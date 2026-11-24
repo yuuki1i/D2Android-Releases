@@ -17,11 +17,11 @@ import android.widget.TextView;
 
 public final class D2Style {
     public static final int BACKGROUND = 0xFF080E18;
-    public static final int FRAME = 0x665E9FB8;
+    public static final int FRAME = 0xAA4D839B;
     public static final int TEXT = 0xFFE5EDF5;
     public static final int HINT = 0xFF9BAEC0;
 
-    public static final int BUTTON = 0xAA172637;
+    public static final int BUTTON = 0xE0162638;
 
     public static final int GOLD = 0xFF78D8F0;
 
@@ -75,11 +75,11 @@ public final class D2Style {
 
         ground.setColor(enabledOr(BUTTON, BACKGROUND));
         ground.setStroke(Math.max(1, Math.round(density)), enabledOr(FRAME, HINT & 0x60FFFFFF));
-        ground.setCornerRadius(2 * density);
+        ground.setCornerRadius(10 * density);
         button.setBackground(new RippleDrawable(ColorStateList.valueOf(FRAME), ground, null));
         buttonText(button, GOLD);
         button.setAllCaps(false);
-        int h = Math.round(14 * density), v = Math.round(8 * density);
+        int h = Math.round(18 * density), v = Math.round(12 * density);
         button.setPadding(h, v, h, v);
         button.setStateListAnimator(null);
     }
