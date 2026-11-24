@@ -10,6 +10,10 @@
         <item name="android:buttonStyle">@style/D2GlassButton</item>
         <item name="buttonStyle">@style/D2GlassButton</item>
         <item name="android:checkboxStyle">@style/CheckBox</item>
+        <item name="android:editTextStyle">@style/D2EditText</item>
+        <item name="android:spinnerStyle">@style/D2Spinner</item>
+        <item name="android:seekBarStyle">@style/D2SeekBar</item>
+        <item name="android:textColorHint">#7893A8</item>
         <item name="android:listPopupWindowStyle">@style/ListPopupWindow</item>
         <item name="listPopupWindowStyle">@style/ListPopupWindow</item>
         <item name="android:popupWindowStyle">@style/PopupWindow</item>
@@ -56,6 +60,21 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:stateListAnimator">@null</item>
+    </style>
+    <style name="D2EditText" parent="@android:style/Widget.Material.EditText">
+        <item name="android:textColor">#E5EDF5</item>
+        <item name="android:textColorHint">#7893A8</item>
+        <item name="android:backgroundTint">#4D839B</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="D2Spinner" parent="@android:style/Widget.Material.Spinner">
+        <item name="android:backgroundTint">#4D839B</item>
+        <item name="android:popupBackground">#142637</item>
+    </style>
+    <style name="D2SeekBar" parent="@android:style/Widget.Material.SeekBar">
+        <item name="android:progressTint">#78D8F0</item>
+        <item name="android:thumbTint">#78D8F0</item>
+        <item name="android:progressBackgroundTint">#4D839B</item>
     </style>
     <style name="SpinnerDropDownItem" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
         <item name="android:textColor">?attr/colorPrimaryText</item>
