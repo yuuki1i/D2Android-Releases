@@ -101,6 +101,7 @@ public class D2LaunchActivity extends D2Activity {
         D2SettingsLook.load(this, null);
         D2Settings.bigStash(this);
 
+        D2PublicLogs.begin(this);
         D2ExitLog.systemExits(this);
 
 
