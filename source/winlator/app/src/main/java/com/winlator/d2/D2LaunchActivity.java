@@ -2053,15 +2053,21 @@ public class D2LaunchActivity extends D2Activity {
         if (look == null || isDestroyed()) return;
         for (D2LaunchButton b : appButtons) b.useLook(look);
         if (launcherRoot != null) {
+            int sampled = look.backdrop.getPixel(look.backdrop.getWidth() / 2, look.backdrop.getHeight() / 3);
+            int accent = android.graphics.Color.rgb(Math.min(255, android.graphics.Color.red(sampled) + 48),
+                Math.min(255, android.graphics.Color.green(sampled) + 54), Math.min(255, android.graphics.Color.blue(sampled) + 62));
+            int dark = android.graphics.Color.rgb(android.graphics.Color.red(sampled) / 3,
+                android.graphics.Color.green(sampled) / 3, android.graphics.Color.blue(sampled) / 3);
             android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable(
                 android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
-                new int[]{0xFF14283A, 0xFF090F19, 0xFF05080E});
+                new int[]{dark, 0xFF090F19, 0xFF05080E});
             bg.setCornerRadius(dp(18));
             android.graphics.drawable.BitmapDrawable texture = new android.graphics.drawable.BitmapDrawable(getResources(), look.backdrop);
             texture.setAlpha(36);
             android.graphics.drawable.LayerDrawable themed = new android.graphics.drawable.LayerDrawable(
                 new android.graphics.drawable.Drawable[]{bg, texture, new android.graphics.drawable.ColorDrawable(0xB800050A)});
             launcherRoot.setBackground(themed);
+            if (launcherRoot.getChildAt(0) instanceof TextView) ((TextView) launcherRoot.getChildAt(0)).setTextColor(accent);
         }
     }
 
