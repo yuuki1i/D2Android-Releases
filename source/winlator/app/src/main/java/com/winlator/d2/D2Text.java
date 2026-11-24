@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public final class D2Text {
     public static final String AUTO = D2AppLanguage.AUTO, GERMAN = D2AppLanguage.GERMAN, ENGLISH = D2AppLanguage.ENGLISH,
-        FRENCH = D2AppLanguage.FRENCH, SPANISH = D2AppLanguage.SPANISH, ITALIAN = D2AppLanguage.ITALIAN;
+        FRENCH = D2AppLanguage.FRENCH, SPANISH = D2AppLanguage.SPANISH, ITALIAN = D2AppLanguage.ITALIAN, CHINESE = D2AppLanguage.CHINESE;
 
     private static volatile int generation;
 
