@@ -156,7 +156,13 @@ public final class D2Settings {
     }
 
     public static String appLanguage(Context context) {
-        return prefs(context).getString(KEY_APP_LANGUAGE, D2Text.CHINESE);
+        SharedPreferences p = prefs(context);
+        if (!p.getBoolean("migratedChineseDefault", false)) {
+            String old = p.getString(KEY_APP_LANGUAGE, D2Text.AUTO);
+            if (D2Text.AUTO.equals(old)) old = D2Text.CHINESE;
+            p.edit().putString(KEY_APP_LANGUAGE, old).putBoolean("migratedChineseDefault", true).apply();
+        }
+        return p.getString(KEY_APP_LANGUAGE, D2Text.CHINESE);
     }
 
     public static void setAppLanguage(Context context, String language) {
