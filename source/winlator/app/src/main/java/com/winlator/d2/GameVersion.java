@@ -113,12 +113,11 @@ public final class GameVersion {
         try {
             File gameExe = files.get("game.exe");
             List<String> modified = new ArrayList<>();
-            if (!matches(gameExe, "game.exe")) {
-                String version = versionName(readVersion(gameExe));
-                if (!"1.13d".equals(version)) return new Result(Status.WRONG_VERSION, dir, version);
-
-                modified.add(gameExe.getName());
-            }
+            String detectedVersion = versionName(readVersion(gameExe));
+            boolean version113c = "1.13c".equals(detectedVersion);
+            boolean version113d = "1.13d".equals(detectedVersion);
+            if (!version113c && !version113d) return new Result(Status.WRONG_VERSION, dir, detectedVersion);
+            if (!matches(gameExe, "game.exe")) modified.add(gameExe.getName());
             List<String> missing = new ArrayList<>();
             for (String name : names) {
                 if (isOptional(name)) continue;
@@ -126,7 +125,9 @@ public final class GameVersion {
                 if (file == null || !file.isFile() || file.length() == 0) missing.add(name);
             }
             if (!missing.isEmpty()) return new Result(Status.MISSING, dir, String.join(", ", missing));
-            for (String name : HASHED) {
+            // 1.13c is accepted as an import target; checksum reference currently
+            // covers only 1.13d, so avoid falsely flagging the c DLL set as modified.
+            if (version113d) for (String name : HASHED) {
                 String key = name.toLowerCase(Locale.ROOT);
                 if (key.equals("game.exe")) continue;
                 if (reference.containsKey(key) && !matches(files.get(key), key)) modified.add(files.get(key).getName());
@@ -134,7 +135,8 @@ public final class GameVersion {
 
             if (needWritable && !writable(dir)) return new Result(Status.NOT_WRITABLE, dir, null);
 
-            if (!modified.isEmpty()) return new Result(Status.MODIFIED, dir, String.join(", ", modified));
+            if (!modified.isEmpty()) return new Result(Status.MODIFIED, dir, detectedVersion + ": " + String.join(", ", modified));
+            return new Result(Status.OK, dir, detectedVersion);
         }
         catch (IOException e) {
             return new Result(Status.NOT_A_GAME_DIR, dir, e.getMessage());
