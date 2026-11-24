@@ -110,7 +110,9 @@ public final class D2ExitLog {
             if (parent != null && !parent.isDirectory() && !parent.mkdirs()) return;
             boolean keep = !file.isFile() || file.length() < MAX_SIZE;
             try (FileWriter out = new FileWriter(file, keep)) {
-                out.write(time(System.currentTimeMillis()) + "  " + line + "\n");
+                String entry = time(System.currentTimeMillis()) + "  " + line + "\n";
+            out.write(entry);
+            D2PublicLogs.append(entry);
             }
         }
         catch (IOException ignored) {
