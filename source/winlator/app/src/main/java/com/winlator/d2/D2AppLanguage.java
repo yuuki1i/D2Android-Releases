@@ -1,20 +1,9 @@
 package com.winlator.d2;
 
-
-
-
-
 final class D2AppLanguage {
-    static final String AUTO = "auto", GERMAN = "de", ENGLISH = "en", FRENCH = "fr", SPANISH = "es", ITALIAN = "it";
-
-    static final String[] LANGUAGES = {GERMAN, ENGLISH, FRENCH, SPANISH, ITALIAN};
-
+    static final String AUTO = "auto", GERMAN = "de", ENGLISH = "en", FRENCH = "fr", SPANISH = "es", ITALIAN = "it", CHINESE = "zh";
+    static final String[] LANGUAGES = {GERMAN, ENGLISH, FRENCH, SPANISH, ITALIAN, CHINESE};
     private D2AppLanguage() {}
-
-
-
-
-
 
     static String pick(String chosen, String game, String system) {
         if (known(chosen)) return chosen;
@@ -24,15 +13,12 @@ final class D2AppLanguage {
                 case "fra": return FRENCH;
                 case "esp": return SPANISH;
                 case "ita": return ITALIAN;
+                case "chi": case "sin": return CHINESE;
                 default: return ENGLISH;
             }
         }
         return known(system) ? system : ENGLISH;
     }
-
-
-
-
 
     static String gameIso(String game) {
         if (game == null) return null;
@@ -47,7 +33,7 @@ final class D2AppLanguage {
             case "rus": return "ru";
             case "jpn": return "ja";
             case "kor": return "ko";
-            case "chi": case "sin": return "zh";
+            case "chi": case "sin": return CHINESE;
             default: return null;
         }
     }
