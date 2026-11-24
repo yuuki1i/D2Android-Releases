@@ -76,6 +76,7 @@ public class D2LaunchActivity extends D2Activity {
     private LinearLayout launcherRoot;
 
     private D2LaunchButton installButton;
+    private D2LaunchButton programButton;
 
     private boolean openInstall;
 
@@ -346,6 +347,8 @@ public class D2LaunchActivity extends D2Activity {
 
         addFirstStepBlock(root);
         addFolderBlock(root);
+        programButton = button(D2ButtonTiers.PLAIN, "启动程序：" + D2Settings.launchProgram(this), () -> chooseLaunchProgram());
+        root.addView(programButton, matchWidth());
         addInstallBlock(root);
 
 
@@ -387,6 +390,37 @@ public class D2LaunchActivity extends D2Activity {
         scroll.addView(root);
         appPage = scroll;
         setContentView(scroll);
+    }
+
+    private void chooseLaunchProgram() {
+        File dir = GameLocator.gameDir(this);
+        if (dir == null || !dir.isDirectory()) {
+            status(getString(R.string.launch_no_game));
+            return;
+        }
+        File[] files = dir.listFiles((folder, name) -> name.toLowerCase(java.util.Locale.ROOT).endsWith(".exe"));
+        if (files == null || files.length == 0) {
+            status("所选游戏目录中没有可选的 EXE 程序");
+            return;
+        }
+        java.util.Arrays.sort(files, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        String[] names = new String[files.length];
+        int selected = 0;
+        String current = D2Settings.launchProgram(this);
+        for (int i = 0; i < files.length; i++) {
+            names[i] = files[i].getName();
+            if (names[i].equalsIgnoreCase(current)) selected = i;
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("选择游戏启动程序")
+            .setSingleChoiceItems(names, selected, (dialog, which) -> {
+                D2Settings.setLaunchProgram(this, names[which]);
+                if (programButton != null) programButton.setText("启动程序：" + names[which]);
+                D2ExitLog.note("用户选择启动程序：" + names[which]);
+                dialog.dismiss();
+            })
+            .setNegativeButton("取消", null)
+            .show();
     }
 
     private boolean updateShown;
@@ -1598,7 +1632,11 @@ public class D2LaunchActivity extends D2Activity {
 
                 Intent intent = new Intent(this, D2GameActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra(D2GameActivity.EXTRA_DIR, D2Runtime.dosPath(this, startDir));
-                intent.putExtra(D2GameActivity.EXTRA_PROGRAM, useMod ? GameShadow.LOADER_EXE : "Game.exe");
+                String selectedProgram = useMod ? GameShadow.LOADER_EXE : D2Settings.launchProgram(this);
+                File selectedExe = new File(startDir, selectedProgram);
+                if (!selectedExe.isFile()) throw new IOException("所选启动程序不存在：" + selectedProgram);
+                D2Trace.log("launch executable: " + selectedProgram);
+                intent.putExtra(D2GameActivity.EXTRA_PROGRAM, selectedProgram);
 
                 String gameArgs = D2Settings.gameArgs(this, playedMod);
                 if (!D2StartArgs.D2DX.equals(gameArgs)) D2Trace.log("start parameters: " + gameArgs);
