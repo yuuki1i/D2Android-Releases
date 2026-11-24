@@ -33,6 +33,30 @@ public final class D2Style {
 
     private D2Style() {}
 
+    public static void applyPalette(android.content.Context context, int index) {
+        int[][] palettes = {
+            {0xFF080E18, 0xAA4D839B, 0xE0162638, 0xFF78D8F0},
+            {0xFF100B18, 0xAA85629E, 0xE0221830, 0xFFC9A5FF},
+            {0xFF0C1510, 0xAA5C9670, 0xE0162A20, 0xFF8FE3A8},
+            {0xFF17110A, 0xAAAC8752, 0xE02C2114, 0xFFFFCF7A}
+        };
+        int chosen = Math.max(0, Math.min(palettes.length - 1, index));
+        int[] palette = palettes[chosen];
+        BACKGROUND = palette[0];
+        FRAME = palette[1];
+        BUTTON = palette[2];
+        GOLD = palette[3];
+        if (context != null) context.getSharedPreferences("d2launch", android.content.Context.MODE_PRIVATE)
+            .edit().putInt("uiPalette", chosen).apply();
+    }
+
+    public static int palette(android.content.Context context) {
+        int selected = context.getSharedPreferences("d2launch", android.content.Context.MODE_PRIVATE)
+            .getInt("uiPalette", 0);
+        applyPalette(context, selected);
+        return selected;
+    }
+
     public static void useGameFrame(D2Hud graphics) {
         gameGraphics = graphics;
     }
