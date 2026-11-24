@@ -330,9 +330,9 @@ public class D2SettingsActivity extends D2Activity {
                 String gameLanguage = gameLanguageName();
                 if (gameLanguage != null) box.addView(hint(getString(R.string.settings_language_game, gameLanguage)));
                 RadioGroup languageGroup = new RadioGroup(this);
-                String[] languages = {D2Text.AUTO, D2Text.GERMAN, D2Text.ENGLISH, D2Text.FRENCH, D2Text.SPANISH, D2Text.ITALIAN};
+                String[] languages = {D2Text.AUTO, D2Text.GERMAN, D2Text.ENGLISH, D2Text.FRENCH, D2Text.SPANISH, D2Text.ITALIAN, D2Text.CHINESE};
                 int[] languageLabels = {R.string.settings_language_auto, R.string.settings_language_de, R.string.settings_language_en,
-                    R.string.settings_language_fr, R.string.settings_language_es, R.string.settings_language_it};
+                    R.string.settings_language_fr, R.string.settings_language_es, R.string.settings_language_it, R.string.settings_language_zh};
                 String current = D2Settings.appLanguage(this);
                 for (int i = 0; i < languages.length; i++) {
                     addOption(languageGroup, ID_LANGUAGE + i, getString(languageLabels[i]));
