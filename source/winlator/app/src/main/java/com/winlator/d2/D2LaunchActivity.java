@@ -1510,9 +1510,18 @@ public class D2LaunchActivity extends D2Activity {
             status(getString(R.string.launch_no_runtime));
             return;
         }
-        if (!GameShadow.isD2DXBundled(this)) {
+        if (D2Settings.useD2DX(this) && !GameShadow.isD2DXBundled(this)) {
             startProblemOnAppPage();
-            status(getString(R.string.launch_no_d2dx));
+            new AlertDialog.Builder(this)
+                .setTitle("缺少 D2DX")
+                .setMessage("此版本未包含 D2DX 图形组件。可以尝试使用游戏原生 DirectDraw 模式启动（兼容性与画面效果可能较差）。是否关闭 D2DX 并尝试启动？")
+                .setPositiveButton("尝试无 D2DX 启动", (dialog, which) -> {
+                    D2Settings.setUseD2DX(this, false);
+                    status("已切换 DirectDraw 模式，正在重新启动流程…");
+                    prepareAndLaunch();
+                })
+                .setNegativeButton("取消", null)
+                .show();
             return;
         }
 
@@ -1590,7 +1599,7 @@ public class D2LaunchActivity extends D2Activity {
                 String keptBig = D2BigStash.keepOnForStart(this, gameDir, playedMod);
                 if (keptBig != null) keptOn.add(keptBig);
                 String d2dxCfg = GameShadow.buildD2DXConfig(D2Settings.gameSize(screenSize, D2Settings.gameLines(this)), 0);
-                File startDir = GameShadow.prepare(this, D2Runtime.driveC(this), gameDir, d2dxCfg, playedMod);
+                File startDir = GameShadow.prepare(this, D2Runtime.driveC(this), gameDir, d2dxCfg, playedMod, D2Settings.useD2DX(this));
                 tellRepairs(D2SaveRepair.takeLast());
                 writeRegistry(startDir, gameDir, playedMod);
 
