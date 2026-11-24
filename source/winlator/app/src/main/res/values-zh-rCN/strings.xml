@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_no_override">默认（不覆盖）</string>
+    <string name="channel_name">游戏运行中</string>
+    <string name="channel_description">保持暗黑破坏神 II 在后台运行，防止 Android 关闭游戏。</string>
+    <string name="notification_paused">已暂停，点击继续游戏</string>
+    <string name="notification_running">运行中</string>
+    <string name="notification_save_and_quit">保存并退出</string>
+    <string name="notification_quit">退出</string>
+    <string name="settings_title">游戏设置</string>
+    <string name="settings_language">应用语言</string>
+    <string name="settings_language_hint">仅更改应用界面语言，不更改游戏语言。游戏语言取决于安装的游戏文件。</string>
+    <string name="settings_language_game">游戏语言：%1$s</string>
+    <string name="settings_language_auto">自动（跟随游戏）</string>
+    <string name="settings_language_de">德语</string>
+    <string name="settings_language_en">英语</string>
+    <string name="settings_language_fr">法语</string>
+    <string name="settings_language_es">西班牙语</string>
+    <string name="settings_language_it">意大利语</string>
+    <string name="settings_language_zh">简体中文</string>
+    <string name="settings_size">画面尺寸</string>
+    <string name="settings_size_hint">尺寸越大，文字和按钮越清晰，但可见游戏区域越小。</string>
+    <string name="settings_size_540">大（540 行，高清，默认）</string>
+    <string name="settings_size_600">中（600 行，原版比例）</string>
+    <string name="settings_size_auto">小（720 行，可见更多地图）</string>
+    <string name="settings_size_ingame">游戏内选择：%1$s（4:3，带黑边）</string>
+    <string name="settings_size_ingame_hint">点击下方尺寸可切回宽屏画面。</string>
+    <string name="settings_frame_rate">帧率</string>
+    <string name="settings_frame_rate_hint">降低帧率可省电并降低手机温度，下次启动生效。</string>
+    <string name="settings_frame_rate_unlimited">不限制</string>
+    <string name="settings_start">启动游戏</string>
+    <string name="sound_button">音乐</string>
+    <string name="settings_sound">音乐与点击音效</string>
+    <string name="settings_skip_intro">跳过开场动画</string>
+    <string name="settings_helpers">游戏辅助功能</string>
+    <string name="settings_background">后台保护</string>
+    <string name="settings_background_open">后台保护设置…</string>
+    <string name="settings_saves">存档管理</string>
+    <string name="settings_saves_share">分享存档</string>
+    <string name="settings_saves_load">导入存档…</string>
+    <string name="settings_play">完成</string>
+</resources>
