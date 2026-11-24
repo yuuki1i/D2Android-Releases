@@ -73,6 +73,7 @@ public class D2LaunchActivity extends D2Activity {
     private TextView folderView;
     private D2LaunchButton chooseButton;
     private LinearLayout installBlock;
+    private LinearLayout launcherRoot;
 
     private D2LaunchButton installButton;
 
@@ -311,6 +312,7 @@ public class D2LaunchActivity extends D2Activity {
     private void buildUI() {
         int pad = dp(24);
         LinearLayout root = new LinearLayout(this);
+        launcherRoot = root;
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(pad, pad, pad, pad);
         android.graphics.drawable.GradientDrawable launcherBackdrop = new android.graphics.drawable.GradientDrawable(
@@ -328,6 +330,12 @@ public class D2LaunchActivity extends D2Activity {
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(D2Style.GOLD);
         root.addView(title);
+        TextView targetVersion = new TextView(this);
+        targetVersion.setText("目标版本：1.13c · D2DX 兼容适配实验");
+        targetVersion.setTextSize(12);
+        targetVersion.setTextColor(0xFF82CFE0);
+        targetVersion.setPadding(0, dp(2), 0, dp(8));
+        root.addView(targetVersion);
 
         statusView = new TextView(this);
         statusView.setPadding(0, dp(12), 0, dp(12));
