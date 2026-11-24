@@ -44,7 +44,7 @@ public final class D2Style {
         GradientDrawable d = new GradientDrawable();
         d.setColor(BACKGROUND);
         d.setStroke(Math.max(1, Math.round(density)), FRAME);
-        d.setCornerRadius(4 * density);
+        d.setCornerRadius(12 * density);
         return d;
     }
 
@@ -58,7 +58,7 @@ public final class D2Style {
 
     public static void heading(TextView view) {
         view.setTextColor(GOLD);
-        view.setTypeface(Typeface.create(Typeface.SERIF, Typeface.BOLD));
+        view.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
     }
 
     public static void control(CompoundButton button) {
