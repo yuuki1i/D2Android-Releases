@@ -161,6 +161,21 @@ public class D2SettingsActivity extends D2Activity {
     private boolean builtPlain;
 
 
+
+    private void choosePalette() {
+        final String[] names = {"冰蓝玻璃（默认）", "紫色玻璃", "翡翠玻璃", "琥珀玻璃"};
+        int selected = D2Style.palette(this);
+        new AlertDialog.Builder(this)
+            .setTitle("界面颜色与贴图")
+            .setSingleChoiceItems(names, selected, (dialog, which) -> {
+                D2Style.applyPalette(this, which);
+                dialog.dismiss();
+                recreate();
+            })
+            .setNegativeButton(R.string.cancel, null)
+            .show();
+    }
+
     private void buildPage(String group) {
         spielweiseViews.clear();
         D2SettingsLook look = null; // App UI is intentionally independent of game assets.
@@ -188,6 +203,11 @@ public class D2SettingsActivity extends D2Activity {
             D2Style.heading(text);
             title = text;
         }
+        Button paletteButton = new Button(this);
+        paletteButton.setText("主题");
+        D2Style.button(paletteButton, getResources().getDisplayMetrics().density);
+        paletteButton.setOnClickListener(v -> choosePalette());
+        head.addView(paletteButton, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         head.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         Runnable play = () -> {
 
