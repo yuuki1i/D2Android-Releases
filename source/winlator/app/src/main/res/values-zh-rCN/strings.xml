@@ -1197,4 +1197,47 @@
     <string name="settings_saves_backups">分享备份</string>
     <string name="settings_saves_from_download">从下载目录导入</string>
     <string name="settings_saves_save_as">保存为文件</string>
+    <string name="choice_title">你想如何体验游戏？</string>
+    <string name="choice_intro">选择一次即可，之后可在“设置 → 玩法预设”随时更改。两种模式下角色存档均兼容。</string>
+    <string name="choice_classic_sub">完全遵循原版 1.13d。</string>
+    <string name="choice_classic_points">掉落、符文和经验保持 2010 年原版
+小背包（10×4），无共享储物箱、重置或整理
+无天梯内容
+适合希望原汁原味体验的玩家</string>
+    <string name="choice_enhanced_sub">单位时间更有乐趣，怪物强度不变。</string>
+    <string name="choice_enhanced_points">更多、更好的掉落，Boss 不再空掉
+高阶符文掉率提高 4 倍，赌博更好
+大背包（10×8）、共享储物箱、重置、整理
+70 级后减少刷级，怪物数量增加 10%
+离线天梯符文之语、牛关和超级任务</string>
+    <string name="choice_chosen">已选择</string>
+    <string name="choice_default">默认</string>
+    <string name="choice_chosen_default">已选择 · 默认</string>
+    <string name="choice_differences">模式差异</string>
+    <string name="choice_footer">之后可在“设置 → 玩法预设”单独调整各项，例如怪物密度最高可设为 200%。</string>
+    <string name="choice_go_classic">体验经典模式</string>
+    <string name="choice_go_enhanced">体验增强模式</string>
+    <string name="choice_row_quality">暗金/套装/稀有</string>
+    <string name="choice_row_nodrop">掉落率参考</string>
+    <string name="choice_row_runes">高阶符文</string>
+    <string name="choice_row_boss">Boss 不空掉</string>
+    <string name="choice_row_uniques">暗金重复掉落</string>
+    <string name="choice_row_gamble">赌博</string>
+    <string name="choice_row_exp">70 级后经验</string>
+    <string name="choice_row_density">怪物密度</string>
+    <string name="choice_row_inventory">背包</string>
+    <string name="choice_row_ladder">离线天梯</string>
+    <string name="choice_row_cow">牛关开放</string>
+    <string name="choice_row_uber">超级任务</string>
+    <string name="choice_row_world">世界事件</string>
+    <string name="choice_inv_small">10×4</string>
+    <string name="choice_inv_big">10×8</string>
+    <string name="choice_val_quality_2">掉率提高 2 倍</string>
+    <string name="choice_val_runes_2">掉率提高 4 倍</string>
+    <string name="choice_val_exp_0">降低</string>
+    <string name="choice_val_exp_2">不降低</string>
+    <string name="choice_val_boss_2">所有 Boss</string>
+    <string name="choice_row_shared">共享储物箱</string>
+    <string name="choice_row_sort">整理背包</string>
+    <string name="choice_row_respec">重置点数</string>
 </resources>
