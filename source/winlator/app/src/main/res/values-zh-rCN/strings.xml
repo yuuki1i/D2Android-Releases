@@ -1467,4 +1467,183 @@
 • 对单个 Boss 伤害较低。</string>
     <string name="build_barb_warcry_tips">• 站在怪群中，战吼可攻击四周。
 • 使用法力药水，装备法力属性有帮助。</string>
+    <string name="build_ama_javelin">亚马逊 — 闪电标枪</string>
+    <string name="build_ama_javelin_strengths">• 充能一击可同时释放多道闪电攻击单体。
+• 30 级闪电之怒可远程攻击整群敌人。
+• 威力一击、闪电球和闪电攻击强化闪电伤害。</string>
+    <string name="build_ama_javelin_weaknesses">• 闪电免疫怪物（地狱常见）。
+• 闪电之怒消耗标枪，挂机暂不自动购买。
+• 每次投掷消耗法力。</string>
+    <string name="build_ama_javelin_tips">• 戳刺和威力一击可练至 18 级。
+• 女武神和诱饵可牵制怪物。
+• 在城镇铁匠处补充标枪。</string>
+    <string name="build_ama_bow">亚马逊 — 弓（多重箭、扫射）</string>
+    <string name="build_ama_bow_strengths">• 多重箭前期即可攻击整群敌人。
+• 24 级扫射可攻击周围多个怪物。
+• 导引箭可稳定命中单体。</string>
+    <string name="build_ama_bow_weaknesses">• 箭矢会耗尽，挂机暂不自动购买，之后会使用魔法箭。
+• 需要好弓和较高敏捷。
+• 生命较少，需保持距离。</string>
+    <string name="build_ama_bow_tips">• 魔法箭无需箭矢。
+• 女武神和诱饵可吸引怪物。
+• 穿透可让箭矢命中多个敌人。</string>
+    <string name="build_ama_freeze">亚马逊 — 冰冻箭</string>
+    <string name="build_ama_freeze_strengths">• 冰冻箭可冻结整群怪物。
+• 冰箭和寒冰箭强化伤害。
+• 冻结的怪物无法反击。</string>
+    <string name="build_ama_freeze_weaknesses">• 冰免怪物。
+• 箭矢会耗尽，挂机暂不自动购买。
+• 冰冻箭 30 级才解锁。</string>
+    <string name="build_ama_freeze_tips">• 18 级起以寒冰箭为主要攻击。
+• 女武神牵制敌人。
+• 箭矢耗尽时可用魔法箭。</string>
+    <string name="build_sorc_light">法师 — 闪电系</string>
+    <string name="build_sorc_light_strengths">• 连锁闪电在怪物之间跳跃攻击。
+• 闪电掌握让后期伤害极高。
+• 静态力场削减周围所有怪物生命。</string>
+    <string name="build_sorc_light_weaknesses">• 闪电免疫怪物。
+• 闪电伤害波动较大。
+• 法力消耗高。</string>
+    <string name="build_sorc_light_tips">• 18 级前使用充能弹和闪电。
+• 传送可快速脱险。
+• 冰封装甲前期提供防御。</string>
+    <string name="build_sorc_orb">法师 — 冰封球</string>
+    <string name="build_sorc_orb_strengths">• 冰封球向四周释放冰弹，可攻击整群敌人。
+• 冰弹强化伤害。
+• 冰系可减速怪物。</string>
+    <string name="build_sorc_orb_weaknesses">• 30 级才解锁冰封球，之前使用冰尖柱。
+• 冰免怪物。
+• 需投入较多冰弹点数，单独使用较弱。</string>
+    <string name="build_sorc_orb_tips">• 将冰封球施放到怪群中央。
+• 怪物靠近时用冰冻新星脱身。
+• 传送保持距离。</string>
+    <string name="build_necro_summon">死灵法师 — 召唤系</string>
+    <string name="build_necro_summon_strengths">• 骷髅军团替你战斗。
+• 骷髅掌握强化召唤物。
+• 尸体爆炸可快速清理整群敌人。</string>
+    <string name="build_necro_summon_weaknesses">• 需要尸体才能召唤骷髅。
+• 挂机暂不指挥召唤物，只使用骨牙攻击。
+• 没有军团时较脆弱。</string>
+    <string name="build_necro_summon_tips">• 尽量从每具尸体召唤骷髅。
+• 伤害加深和衰老可辅助军团。
+• 黏土石魔减速强敌。</string>
+    <string name="build_necro_poison">死灵法师 — 毒系</string>
+    <string name="build_necro_poison_strengths">• 毒新星可毒伤周围所有怪物。
+• 毒匕首和尸体爆炸强化毒伤。
+• 毒素持续伤害，可边移动边消耗敌人。</string>
+    <string name="build_necro_poison_weaknesses">• 毒免怪物。
+• 毒伤需要时间生效。
+• 挂机暂不施放诅咒，因此未使用降低抵抗。</string>
+    <string name="build_necro_poison_tips">• 毒匕首需要装备匕首。
+• 降低抵抗可大幅提升毒伤。
+• 骨甲可吸收伤害。</string>
+    <string name="build_pala_hammer">圣骑士 — 锤子</string>
+    <string name="build_pala_hammer_strengths">• 祝福之锤绕身旋转并攻击整群敌人。
+• 魔法伤害，几乎没有怪物免疫。
+• 专注、祝福瞄准和活力使伤害极高。</string>
+    <string name="build_pala_hammer_weaknesses">• 18 级才解锁，之前近战并使用力量光环。
+• 法力需求高，配装不投入能量。
+• 挂机暂不维持专注光环。</string>
+    <string name="build_pala_hammer_tips">• 右侧技能设置专注光环。
+• 神圣之盾提高格挡和防御。
+• 站在怪群中，锤子会环绕攻击。</string>
+    <string name="build_pala_zeal">圣骑士 — 热诚</string>
+    <string name="build_pala_zeal_strengths">• 热诚可快速连续攻击多次，准确率高。
+• 30 级狂热光环提高攻速和伤害。
+• 法力需求低。</string>
+    <string name="build_pala_zeal_weaknesses">• 地狱难度物理免疫怪物。
+• 需要优秀武器。
+• 挂机暂不维持光环。</string>
+    <string name="build_pala_zeal_tips">• 右侧技能设置狂热（30 级前使用力量）。
+• 献祭提高热诚伤害。
+• 吸血武器有帮助。</string>
+    <string name="build_pala_avenger">圣骑士 — 复仇</string>
+    <string name="build_pala_avenger_strengths">• 复仇为每次攻击附加火、冰、电伤害。
+• 30 级审判降低怪物抗性。
+• 可应对单元素免疫怪物。</string>
+    <string name="build_pala_avenger_weaknesses">• 三种抗性光环需要投入较多点数。
+• 每次攻击消耗法力。
+• 挂机暂不维持光环。</string>
+    <string name="build_pala_avenger_tips">• 右侧技能设置审判光环。
+• 18 级前用热诚。
+• 抗性光环也可提高自身防护。</string>
+    <string name="build_druid_wind">德鲁伊 — 风系（龙卷风）</string>
+    <string name="build_druid_wind_strengths">• 龙卷风造成高伤害，几乎没有怪物免疫（物理伤害）。
+• 飓风持续伤害周围敌人。
+• 旋风护甲吸收元素伤害。</string>
+    <string name="build_druid_wind_weaknesses">• 龙卷风方向略随机，偶尔会打空。
+• 24 级才解锁，之前用 Arctic Blast 和 Twister。
+• 游戏暂不报告飓风和旋风护甲状态，挂机无法续期。</string>
+    <string name="build_druid_wind_tips">• 手动刷新旋风护甲和飓风。
+• 橡木智者提高生命。
+• 熊可牵制怪物。</string>
+    <string name="build_druid_fire">德鲁伊 — 火系（裂地、火山）</string>
+    <string name="build_druid_fire_strengths">• 12 级裂地可灼烧整群怪物。
+• 火山和毁天灭地补充火焰与岩石伤害。
+• 火风暴和熔岩巨石强化火伤。</string>
+    <string name="build_druid_fire_weaknesses">• 火免怪物。
+• 裂地对快速怪物效果较差。
+• 游戏暂不报告毁天灭地状态，挂机无法续期。</string>
+    <string name="build_druid_fire_tips">• 将裂地施放在怪物脚下。
+• 手动维持毁天灭地。
+• 熊可牵制怪物。</string>
+    <string name="build_druid_wolf">德鲁伊 — 狼人（狂怒）</string>
+    <string name="build_druid_wolf_strengths">• 狼人形态攻击速度很快。
+• 30 级狂怒最多连续攻击五次。
+• 狼人变化提高大量生命。</string>
+    <string name="build_druid_wolf_weaknesses">• 挂机暂不支持变身，只会普通攻击。
+• 地狱难度物理免疫怪物。
+• 需要优秀武器。</string>
+    <string name="build_druid_wolf_tips">• 每场战斗前变身狼人。
+• 野性狂暴提高速度和吸血。
+• 熊可牵制怪物。</string>
+    <string name="build_druid_summon">德鲁伊 — 召唤系</string>
+    <string name="build_druid_summon_strengths">• 狼和熊替你战斗。
+• 橡木智者提高召唤物生命。
+• 怪物攻击宠物，较安全。</string>
+    <string name="build_druid_summon_weaknesses">• 挂机暂不指挥召唤物，只会普通攻击。
+• 自身输出较慢。
+• 召唤物在狭窄区域容易卡住。</string>
+    <string name="build_druid_summon_tips">• 召唤物死亡后重新召唤。
+• 食腐藤和太阳藤可辅助生命与法力。
+• 保持在召唤物后方。</string>
+    <string name="build_assa_trap">刺客 — 陷阱</string>
+    <string name="build_assa_trap_strengths">• 闪电守卫自动向怪物发射多道闪电。
+• 30 级亡者守卫可引爆尸体。
+• 陷阱战斗，角色可保持距离。</string>
+    <string name="build_assa_trap_weaknesses">• 闪电免疫怪物。
+• 同时最多放置五个陷阱。
+• 挂机暂不识别陷阱自动攻击。</string>
+    <string name="build_assa_trap_tips">• 在怪物附近放置陷阱后撤退。
+• 速度爆发非常有用。
+• 影子大师可并肩战斗。</string>
+    <string name="build_assa_kick">刺客 — 踢腿（龙爪）</string>
+    <string name="build_assa_kick_strengths">• 龙爪每次攻击连续踢击多次。
+• 无需蓄力，操作简单。
+• 靴子的伤害会计入踢腿。</string>
+    <string name="build_assa_kick_weaknesses">• 地狱难度物理免疫怪物。
+• 近战需站在怪群中。
+• 需要好靴子。</string>
+    <string name="build_assa_kick_tips">• 龙飞可跳到目标并踢击。
+• 能量消散和 30 级毒牙（每踢附加毒伤）很有帮助。
+• 影子大师可协助战斗。</string>
+    <string name="build_assa_martial">刺客 — 武术（凤凰击）</string>
+    <string name="build_assa_martial_strengths">• 凤凰击可蓄力释放陨石、连锁闪电和冰攻击。
+• 三种元素，几乎没有怪物能全部免疫。
+• 火焰拳、雷电爪和寒冰刃强化伤害。</string>
+    <string name="build_assa_martial_weaknesses">• 蓄力和终结需要练习。
+• 挂机暂不识别连招，只会普通攻击。
+• 凤凰击 30 级才解锁。</string>
+    <string name="build_assa_martial_tips">• 蓄力最多三次，再用龙爪终结。
+• 速度爆发和能量消散有帮助。</string>
+    <string name="build_assa_blade">刺客 — 刀刃（刀刃之怒）</string>
+    <string name="build_assa_blade_strengths">• 刀刃之怒可远程投掷刀刃攻击目标。
+• 物理伤害，几乎没有怪物免疫。
+• 刀刃哨兵和刀刃盾补充攻击。</string>
+    <string name="build_assa_blade_weaknesses">• 主要攻击单体。
+• 法力消耗较高。
+• 18 级才解锁，之前用火焰爆破。</string>
+    <string name="build_assa_blade_tips">• 持续按住攻击，刀刃会不断投出。
+• 30 级毒牙为刀刃附加毒伤。
+• 速度爆发和能量消散有帮助。</string>
 </resources>
