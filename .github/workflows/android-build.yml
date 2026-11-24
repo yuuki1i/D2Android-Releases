@@ -8,6 +8,10 @@ on:
       - '.github/workflows/android-build.yml'
 permissions:
   contents: read
+
+concurrency:
+  group: d2android-touch-glass-build
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-24.04
