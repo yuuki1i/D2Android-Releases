@@ -1695,4 +1695,5 @@
     <string name="game_in_app">In the app</string>
     <string name="game_in_app_from">In the app (taken from %1$s)</string>
     <string name="settings_saves_save_as">Save to a file</string>
+    <string name="settings_language_zh">Simplified Chinese</string>
 </resources>
