@@ -146,9 +146,7 @@ public class D2SettingsActivity extends D2Activity {
 
 
 
-        if (builtPlain) D2SettingsLook.load(this, () -> {
-            if (!isFinishing() && !isDestroyed()) buildPage(D2HelpersPanel.group(helpersPanel));
-        });
+        // Settings stay in the native glass theme; do not swap to game-art UI.
     }
 
     @Override
@@ -165,8 +163,7 @@ public class D2SettingsActivity extends D2Activity {
 
     private void buildPage(String group) {
         spielweiseViews.clear();
-        D2SettingsLook look = D2SettingsLook.get();
-        builtPlain = look == null;
+        D2SettingsLook look = null; // App UI is intentionally independent of game assets.
         int pad = dp(16);
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
