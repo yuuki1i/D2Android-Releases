@@ -313,7 +313,9 @@ public class D2LaunchActivity extends D2Activity {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(pad, pad, pad, pad);
-        android.graphics.drawable.GradientDrawable launcherBackdrop = new android.graphics.drawable.GradientDrawable(\n            android.graphics.drawable.GradientDrawable.Orientation.TL_BR,\n            new int[]{0xFF14283A, 0xFF090F19, 0xFF05080E});\n        launcherBackdrop.setCornerRadius(dp(18));\n        root.setBackground(launcherBackdrop);
+        android.graphics.drawable.GradientDrawable launcherBackdrop = new android.graphics.drawable.GradientDrawable(
+            android.graphics.drawable.GradientDrawable.Orientation.TL_BR,
+            new int[]{0xFF14283A, 0xFF090F19, 0xFF05080E});\n        launcherBackdrop.setCornerRadius(dp(18));\n        root.setBackground(launcherBackdrop);
 
         if (com.winlator.BuildConfig.D2_INTERNAL) root.addView(new D2TestBanner(this), new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
