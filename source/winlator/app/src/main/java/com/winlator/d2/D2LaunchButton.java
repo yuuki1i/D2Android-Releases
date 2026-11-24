@@ -61,20 +61,13 @@ final class D2LaunchButton extends FrameLayout {
     }
 
     private void build() {
+        // Launcher controls always use the same native glass treatment.
         removeAllViews();
-        View child;
-        if (look != null) {
-            child = D2ButtonTiers.make(getContext(), look, kind, text, action);
-            addView(child, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL));
-        }
-        else {
-            Button button = new Button(getContext());
-            button.setText(text);
-            D2Style.button(button, getResources().getDisplayMetrics().density);
-            button.setOnClickListener((v) -> action.run());
-            child = button;
-            addView(child, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        }
-        child.setEnabled(isEnabled());
+        Button button = new Button(getContext());
+        button.setText(text);
+        D2Style.button(button, getResources().getDisplayMetrics().density);
+        button.setOnClickListener((v) -> action.run());
+        button.setEnabled(isEnabled());
+        addView(button, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
 }
