@@ -156,7 +156,7 @@ public final class D2Settings {
     }
 
     public static String appLanguage(Context context) {
-        return prefs(context).getString(KEY_APP_LANGUAGE, D2Text.AUTO);
+        return prefs(context).getString(KEY_APP_LANGUAGE, D2Text.CHINESE);
     }
 
     public static void setAppLanguage(Context context, String language) {
