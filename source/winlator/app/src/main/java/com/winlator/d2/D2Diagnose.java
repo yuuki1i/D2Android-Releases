@@ -4,6 +4,8 @@ import com.winlator.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContentValues;
+import android.provider.MediaStore;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -82,13 +85,17 @@ public final class D2Diagnose {
                     out.closeEntry();
                 }
                 trace.delete();
+                String saved = saveToDownloads(activity, zip);
                 Uri uri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".FileProvider", zip);
                 Intent send = new Intent(Intent.ACTION_SEND);
                 send.setType("application/zip");
                 send.putExtra(Intent.EXTRA_STREAM, uri);
                 send.putExtra(Intent.EXTRA_SUBJECT, D2Text.get(activity, R.string.diagnose_subject));
                 send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                new Handler(Looper.getMainLooper()).post(() -> activity.startActivity(Intent.createChooser(send, D2Text.get(activity, R.string.diagnose_share))));
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    if (saved != null) Toast.makeText(activity, "诊断包已保存到 Download/D2Android\\n" + saved, Toast.LENGTH_LONG).show();
+                    activity.startActivity(Intent.createChooser(send, D2Text.get(activity, R.string.diagnose_share)));
+                });
             }
             catch (Exception e) {
                 new Handler(Looper.getMainLooper()).post(() ->
@@ -285,6 +292,39 @@ public final class D2Diagnose {
         }
         catch (RuntimeException e) {
             return -1;
+        }
+    }
+
+
+    // Export a second copy to the public Downloads folder so users can find it
+    // without relying on a share target or private app storage.
+    private static String saveToDownloads(Context context, File zip) {
+        if (Build.VERSION.SDK_INT < 29) return null;
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Downloads.DISPLAY_NAME, zip.getName());
+        values.put(MediaStore.Downloads.MIME_TYPE, "application/zip");
+        values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/D2Android");
+        values.put(MediaStore.Downloads.IS_PENDING, 1);
+        Uri uri = null;
+        try {
+            uri = context.getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+            if (uri == null) return null;
+            try (InputStream in = new FileInputStream(zip);
+                 OutputStream out = context.getContentResolver().openOutputStream(uri)) {
+                if (out == null) throw new IOException("无法写入下载目录");
+                byte[] buffer = new byte[16384];
+                int n;
+                while ((n = in.read(buffer)) > 0) out.write(buffer, 0, n);
+            }
+            values.clear();
+            values.put(MediaStore.Downloads.IS_PENDING, 0);
+            context.getContentResolver().update(uri, values, null, null);
+            return zip.getName();
+        }
+        catch (Exception e) {
+            if (uri != null) try { context.getContentResolver().delete(uri, null, null); } catch (Exception ignored) {}
+            D2Trace.log("diagnose export to Downloads failed: " + e);
+            return null;
         }
     }
 
