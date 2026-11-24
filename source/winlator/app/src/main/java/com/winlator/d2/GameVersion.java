@@ -117,7 +117,12 @@ public final class GameVersion {
             boolean version113c = "1.13c".equals(detectedVersion);
             boolean version113d = "1.13d".equals(detectedVersion);
             if (!version113c && !version113d) return new Result(Status.WRONG_VERSION, dir, detectedVersion);
-            if (!matches(gameExe, "game.exe")) modified.add(gameExe.getName());
+            // 1.13c has a different official binary set than the 1.13d checksum
+            // catalog. Do not label its stock Game.exe as modified just because it
+            // cannot match the 1.13d hash.
+            if (!version113c && !matches(gameExe, "game.exe")) modified.add(gameExe.getName());
+            String exeStructure = pe32(gameExe);
+            if (exeStructure != null) modified.add(gameExe.getName() + " (" + exeStructure + ")");
             List<String> missing = new ArrayList<>();
             for (String name : names) {
                 if (isOptional(name)) continue;
@@ -125,22 +130,71 @@ public final class GameVersion {
                 if (file == null || !file.isFile() || file.length() == 0) missing.add(name);
             }
             if (!missing.isEmpty()) return new Result(Status.MISSING, dir, String.join(", ", missing));
-            // 1.13c is accepted as an import target; checksum reference currently
-            // covers only 1.13d, so avoid falsely flagging the c DLL set as modified.
-            if (version113d) for (String name : HASHED) {
-                String key = name.toLowerCase(Locale.ROOT);
-                if (key.equals("game.exe")) continue;
-                if (reference.containsKey(key) && !matches(files.get(key), key)) modified.add(files.get(key).getName());
+            if (version113d) {
+                for (String name : HASHED) {
+                    String key = name.toLowerCase(Locale.ROOT);
+                    if (key.equals("game.exe")) continue;
+                    if (reference.containsKey(key) && !matches(files.get(key), key)) modified.add(files.get(key).getName());
+                }
+            }
+            else if (version113c) {
+                // 1.13c is intentionally checked against structural invariants here:
+                // this project does not ship a verified 1.13c checksum catalog.
+                // Validate x86 PE headers for its code files and MPQ signatures
+                // for archives to catch mixed-version/broken folders.
+                for (String name : HASHED) {
+                    if (name.equalsIgnoreCase("game.exe")) continue;
+                    File dll = files.get(name.toLowerCase(Locale.ROOT));
+                    String why = pe32(dll);
+                    if (why != null) modified.add(name + " (" + why + ")");
+                }
+                for (String name : names) {
+                    if (!name.toLowerCase(Locale.ROOT).endsWith(".mpq") || isOptional(name)) continue;
+                    File archive = files.get(name.toLowerCase(Locale.ROOT));
+                    String why = mpqHeader(archive);
+                    if (why != null) modified.add(name + " (" + why + ")");
+                }
             }
 
             if (needWritable && !writable(dir)) return new Result(Status.NOT_WRITABLE, dir, null);
 
             if (!modified.isEmpty()) return new Result(Status.MODIFIED, dir, detectedVersion + ": " + String.join(", ", modified));
+            if (version113c) return new Result(Status.MODIFIED, dir,
+                "1.13c: 文件结构检查通过；未使用1.13d校验码，无法证明文件为原版");
             return new Result(Status.OK, dir, detectedVersion);
         }
         catch (IOException e) {
             return new Result(Status.NOT_A_GAME_DIR, dir, e.getMessage());
         }
+    }
+
+    private static String pe32(File file) throws IOException {
+        if (file == null || !file.isFile() || file.length() < 64) return "invalid PE file";
+        try (RandomAccessFile in = new RandomAccessFile(file, "r")) {
+            if (in.readUnsignedByte() != 'M' || in.readUnsignedByte() != 'Z') return "missing MZ header";
+            in.seek(0x3c);
+            int pe = readLe32(in);
+            if (pe < 0x40 || pe > file.length() - 6) return "invalid PE offset";
+            in.seek(pe);
+            if (in.readUnsignedByte() != 'P' || in.readUnsignedByte() != 'E'
+                || in.readUnsignedByte() != 0 || in.readUnsignedByte() != 0) return "missing PE signature";
+            int machine = in.readUnsignedByte() | (in.readUnsignedByte() << 8);
+            return machine == 0x14c ? null : "not x86 (machine 0x" + Integer.toHexString(machine) + ")";
+        }
+    }
+
+    private static int readLe32(RandomAccessFile in) throws IOException {
+        return in.readUnsignedByte() | in.readUnsignedByte() << 8
+            | in.readUnsignedByte() << 16 | in.readUnsignedByte() << 24;
+    }
+
+    private static String mpqHeader(File file) throws IOException {
+        if (file == null || !file.isFile() || file.length() < 16) return "archive too small";
+        try (RandomAccessFile in = new RandomAccessFile(file, "r")) {
+            if (in.readUnsignedByte() != 'M' || in.readUnsignedByte() != 'P'
+                || in.readUnsignedByte() != 'Q' || in.readUnsignedByte() != 0x1a) return "missing MPQ header";
+        }
+        return null;
     }
 
     private static boolean isOptional(String name) {
