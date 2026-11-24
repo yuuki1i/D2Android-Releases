@@ -1052,13 +1052,11 @@ public class D2LaunchActivity extends D2Activity {
 
         android.content.SharedPreferences prefs = getSharedPreferences(D2Settings.PREFS, MODE_PRIVATE);
         if (choice != null && D2PlaystyleChoice.needed(prefs.getAll())) {
-            D2StartPage page = startPage;
-            choicePage = new D2PlaystyleChoicePage(this, choice, D2PlaystyleChoice.preselected(prefs.getAll()), (preset) -> {
-                D2Settings.choosePlaystyle(this, preset);
-                choicePage = null;
-                if (startPage == page && !isFinishing() && !isDestroyed()) showAfterChoice(page, choice);
-            });
-            setContentView(choicePage);
+            // Skip the first-run preset chooser: start directly with Enhanced.
+            // The preset remains fully editable in Settings > Play style.
+            D2Settings.choosePlaystyle(this, D2Spielweise.ENHANCED);
+            choicePage = null;
+            showAfterChoice(startPage, choice);
         }
         else showAfterChoice(startPage, choice);
         startPageExpected = false;
