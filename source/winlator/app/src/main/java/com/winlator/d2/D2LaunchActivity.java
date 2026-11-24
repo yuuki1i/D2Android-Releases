@@ -842,9 +842,9 @@ public class D2LaunchActivity extends D2Activity {
         // The latter uses Diablo bitmap fonts and cannot render Chinese reliably.
         getSharedPreferences(D2Settings.PREFS, MODE_PRIVATE).edit().putBoolean(KEY_START_PAGE, false).apply();
         noStartPage();
-        return;
+    }
 
-        // Legacy game-art start page kept below for future opt-in compatibility work.
+    private void loadLegacyGameArtStartPage(java.util.List<D2SaveHeader.Info> characters) {
         if (startPage != null || startPageLoading) return;
         startPageLoading = true;
         final int gen = startPageGeneration;
