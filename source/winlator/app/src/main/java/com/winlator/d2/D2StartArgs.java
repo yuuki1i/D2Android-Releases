@@ -66,8 +66,12 @@ public final class D2StartArgs {
 
 
     public static String commandLine(boolean direct, boolean txt, boolean noSound, String free) {
-        StringBuilder sb = new StringBuilder(D2DX);
-        if (direct) sb.append(' ').append(DIRECT);
+        return commandLine(true, direct, txt, noSound, free);
+    }
+
+    public static String commandLine(boolean useD2DX, boolean direct, boolean txt, boolean noSound, String free) {
+        StringBuilder sb = new StringBuilder(useD2DX ? D2DX : DIRECT);
+        if (direct && useD2DX) sb.append(' ').append(DIRECT);
         if (txt) sb.append(' ').append(TXT);
         if (noSound) sb.append(' ').append(NO_SOUND);
         for (String token : parse(free).taken) sb.append(' ').append(token);
