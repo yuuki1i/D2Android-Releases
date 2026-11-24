@@ -33,7 +33,7 @@ public final class D2Text {
 
     private static Context wrap(Context context, String language) {
         Configuration config = new Configuration(context.getResources().getConfiguration());
-        config.setLocale(new Locale(language));
+        config.setLocale(D2AppLanguage.CHINESE.equals(language) ? new Locale("zh", "CN") : new Locale(language));
         return context.createConfigurationContext(config);
     }
 
