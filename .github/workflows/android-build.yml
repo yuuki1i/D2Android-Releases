@@ -38,6 +38,18 @@ jobs:
           test -x "$SDKMANAGER"
           yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses || true
           "$SDKMANAGER" --sdk_root="$ANDROID_HOME" 'platforms;android-35' 'build-tools;34.0.0' 'ndk;24.0.8215888' 'cmake;3.22.1'
+      - name: Install runtime build dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q gcc-aarch64-linux-gnu libasound2-dev libx11-dev python3-zstandard
+      - name: Cache D2Android runtime build sources
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/d2android
+          key: d2-runtime-v2-${{ hashFiles('source/tools/build-runtime.sh', 'source/tools/build-runtime.py', 'source/tools/binpatch.py', 'source/tools/fetch-winlator101.sh', 'source/tools/alsa-plugin/**', 'source/tools/patches/vortek-client-*.patch') }}
+      - name: Build and bundle Wine / Box64 runtime
+        working-directory: source
+        run: bash tools/build-runtime.sh
       - uses: actions/cache@v4
         with:
           path: |
