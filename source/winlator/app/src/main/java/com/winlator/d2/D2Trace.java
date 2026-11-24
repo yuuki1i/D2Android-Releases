@@ -43,6 +43,7 @@ public final class D2Trace {
         String line = TIME.format(new Date()) + " " + text;
         lines.addLast(line);
         D2SpieltestPort.trace(line);
+        D2PublicLogs.append(line);
         while (lines.size() > MAX_LINES) lines.removeFirst();
     }
 
