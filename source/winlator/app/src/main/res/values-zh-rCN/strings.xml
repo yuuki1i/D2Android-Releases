@@ -1380,4 +1380,91 @@
     <string name="rb_type_glov">手套</string>
     <string name="rb_type_boot">鞋子</string>
     <string name="rb_type_belt">腰带</string>
+    <string name="build_sorc_fire">法师 — 火系</string>
+    <string name="build_sorc_fire_strengths">• 火弹远程攻击，前期耗费低。
+• 12 级后火球可攻击整群怪物。
+• 陨石和火焰掌握使其在噩梦难度仍强势。</string>
+    <string name="build_sorc_fire_weaknesses">• 地狱中常见火免怪物难以处理。
+• 生命较少，需要保持距离。
+• 依赖法力药水。</string>
+    <string name="build_sorc_fire_tips">• 冰封装甲前期提供防御。
+• 温暖提高法力恢复速度。
+• 装备优先施法速度（FCR）和法力。</string>
+    <string name="build_sorc_cold">法师 — 冰系</string>
+    <string name="build_sorc_cold_strengths">• 冰系可减速大多数怪物。
+• 6 级冰尖柱伤害高。
+• 24 级暴风雪可覆盖大片区域。
+• 怪物移动变慢，比火系更安全。</string>
+    <string name="build_sorc_cold_weaknesses">• 冰免怪物难以处理。
+• 暴风雪对移动目标命中较差。
+• 24 级前主要应对单体。</string>
+    <string name="build_sorc_cold_tips">• 冰冻新星可在怪物靠近时脱身。
+• 冰封球、冰弹可强化暴风雪流派。</string>
+    <string name="build_barb_frenzy">野蛮人 — 狂乱</string>
+    <string name="build_barb_frenzy_strengths">• 生命高，近战且不太缺法力。
+• 双挥前期可连续攻击两次。
+• 24 级狂乱提高攻击和移动速度。
+• 战斗体制大幅提升生命与法力。</string>
+    <string name="build_barb_frenzy_weaknesses">• 需要近身，依赖治疗药水。
+• 需要两把好武器。
+• 对远程攻击者较吃力。</string>
+    <string name="build_barb_frenzy_tips">• 战斗前刷新战吼和战斗体制（应用可辅助）。
+• 剑类掌握适用于剑；其他武器类型需另配流派。</string>
+    <string name="build_necro_bone">死灵法师 — 骨系</string>
+    <string name="build_necro_bone_strengths">• 骨牙前期可攻击多个怪物。
+• 18 级骨矛可贯穿整排敌人。
+• 魔法伤害几乎没有免疫怪物。</string>
+    <string name="build_necro_bone_weaknesses">• 生命较少，需要保持距离。
+• 法力消耗较大。
+• 没有召唤物时较脆弱。</string>
+    <string name="build_necro_bone_tips">• 骨甲吸收伤害。
+• 伤害加深提高输出。
+• clay golem（黏土石魔）可牵制敌人。</string>
+    <string name="build_barb_whirlwind">野蛮人 — 旋风</string>
+    <string name="build_barb_whirlwind_strengths">• 穿过敌群并攻击沿途所有目标。
+• 剑类掌握让前期强势，远早于旋风解锁。
+• 战斗体制和战斗指挥提高生命、法力及技能。</string>
+    <string name="build_barb_whirlwind_weaknesses">• 旋风 30 级才解锁，之前使用专注。
+• 每次旋风消耗法力。
+• 需要高伤害且攻速快的武器。</string>
+    <string name="build_barb_whirlwind_tips">• 旋风穿过怪群，而不是只移动到怪物面前。
+• 1 点狂战士可应对物理免疫（魔法伤害）。
+• 跳跃可脱困，自然抵抗有助于噩梦和地狱。</string>
+    <string name="build_barb_berserk">野蛮人 — 狂战士</string>
+    <string name="build_barb_berserk_strengths">• 狂战士造成魔法伤害，几乎没有怪物抗性。
+• 嚎叫和大吼可提高伤害。
+• 可应对地狱难度物理免疫怪物。</string>
+    <string name="build_barb_berserk_weaknesses">• 攻击时防御降为 0。
+• 狂战士 30 级解锁，之前使用专注。
+• 每次攻击消耗法力。</string>
+    <string name="build_barb_berserk_tips">• 保持大吼和战斗体制（应用可辅助）。
+• 及时喝治疗药水，容易受到攻击。
+• 吸血武器有帮助。</string>
+    <string name="build_barb_leap">野蛮人 — 跳跃攻击</string>
+    <string name="build_barb_leap_strengths">• 跳至目标并从空中攻击，不必步行接近。
+• 跳跃技能提高伤害并可脱困。
+• 对 Boss 单次攻击伤害高。</string>
+    <string name="build_barb_leap_weaknesses">• 对大量怪物清场较慢。
+• 挂机暂不支持此流派，只会普通攻击。
+• 需要高伤害剑类武器。</string>
+    <string name="build_barb_leap_tips">• 在怪群间跳跃，避免聚集。
+• 战斗体制提高生命值。</string>
+    <string name="build_barb_throw">野蛮人 — 投掷</string>
+    <string name="build_barb_throw_strengths">• 双投可同时用两把武器远程攻击。
+• 投掷掌握提高伤害和致命一击。
+• 可保持与怪物的距离。</string>
+    <string name="build_barb_throw_weaknesses">• 投掷武器会耗尽，挂机暂不自动购买。
+• 需要两把优秀投掷武器。
+• 面对大量怪物较弱。</string>
+    <string name="build_barb_throw_tips">• 第二武器栏放置近战武器。
+• 在城镇铁匠处补充投掷武器。</string>
+    <string name="build_barb_warcry">野蛮人 — 战吼</string>
+    <string name="build_barb_warcry_strengths">• 战吼可伤害并眩晕周围所有怪物。
+• 嚎叫、嘲弄和战斗呐喊提高伤害。
+• 战斗体制与战斗指挥可帮助全队。</string>
+    <string name="build_barb_warcry_weaknesses">• 法力需求高，但配装不投入能量。
+• 30 级才解锁，之前使用双挥。
+• 对单个 Boss 伤害较低。</string>
+    <string name="build_barb_warcry_tips">• 站在怪群中，战吼可攻击四周。
+• 使用法力药水，装备法力属性有帮助。</string>
 </resources>
