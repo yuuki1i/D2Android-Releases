@@ -395,7 +395,7 @@ public class D2LaunchActivity extends D2Activity {
     private void chooseLaunchProgram() {
         File dir = GameLocator.gameDir(this);
         if (dir == null || !dir.isDirectory()) {
-            status(getString(R.string.launch_no_game));
+            status("请先选择游戏目录");
             return;
         }
         File[] files = dir.listFiles((folder, name) -> name.toLowerCase(java.util.Locale.ROOT).endsWith(".exe"));
