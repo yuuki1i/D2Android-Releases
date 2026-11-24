@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Modified by D2Android (changes 2026-10-09 to 2026-11-16). -->
 
 <resources>
-    <style name="AppThemeBase" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeBase" parent="@style/Theme.AppCompat.NoActionBar">
         <item name="tabSelectedTextColor">?attr/colorPrimaryText</item>
         <item name="tabTextColor">?attr/colorSecondaryText</item>
         <item name="android:windowBackground">?attr/colorPrimarySurface</item>
