@@ -386,12 +386,6 @@
     <string name="settings_mods_fail_ambiguous">压缩包内包含多个模组，请一次只导入一个。</string>
     <string name="settings_mods_fail_code">包含程序文件（%1$s）。含 DLL 的模组暂不支持。</string>
     <string name="settings_mods_fail_space">空间不足，还需 %1$s MB。</string>
-    <string name="channel_name">游戏运行中</string>
-    <string name="channel_description">保持暗黑 II 在后台运行，防止 Android 结束游戏进程。</string>
-    <string name="notification_paused">已暂停，点击继续游戏</string>
-    <string name="notification_running">运行中</string>
-    <string name="notification_save_and_quit">保存并退出</string>
-    <string name="notification_quit">退出</string>
     <string name="background_title">后台保护</string>
     <string name="background_intro">避免切换应用时 Android 结束游戏。每次暂停前都会保存；即使游戏被系统结束，也只会丢失当前位置。</string>
     <string name="background_notify">通知权限</string>
