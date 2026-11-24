@@ -1692,4 +1692,101 @@
     <string name="direct_loading_skip">点击：直接在城镇开始</string>
     <string name="game_in_app">应用内</string>
     <string name="game_in_app_from">应用内（从 %1$s 导入）</string>
+    <string name="menu_switch_character">切换角色</string>
+    <string name="char_menu_locked_nightmare_classic">未解锁：普通难度击败迪亚波罗</string>
+    <string name="char_menu_locked_hell_classic">未解锁：噩梦难度击败迪亚波罗</string>
+    <string name="char_menu_menu_only">仅可通过游戏菜单进入</string>
+    <string name="start_trademark">Diablo II 为暴雪娱乐商标。</string>
+    <string name="start_licenses">许可证</string>
+    <string name="start_mod_original_sub">原版游戏，点击切换模组</string>
+    <string name="big_stash_checking">检查中…</string>
+    <string name="big_stash_where_pages">%1$s：储物箱，第 %2$s 页</string>
+    <string name="big_stash_where_save">%1$s：储物箱</string>
+    <string name="big_stash_where_unreadable">%1$s：文件无法读取</string>
+    <string name="big_stash_shared">共享储物箱</string>
+    <string name="big_stash_shared_hc">共享储物箱（专家模式）</string>
+    <string name="big_stash_more">…以及另外 %1$d 项</string>
+    <string name="big_stash_kept_on_start">已重新启用大型储物箱：物品位于 6×8 格范围之外，普通储物箱会删除这些物品。
+%1$s</string>
+    <string name="stash_guard_plugy">PlugY</string>
+    <string name="stash_guard_mod_plugy">应用游戏辅助与 PlugY</string>
+    <string name="stash_guard_on_plugy">PlugY 保持开启。</string>
+    <string name="stash_guard_on_mod">应用游戏辅助保持开启。</string>
+    <string name="stash_guard_off_plugy">下次启动时关闭 PlugY。</string>
+    <string name="stash_guard_off_mod">下次启动时关闭应用游戏辅助。</string>
+    <string name="stash_guard_off_backup">%1$s 存档备份：%2$s</string>
+    <string name="stash_guard_failed">无法检查储物箱（%2$s）。%1$s</string>
+    <string name="stash_guard_game_running">请先退出游戏，储物箱内容可能仍在变化。%1$s</string>
+    <string name="stash_guard_kept_on_start">%1$s 和大型储物箱已重新开启：物品位于 6×8 格之外，关闭 PlugY 会导致删除。
+%2$s</string>
+    <string name="big_inv_where">%1$s：背包</string>
+    <string name="big_inv_failed">无法检查背包（%2$s）。%1$s</string>
+    <string name="big_inv_game_running">请先退出游戏，背包内容可能仍在变化。%1$s</string>
+    <string name="big_inv_kept_on_start">已重新启用大型背包：物品位于第 5–8 行，关闭大型背包会删除这些物品。
+%1$s</string>
+    <string name="big_inv_start_refused">游戏无法启动：背包第 5–8 行有物品，而此游戏语言不支持大型背包。关闭后物品会被删除。请在支持大型背包的角色中将物品移至前四行：
+%1$s</string>
+    <string name="launch_kept_on_title">已重新开启</string>
+    <string name="big_inv_kept_on_start_mod">大型背包和应用游戏辅助已重新开启：物品位于背包第 5–8 行，关闭后会被删除。
+%1$s</string>
+    <string name="big_inv_reason">背包第 5–8 行仍有物品，关闭大型背包后游戏会静默删除。请先移至前四行或储物箱：</string>
+    <string name="big_inv_off">下次启动时关闭大型背包。</string>
+    <string name="big_inv_on">大型背包保持开启。</string>
+    <string name="stash_guard_reason">储物箱 6×8 格范围外仍有物品，关闭 PlugY 后游戏会静默删除。请先移出外围格子（需开启大型储物箱）：</string>
+    <string name="big_stash_reason">6×8 格范围外仍有物品，关闭大型储物箱后游戏会静默删除。请先移出外围格子：</string>
+    <string name="big_stash_off">下次启动时关闭大型储物箱。</string>
+    <string name="big_stash_on">大型储物箱保持开启。</string>
+    <string name="telemetry_title">发送匿名统计吗？</string>
+    <string name="telemetry_intro">帮助我们改善 D2Android 在更多手机上的运行表现。最多每天一次及崩溃后，向欧盟 Aptabase 服务器发送简短数据。未经同意不会发送。</string>
+    <string name="telemetry_in">包含的数据</string>
+    <string name="telemetry_in_points">手机厂商、型号、内存（取整）、芯片、图形芯片和驱动版本（OpenGL/Vulkan）、刷新率、Android 和应用版本、语言、手柄
+设备检查结果、图形路径、音频输出及游戏音频是否启动
+部分设置：帧率、画面尺寸、瞄准辅助、继续游戏
+角色仅统计数量、职业、等级（每 5 级取整）、章节、难度、专家模式
+游戏时长、次数、结束方式及游戏内存使用
+崩溃后发送固定代码、发生位置和运行时长</string>
+    <string name="telemetry_out">不包含的数据</string>
+    <string name="telemetry_out_points">不包含角色名称、存档、文件、日志
+不包含设备 ID 或可识别个人身份的信息</string>
+    <string name="telemetry_footer">可随时在“设置 → 帮助与信息”中更改。</string>
+    <string name="telemetry_yes">同意发送</string>
+    <string name="telemetry_no">不同意</string>
+    <string name="win_info_shop">双击：购买 · 长按：数量
+背包中双击可出售</string>
+    <string name="win_info_shop_pad">X：购买一个 · 长按 X：选择数量
+背包中 X 可出售</string>
+    <string name="win_info_merc">点击：装备/卸下
+拖动：查看属性</string>
+    <string name="win_info_merc_pad">A：装备/卸下</string>
+    <string name="win_info_stash">点击：取出/放入
+双击：移至背包
+拖动：查看属性</string>
+    <string name="win_info_stash_pad">A：取出/放入</string>
+    <string name="win_info_cube">点击：放入/取出
+下方按钮：转化
+左下角书本：配方</string>
+    <string name="win_info_cube_pad">A：放入/取出
+下方按钮：转化</string>
+    <string name="win_info_inv">点击：取出/放下
+长按：使用 · 拖动：查看属性
+双击：药水放入腰带</string>
+    <string name="win_info_inv_stash">点击：取出/放下
+长按：使用 · 拖动：查看属性
+双击：移至储物箱</string>
+    <string name="win_info_inv_pad">A：取出/放下 · X：使用
+长按 R3：整理</string>
+    <string name="move_progress">正在将游戏移入应用：%1$d/%2$d MB</string>
+    <string name="move_no_space">空间不足，无法将游戏移入应用：需要 %1$s，可用 %2$s。</string>
+    <string name="move_failed">无法将游戏移入应用（%1$s）。下次启动会重试。</string>
+    <string name="saves_backups_none">暂无备份。</string>
+    <string name="move_cleanup_title">删除旧游戏文件吗？</string>
+    <string name="move_cleanup_message">游戏现已保存在应用中。无需保留 %1$s 中的旧文件（%2$s）。仅删除旧游戏文件，存档（包括 save.alt 等目录）、模组和其他个人文件都会保留。</string>
+    <string name="move_cleanup_delete">删除</string>
+    <string name="move_cleanup_done">已删除旧游戏文件（释放 %1$s）。</string>
+    <string name="saves_from_download_ask">将 %1$s 中的存档替换应用内存档。应用会先备份当前存档。</string>
+    <string name="saves_from_download_none">下载目录中没有存档。</string>
+    <string name="saves_from_download_done">已从下载目录导入存档。</string>
+    <string name="move_done_hint">游戏和存档已保存在应用中。建议通过“设置 → 存档管理 → 分享存档”备份。</string>
+    <string name="move_pending">返回开始页面时会将其复制到应用中：%1$s</string>
+    <string name="move_checking">正在检查副本：%1$d/%2$d MB</string>
 </resources>
