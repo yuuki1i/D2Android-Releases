@@ -141,7 +141,6 @@ public final class GameVersion {
         catch (IOException e) {
             return new Result(Status.NOT_A_GAME_DIR, dir, e.getMessage());
         }
-        return new Result(Status.OK, dir, "1.13d");
     }
 
     private static boolean isOptional(String name) {
