@@ -70,6 +70,10 @@ final class D2GameFont {
 
 
     Img render(String text, int rgb, int gainPercent) {
+        // The bundled Diablo bitmap fonts contain Latin glyphs only. Never map
+        // unsupported CJK text to '?' — render the complete string with Android's
+        // native font so every launcher/settings label remains readable.
+        if (containsCjk(text)) return renderNative(text, rgb, gainPercent);
         text = D2FontText.map(text);
         int w = Math.max(1, width(text)), h = Math.max(1, height);
         int[] out = new int[w * h];
@@ -91,6 +95,37 @@ final class D2GameFont {
             x += widths[c];
         }
         return new Img(w, h, out);
+    }
+
+    private static boolean containsCjk(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if ((c >= 0x2E80 && c <= 0x9FFF) || (c >= 0xF900 && c <= 0xFAFF)
+                || (c >= 0xAC00 && c <= 0xD7AF) || (c >= 0x3040 && c <= 0x30FF)) return true;
+        }
+        return false;
+    }
+
+    private Img renderNative(String text, int rgb, int gainPercent) {
+        android.graphics.Paint paint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+        float targetHeight = Math.max(12f, height * 0.92f);
+        paint.setTypeface(android.graphics.Typeface.create(android.graphics.Typeface.DEFAULT,
+            android.graphics.Typeface.NORMAL));
+        paint.setTextSize(targetHeight);
+        android.graphics.Rect bounds = new android.graphics.Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        int w = Math.max(1, (int)Math.ceil(paint.measureText(text)) + 2);
+        int h = Math.max(Math.max(1, height), bounds.height() + 2);
+        android.graphics.Bitmap bitmap = android.graphics.Bitmap.createBitmap(w, h, android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas canvas = new android.graphics.Canvas(bitmap);
+        int cr = rgb >> 16 & 0xFF, cg = rgb >> 8 & 0xFF, cb = rgb & 0xFF;
+        int gain = Math.max(0, Math.min(100, gainPercent));
+        paint.setColor(android.graphics.Color.rgb(cr * gain / 100, cg * gain / 100, cb * gain / 100));
+        canvas.drawText(text, 1, Math.max(1, (h - bounds.height()) / 2f - bounds.top), paint);
+        int[] pixels = new int[w * h];
+        bitmap.getPixels(pixels, 0, w, 0, 0, w, h);
+        bitmap.recycle();
+        return new Img(w, h, pixels);
     }
 
 
