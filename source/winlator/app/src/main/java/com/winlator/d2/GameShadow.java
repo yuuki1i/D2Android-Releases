@@ -88,11 +88,14 @@ public final class GameShadow {
 
 
     public static File prepare(Context context, File driveC, File gameDir, String d2dxCfg) throws IOException {
-        return prepare(context, driveC, gameDir, d2dxCfg, D2Mods.active(context));
+        return prepare(context, driveC, gameDir, d2dxCfg, D2Mods.active(context), true);
     }
 
-
     public static File prepare(Context context, File driveC, File gameDir, String d2dxCfg, D2ModInfo.Mod mod) throws IOException {
+        return prepare(context, driveC, gameDir, d2dxCfg, mod, true);
+    }
+
+    public static File prepare(Context context, File driveC, File gameDir, String d2dxCfg, D2ModInfo.Mod mod, boolean useD2DX) throws IOException {
 
 
         File saveDir = mod != null ? mod.saves() : D2Saves.saveDir(gameDir);
@@ -118,12 +121,16 @@ public final class GameShadow {
 
         int ingame = D2IngameResolution.read(shadowDir);
 
-
-        FileUtils.copy(context, D2Settings.vortek(context)
-            ? d2dxAsset(D2GpuPath.tier(D2Runtime.totalMem(context)).atlasLayers) : D2DX_ASSET, glide);
-        if (!glide.isFile()) throw new IOException("D2DX fehlt in dieser App-Version");
-
-        if (ingame != D2IngameResolution.MODE_WIDE) D2Trace.log(D2IngameResolution.apply(glide, ingame));
+        if (useD2DX) {
+            FileUtils.copy(context, D2Settings.vortek(context)
+                ? d2dxAsset(D2GpuPath.tier(D2Runtime.totalMem(context)).atlasLayers) : D2DX_ASSET, glide);
+            if (!glide.isFile()) throw new IOException("D2DX is not bundled in this app version");
+            if (ingame != D2IngameResolution.MODE_WIDE) D2Trace.log(D2IngameResolution.apply(glide, ingame));
+        }
+        else {
+            if (glide.exists() && !glide.delete()) D2Trace.log("could not remove stale D2DX glide3x.dll");
+            D2Trace.log("D2DX disabled; launch using Diablo II DirectDraw path");
+        }
 
 
         if (isModBundled(context)) {
@@ -135,7 +142,7 @@ public final class GameShadow {
         if (plugy) plugyStatsHint(context, new File(new File(shadowDir, "PlugY"), D2PlugYTexts.STRINGS_FILE));
 
 
-        FileUtils.writeString(new File(shadowDir, "d2dx.cfg"), d2dxCfg != null ? d2dxCfg : defaultD2DXConfig());
+        if (useD2DX) FileUtils.writeString(new File(shadowDir, "d2dx.cfg"), d2dxCfg != null ? d2dxCfg : defaultD2DXConfig());
 
 
         java.util.List<String> laid = mod == null ? java.util.Collections.emptyList()
