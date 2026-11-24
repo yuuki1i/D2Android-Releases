@@ -137,7 +137,7 @@ public final class D2Settings {
 
     static String gameArgs(Context context, D2ModInfo.Mod mod) {
         String free = prefs(context).getString(mod == null ? KEY_ARGS_FREE : KEY_ARGS_FREE + "@" + mod.id, "");
-        return D2StartArgs.commandLine(argSwitch(context, KEY_ARG_DIRECT, mod), argSwitch(context, KEY_ARG_TXT, mod),
+        return D2StartArgs.commandLine(useD2DX(context), argSwitch(context, KEY_ARG_DIRECT, mod), argSwitch(context, KEY_ARG_TXT, mod),
             argSwitch(context, KEY_ARG_NS, mod), free);
     }
 
