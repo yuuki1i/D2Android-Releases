@@ -1919,9 +1919,8 @@ public class D2LaunchActivity extends D2Activity {
         }
         for (int which : new int[]{AlertDialog.BUTTON_POSITIVE, AlertDialog.BUTTON_NEGATIVE}) {
             Button button = dialog.getButton(which);
-            if (button != null) button.setTextColor(D2Style.GOLD);
+            if (button != null) D2Style.button(button, getResources().getDisplayMetrics().density);
         }
-        D2ButtonTiers.dialog(dialog, dialog.getButton(AlertDialog.BUTTON_POSITIVE), dialog.getButton(AlertDialog.BUTTON_NEGATIVE));
         return dialog;
     }
 
