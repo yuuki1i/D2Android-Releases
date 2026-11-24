@@ -81,6 +81,8 @@ public class D2TouchOverlay extends View {
 
     private static final int ICON_TEXT = -1, ICON_RUN = 100, ICON_ARROW = 101, ICON_LINES = 102, ICON_PAUSE = 103, ICON_PORTAL = 104,
         ICON_CUBE = 105;
+    // Minimal glass touch palette: low-contrast idle controls, clear pressed feedback.
+    private static final int TOUCH_ACCENT = 0xFF70D6E8, TOUCH_IDLE = 0xFF14232C, TOUCH_TEXT = 0xFFEAF5F7;
 
     private static final int SKILL_BOOK_OF_TOWNPORTAL = 220;
 
@@ -2058,7 +2060,7 @@ public class D2TouchOverlay extends View {
             canvas.drawCircle(button.cx, button.cy, iconR, strokePaint);
         }
         if (active) {
-            strokePaint.setColor(Color.rgb(236, 201, 127));
+            strokePaint.setColor(TOUCH_ACCENT);
             strokePaint.setStrokeWidth(3 * dp);
             canvas.drawCircle(button.cx, button.cy, button.r + 1.5f * dp, strokePaint);
         }
@@ -2106,7 +2108,7 @@ public class D2TouchOverlay extends View {
         D2Hud graphics = hud;
         if (graphics != null) {
             float k = menuTextScale() * (button.kind == KIND_SKILLSET ? 1.5f : 1f);
-            graphics.drawText(canvas, label, button.cx, button.cy, k, pressed ? 0xB0B0B0 : 0xECD696);
+            graphics.drawText(canvas, label, button.cx, button.cy, k, pressed ? TOUCH_ACCENT : TOUCH_TEXT);
             return;
         }
         textPaint.setTextSize(13 * dp);
