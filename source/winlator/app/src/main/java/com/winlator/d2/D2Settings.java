@@ -75,6 +75,19 @@ public final class D2Settings {
     }
 
 
+    private static final String KEY_LAUNCH_PROGRAM = "launchProgram";
+
+    public static String launchProgram(Context context) {
+        String value = prefs(context).getString(KEY_LAUNCH_PROGRAM, "Game.exe");
+        if (value == null || value.isEmpty() || value.contains("/") || value.contains("\\") || !value.toLowerCase(java.util.Locale.ROOT).endsWith(".exe")) return "Game.exe";
+        return value;
+    }
+
+    public static void setLaunchProgram(Context context, String program) {
+        if (program == null || program.contains("/") || program.contains("\\") || !program.toLowerCase(java.util.Locale.ROOT).endsWith(".exe")) return;
+        prefs(context).edit().putString(KEY_LAUNCH_PROGRAM, program).apply();
+    }
+
     static final String KEY_ARG_DIRECT = "argDirect", KEY_ARG_TXT = "argTxt", KEY_ARG_NS = "argNs", KEY_ARGS_FREE = "argsFree";
 
 
