@@ -16,14 +16,14 @@ import android.widget.TextView;
 
 
 public final class D2Style {
-    public static final int BACKGROUND = 0xFF080E18;
-    public static final int FRAME = 0xAA4D839B;
-    public static final int TEXT = 0xFFE5EDF5;
-    public static final int HINT = 0xFF9BAEC0;
+    public static volatile int BACKGROUND = 0xFF080E18;
+    public static volatile int FRAME = 0xAA4D839B;
+    public static volatile int TEXT = 0xFFE5EDF5;
+    public static volatile int HINT = 0xFF9BAEC0;
 
-    public static final int BUTTON = 0xE0162638;
+    public static volatile int BUTTON = 0xE0162638;
 
-    public static final int GOLD = 0xFF78D8F0;
+    public static volatile int GOLD = 0xFF78D8F0;
 
     public static final int GREEN = 0xFF00FF00;
     public static final int RED = 0xFFFF4D4D;
