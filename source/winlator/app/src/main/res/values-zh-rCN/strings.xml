@@ -339,7 +339,7 @@
     <string name="settings_mods_start_hint">下次启动对当前选择生效（每个模组独立配置）。-3dfx（图形模式）始终优先。</string>
     <string name="settings_mods_by_hand">自行复制到游戏目录的模组会与原版共享存档。返回原版时请关闭这些参数。</string>
     <string name="settings_arg_direct_hint">优先读取游戏目录 data 文件夹中的文件，而非压缩包。Enjoy-SP 等数据模组需要此项。</string>
-    <string name="settings_arg_txt_hint">启动时读取 .txt 表格并生成 .bin（写入 data\global\excel），通常与 -direct 配合使用。</string>
+    <string name="settings_arg_txt_hint">启动时读取 .txt 表格并生成 .bin（写入 data\\global\\excel），通常与 -direct 配合使用。</string>
     <string name="settings_arg_ns_hint">启动时关闭音效和音乐。</string>
     <string name="settings_args_free_hint">高级选项：其他启动参数，以空格分隔。</string>
     <string name="settings_args_free_example">例如 -lq</string>
