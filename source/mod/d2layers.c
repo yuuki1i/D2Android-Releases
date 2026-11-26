@@ -25,9 +25,6 @@
 #define CMD_LAYER            33
 #define CAP2_LAYERS          0x40
 #define CAP2_LAYERS_L        0x80
-#define RVA_LoadCell         0xA9480
-#define RVA_LoadCellCaller   0x19238
-#define RVA_CellDrawImport   0xCFCE
 #define ORD_GfxDrawCell      10042
 #define ORD_GfxDrawRect      10028
 #define LYR_CELLS            192

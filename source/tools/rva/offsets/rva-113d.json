@@ -1,0 +1,2024 @@
+{
+  "image": "client",
+  "count": 243,
+  "defines": [
+    {
+      "name": "RVA_InvTable",
+      "value": 674988,
+      "file": "d2biginv.c",
+      "line": 26,
+      "module": "D2Common.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_InvCount",
+      "value": 674984,
+      "file": "d2biginv.c",
+      "line": 27,
+      "module": "D2Common.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_InvTableStore",
+      "value": 445481,
+      "file": "d2biginv.c",
+      "line": 28,
+      "module": "D2Common.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PanelLoadCall",
+      "value": 450547,
+      "file": "d2biginv.c",
+      "line": 29,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PanelPath6",
+      "value": 875184,
+      "file": "d2biginv.c",
+      "line": 30,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PanelPath",
+      "value": 875168,
+      "file": "d2biginv.c",
+      "line": 31,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PanelCell",
+      "value": 1063776,
+      "file": "d2biginv.c",
+      "line": 32,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_UiPicture",
+      "value": 102896,
+      "file": "d2biginv.c",
+      "line": 33,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawHoverCall",
+      "value": 120721,
+      "file": "d2compare.c",
+      "line": 16,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawHoverThunk",
+      "value": 54110,
+      "file": "d2compare.c",
+      "line": 17,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ItemHover",
+      "value": 620576,
+      "file": "d2compare.c",
+      "line": 18,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverGrid",
+      "value": 1166104,
+      "file": "d2compare.c",
+      "line": 19,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverBody",
+      "value": 1166108,
+      "file": "d2compare.c",
+      "line": 20,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverItem",
+      "value": 1166120,
+      "file": "d2compare.c",
+      "line": 21,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverItem2",
+      "value": 1166124,
+      "file": "d2compare.c",
+      "line": 22,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverSlot",
+      "value": 1166168,
+      "file": "d2compare.c",
+      "line": 23,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_TradeMode",
+      "value": 1166116,
+      "file": "d2compare.c",
+      "line": 24,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HoverAnchor",
+      "value": 976028,
+      "file": "d2compare.c",
+      "line": 25,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BodySlots",
+      "value": 1166224,
+      "file": "d2compare.c",
+      "line": 26,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawUnitInfoCall",
+      "value": 119895,
+      "file": "d2damage.c",
+      "line": 43,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawUnitInfo",
+      "value": 108336,
+      "file": "d2damage.c",
+      "line": 44,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameDamage",
+      "value": 572592,
+      "file": "d2damage.c",
+      "line": 45,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameDamageLife",
+      "value": 572978,
+      "file": "d2damage.c",
+      "line": 46,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameDamageSet",
+      "value": 573012,
+      "file": "d2damage.c",
+      "line": 47,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameSetStatThunk",
+      "value": 41924,
+      "file": "d2damage.c",
+      "line": 48,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameRegen",
+      "value": 549776,
+      "file": "d2damage.c",
+      "line": 49,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameRegenSet",
+      "value": 550042,
+      "file": "d2damage.c",
+      "line": 50,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GamePlayerRegen",
+      "value": 597088,
+      "file": "d2damage.c",
+      "line": 51,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GamePlayerRegenSet",
+      "value": 597186,
+      "file": "d2damage.c",
+      "line": 52,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameStateListThunk",
+      "value": 42140,
+      "file": "d2damage.c",
+      "line": 53,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameListStatThunk",
+      "value": 43388,
+      "file": "d2damage.c",
+      "line": 55,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchSinglePlayer",
+      "value": 80384,
+      "file": "d2direct.c",
+      "line": 33,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchCharOk",
+      "value": 104912,
+      "file": "d2direct.c",
+      "line": 34,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchDiffPress0",
+      "value": 105808,
+      "file": "d2direct.c",
+      "line": 35,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchStartGame",
+      "value": 104752,
+      "file": "d2direct.c",
+      "line": 36,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchCharList",
+      "value": 154336,
+      "file": "d2direct.c",
+      "line": 37,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchCharSelected",
+      "value": 134104,
+      "file": "d2direct.c",
+      "line": 38,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchModeVar",
+      "value": 154440,
+      "file": "d2direct.c",
+      "line": 39,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchBusyVar",
+      "value": 154308,
+      "file": "d2direct.c",
+      "line": 40,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchNewChar",
+      "value": 70048,
+      "file": "d2direct.c",
+      "line": 41,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchToClasses",
+      "value": 63536,
+      "file": "d2direct.c",
+      "line": 42,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchTitlePress",
+      "value": 70032,
+      "file": "d2direct.c",
+      "line": 43,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchToMainMenu",
+      "value": 67488,
+      "file": "d2direct.c",
+      "line": 44,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_WinFirstControl",
+      "value": 580404,
+      "file": "d2direct.c",
+      "line": 53,
+      "module": "D2Win.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GoldDialogAction",
+      "value": 1165420,
+      "file": "d2gold.c",
+      "line": 16,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GoldDialogControls",
+      "value": 1165428,
+      "file": "d2gold.c",
+      "line": 17,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GoldDialogAmount",
+      "value": 1168744,
+      "file": "d2gold.c",
+      "line": 18,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetItemName",
+      "value": 612544,
+      "file": "d2items.c",
+      "line": 12,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetItemNameEnd",
+      "value": 616309,
+      "file": "d2items.c",
+      "line": 13,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ItemToBeltSite",
+      "value": 635671,
+      "file": "d2items.c",
+      "line": 14,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SendPacket5",
+      "value": 748080,
+      "file": "d2items.c",
+      "line": 15,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LabelItemCheck",
+      "value": 321038,
+      "file": "d2labels.c",
+      "line": 10,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LabelItemJump",
+      "value": 321041,
+      "file": "d2labels.c",
+      "line": 11,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LabelItemNext",
+      "value": 321047,
+      "file": "d2labels.c",
+      "line": 12,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LabelUnitSkip",
+      "value": 321961,
+      "file": "d2labels.c",
+      "line": 13,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LoadCell",
+      "value": 693376,
+      "file": "d2layers.c",
+      "line": 28,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LoadCellCaller",
+      "value": 102968,
+      "file": "d2layers.c",
+      "line": 29,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_CellDrawImport",
+      "value": 53198,
+      "file": "d2layers.c",
+      "line": 30,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetPlayerUnit",
+      "value": 398272,
+      "file": "d2mod.c",
+      "line": 33,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetUiVar_I",
+      "value": 97360,
+      "file": "d2mod.c",
+      "line": 34,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetSelectedUnit",
+      "value": 94848,
+      "file": "d2mod.c",
+      "line": 35,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SetSelectedUnit_I",
+      "value": 94304,
+      "file": "d2mod.c",
+      "line": 36,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ClickMap",
+      "value": 177184,
+      "file": "d2mod.c",
+      "line": 37,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ClickTakenThisFrame",
+      "value": 1168076,
+      "file": "d2mod.c",
+      "line": 43,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ClickTakenCheck",
+      "value": 177199,
+      "file": "d2mod.c",
+      "line": 44,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_FindServerSideUnit",
+      "value": 401616,
+      "file": "d2mod.c",
+      "line": 45,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_FindClientSideUnit",
+      "value": 401584,
+      "file": "d2mod.c",
+      "line": 46,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ViewportX",
+      "value": 1075268,
+      "file": "d2mod.c",
+      "line": 47,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ViewportY",
+      "value": 1075264,
+      "file": "d2mod.c",
+      "line": 48,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AlwaysRun",
+      "value": 1167924,
+      "file": "d2mod.c",
+      "line": 49,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetMouseXOffset",
+      "value": 375840,
+      "file": "d2mod.c",
+      "line": 50,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetUnitX",
+      "value": 4624,
+      "file": "d2mod.c",
+      "line": 51,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetUnitY",
+      "value": 4672,
+      "file": "d2mod.c",
+      "line": 52,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetUnitName_I",
+      "value": 402144,
+      "file": "d2mod.c",
+      "line": 53,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetMouseYOffset",
+      "value": 375856,
+      "file": "d2mod.c",
+      "line": 54,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ScreenSizeX",
+      "value": 1011764,
+      "file": "d2mod.c",
+      "line": 55,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ScreenSizeY",
+      "value": 1011768,
+      "file": "d2mod.c",
+      "line": 56,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_MouseX",
+      "value": 1165648,
+      "file": "d2mod.c",
+      "line": 57,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_MouseY",
+      "value": 1165644,
+      "file": "d2mod.c",
+      "line": 58,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawStatueLeft",
+      "value": 447817,
+      "file": "d2mod.c",
+      "line": 60,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawStatueRight",
+      "value": 448038,
+      "file": "d2mod.c",
+      "line": 61,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_GfxDrawThunk",
+      "value": 53198,
+      "file": "d2mod.c",
+      "line": 62,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawCursorCall",
+      "value": 85753,
+      "file": "d2mod.c",
+      "line": 63,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawCursorCall2",
+      "value": 85367,
+      "file": "d2mod.c",
+      "line": 64,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawHelpButtonCall",
+      "value": 120263,
+      "file": "d2mod.c",
+      "line": 69,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawHelpButton",
+      "value": 702512,
+      "file": "d2mod.c",
+      "line": 70,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawQuestButtonCall",
+      "value": 120316,
+      "file": "d2mod.c",
+      "line": 71,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawQuestButton",
+      "value": 577264,
+      "file": "d2mod.c",
+      "line": 72,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_UiVarHelpButton",
+      "value": 1165592,
+      "file": "d2mod.c",
+      "line": 73,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HelpButtonDown",
+      "value": 697920,
+      "file": "d2mod.c",
+      "line": 77,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_HelpButtonUp",
+      "value": 701985,
+      "file": "d2mod.c",
+      "line": 78,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_HelpButtonLock",
+      "value": 1166056,
+      "file": "d2mod.c",
+      "line": 79,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestButtonDownHit",
+      "value": 575023,
+      "file": "d2mod.c",
+      "line": 81,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_QuestButtonUpHit",
+      "value": 582160,
+      "file": "d2mod.c",
+      "line": 82,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_QuestButtonHit",
+      "value": 570320,
+      "file": "d2mod.c",
+      "line": 83,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawManaOrbCall",
+      "value": 455497,
+      "file": "d2mod.c",
+      "line": 84,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawLifeOrbCall",
+      "value": 455502,
+      "file": "d2mod.c",
+      "line": 85,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawManaOrb",
+      "value": 450016,
+      "file": "d2mod.c",
+      "line": 86,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawLifeOrb",
+      "value": 449696,
+      "file": "d2mod.c",
+      "line": 87,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawDurabilityCall",
+      "value": 119937,
+      "file": "d2mod.c",
+      "line": 88,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_DrawDurability",
+      "value": 452944,
+      "file": "d2mod.c",
+      "line": 89,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_UiVarGameMenu",
+      "value": 1165492,
+      "file": "d2mod.c",
+      "line": 95,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_UiVars",
+      "value": 1165456,
+      "file": "d2mod.c",
+      "line": 98,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_EscCloseList",
+      "value": 868472,
+      "file": "d2mod.c",
+      "line": 103,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_EscCloseListRead",
+      "value": 99613,
+      "file": "d2mod.c",
+      "line": 104,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LabelsTipClearCall",
+      "value": 322107,
+      "file": "d2mod.c",
+      "line": 108,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SetHoverTextThunk",
+      "value": 53900,
+      "file": "d2mod.c",
+      "line": 109,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetItemUseSound",
+      "value": 760368,
+      "file": "d2mod.c",
+      "line": 110,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlaySound",
+      "value": 156272,
+      "file": "d2mod.c",
+      "line": 111,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SoundCheckVar",
+      "value": 1168112,
+      "file": "d2mod.c",
+      "line": 112,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcMenuTable",
+      "value": 989840,
+      "file": "d2mod.c",
+      "line": 115,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcMenuCount",
+      "value": 991712,
+      "file": "d2mod.c",
+      "line": 116,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcMenuSearch",
+      "value": 505216,
+      "file": "d2mod.c",
+      "line": 117,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetCurrentNpc",
+      "value": 495824,
+      "file": "d2mod.c",
+      "line": 118,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GetLocaleText",
+      "value": 53516,
+      "file": "d2mod.c",
+      "line": 119,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SetPlayersThunk",
+      "value": 53084,
+      "file": "d2mod.c",
+      "line": 120,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SetPlayersImport",
+      "value": 850540,
+      "file": "d2mod.c",
+      "line": 121,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GamePlayers",
+      "value": 1121348,
+      "file": "d2mod.c",
+      "line": 122,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameType",
+      "value": 1167836,
+      "file": "d2mod.c",
+      "line": 123,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcDialog",
+      "value": 1055320,
+      "file": "d2mod.c",
+      "line": 124,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawGameMenuCall",
+      "value": 119871,
+      "file": "d2mod.c",
+      "line": 126,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawGameMenu",
+      "value": 799952,
+      "file": "d2mod.c",
+      "line": 127,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HotkeySkill",
+      "value": 1053712,
+      "file": "d2mod.c",
+      "line": 129,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HotkeyLeft",
+      "value": 1053952,
+      "file": "d2mod.c",
+      "line": 130,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameRunDrainCall",
+      "value": 602580,
+      "file": "d2mod.c",
+      "line": 133,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameRunDrain",
+      "value": 596784,
+      "file": "d2mod.c",
+      "line": 134,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GfxLoadRenderer",
+      "value": 43523,
+      "file": "d2mod.c",
+      "line": 146,
+      "module": "D2Gfx.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GfxLoadLibraryIat",
+      "value": 53532,
+      "file": "d2mod.c",
+      "line": 147,
+      "module": "D2Gfx.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_StormStreamFill",
+      "value": 177696,
+      "file": "d2mod.c",
+      "line": 153,
+      "module": "Storm.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_StormStreamFillRead",
+      "value": 177714,
+      "file": "d2mod.c",
+      "line": 154,
+      "module": "Storm.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_StormStreamFillExit",
+      "value": 178027,
+      "file": "d2mod.c",
+      "line": 155,
+      "module": "Storm.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_StormStreamLock",
+      "value": 350516,
+      "file": "d2mod.c",
+      "line": 156,
+      "module": "Storm.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameSaveFlag",
+      "value": 779988,
+      "file": "d2mod.c",
+      "line": 159,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GamePlugYPacket",
+      "value": 423619,
+      "file": "d2mod.c",
+      "line": 161,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_RevealAutomapRoom",
+      "value": 471392,
+      "file": "d2mod.c",
+      "line": 164,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_InitAutomapLayer",
+      "value": 472016,
+      "file": "d2mod.c",
+      "line": 165,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NewAutomapCell",
+      "value": 459712,
+      "file": "d2mod.c",
+      "line": 166,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AddAutomapCell",
+      "value": 466592,
+      "file": "d2mod.c",
+      "line": 167,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapCellPool",
+      "value": 1167136,
+      "file": "d2mod.c",
+      "line": 168,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapLayerList",
+      "value": 1167140,
+      "file": "d2mod.c",
+      "line": 169,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapLayer",
+      "value": 1167144,
+      "file": "d2mod.c",
+      "line": 170,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapDivisor",
+      "value": 996600,
+      "file": "d2mod.c",
+      "line": 171,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapOffsetX",
+      "value": 1167196,
+      "file": "d2mod.c",
+      "line": 172,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapOffsetY",
+      "value": 1167200,
+      "file": "d2mod.c",
+      "line": 173,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapMode",
+      "value": 1167124,
+      "file": "d2mod.c",
+      "line": 174,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapCorner",
+      "value": 1167268,
+      "file": "d2mod.c",
+      "line": 175,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_AutomapCornerTop",
+      "value": 1166900,
+      "file": "d2mod.c",
+      "line": 176,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawAutomapCall",
+      "value": 119964,
+      "file": "d2mod.c",
+      "line": 177,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawAutomap",
+      "value": 472096,
+      "file": "d2mod.c",
+      "line": 178,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ClickBlocked",
+      "value": 1165492,
+      "file": "d2mod.c",
+      "line": 1430,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlugYWindowStartX",
+      "value": 203592,
+      "file": "d2mod.c",
+      "line": 2095,
+      "module": "PlugY.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_WorldUiCall",
+      "value": 283595,
+      "file": "d2mod.c",
+      "line": 4552,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_WorldUi",
+      "value": 119776,
+      "file": "d2mod.c",
+      "line": 4553,
+      "module": "D2Client.dll/D2Game.dll/PlugY.dll",
+      "module_confidence": "conflict"
+    },
+    {
+      "name": "RVA_WorldUiFlag",
+      "value": 1165528,
+      "file": "d2mod.c",
+      "line": 4554,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_WinFocusedControl",
+      "value": 580420,
+      "file": "d2mod.c",
+      "line": 5077,
+      "module": "D2Win.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchBattleNet",
+      "value": 74576,
+      "file": "d2mod.c",
+      "line": 5140,
+      "module": "D2Launch.dll",
+      "module_confidence": "prefix"
+    },
+    {
+      "name": "RVA_LaunchMultiplayer",
+      "value": 63376,
+      "file": "d2mod.c",
+      "line": 5141,
+      "module": "D2Launch.dll",
+      "module_confidence": "prefix"
+    },
+    {
+      "name": "RVA_LaunchExitEntry",
+      "value": 135696,
+      "file": "d2mod.c",
+      "line": 5193,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchExit",
+      "value": 42368,
+      "file": "d2mod.c",
+      "line": 5194,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlayerUnitVar",
+      "value": 1167440,
+      "file": "d2mod.c",
+      "line": 5228,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LaunchMovieCheck",
+      "value": 74004,
+      "file": "d2mod.c",
+      "line": 5423,
+      "module": "D2Launch.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DialogTop",
+      "value": 1168772,
+      "file": "d2npcdialog.c",
+      "line": 14,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DialogTopStore",
+      "value": 89562,
+      "file": "d2npcdialog.c",
+      "line": 15,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DialogAddLine",
+      "value": 87216,
+      "file": "d2npcdialog.c",
+      "line": 16,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DialogClickCall",
+      "value": 88354,
+      "file": "d2npcdialog.c",
+      "line": 17,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcLists",
+      "value": 1054927,
+      "file": "d2npcdialog.c",
+      "line": 18,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_NpcListMain",
+      "value": 1054939,
+      "file": "d2npcdialog.c",
+      "line": 19,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcListTopics",
+      "value": 1054943,
+      "file": "d2npcdialog.c",
+      "line": 20,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcListMainStore",
+      "value": 505066,
+      "file": "d2npcdialog.c",
+      "line": 21,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_NpcListTopicsStore",
+      "value": 509713,
+      "file": "d2npcdialog.c",
+      "line": 22,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_D2DXFpsFix",
+      "value": 286369,
+      "file": "d2patchguard.c",
+      "line": 19,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SkillTab",
+      "value": 1011424,
+      "file": "d2points.c",
+      "line": 36,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SkillTabCheck",
+      "value": 199175,
+      "file": "d2points.c",
+      "line": 37,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SkillColumnX",
+      "value": 192768,
+      "file": "d2points.c",
+      "line": 38,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SkillRowY",
+      "value": 192848,
+      "file": "d2points.c",
+      "line": 39,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ScreenW",
+      "value": 1011764,
+      "file": "d2points.c",
+      "line": 40,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_ScreenH",
+      "value": 1011768,
+      "file": "d2points.c",
+      "line": 41,
+      "module": "D2Client.dll",
+      "module_confidence": "guess"
+    },
+    {
+      "name": "RVA_PanelOffX",
+      "value": 1168212,
+      "file": "d2points.c",
+      "line": 48,
+      "module": "D2Client.dll",
+      "module_confidence": "prefix"
+    },
+    {
+      "name": "RVA_PanelOffY",
+      "value": 1168216,
+      "file": "d2points.c",
+      "line": 49,
+      "module": "D2Client.dll",
+      "module_confidence": "prefix"
+    },
+    {
+      "name": "RVA_StatSite",
+      "value": 788177,
+      "file": "d2points.c",
+      "line": 172,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SkillSite",
+      "value": 199457,
+      "file": "d2points.c",
+      "line": 173,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_Send3",
+      "value": 748288,
+      "file": "d2points.c",
+      "line": 174,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HotkeySite",
+      "value": 679655,
+      "file": "d2points.c",
+      "line": 175,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SetHotkey",
+      "value": 678432,
+      "file": "d2points.c",
+      "line": 176,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_HotkeyItem",
+      "value": 1053872,
+      "file": "d2points.c",
+      "line": 177,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_CharScreenCall",
+      "value": 120136,
+      "file": "d2points.c",
+      "line": 178,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_CharScreenPage",
+      "value": 783936,
+      "file": "d2points.c",
+      "line": 179,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlugYPrintPage",
+      "value": 105184,
+      "file": "d2points.c",
+      "line": 180,
+      "module": "PlugY.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlugYRealm",
+      "value": 204746,
+      "file": "d2points.c",
+      "line": 181,
+      "module": "PlugY.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlugYPage",
+      "value": 204820,
+      "file": "d2points.c",
+      "line": 182,
+      "module": "PlugY.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlugYLastPage",
+      "value": 204824,
+      "file": "d2points.c",
+      "line": 183,
+      "module": "PlugY.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestFlagsLoad",
+      "value": 512676,
+      "file": "d2quest.c",
+      "line": 17,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestFlags",
+      "value": 1054899,
+      "file": "d2quest.c",
+      "line": 18,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestDifficulty",
+      "value": 1167832,
+      "file": "d2quest.c",
+      "line": 19,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestPriceCall",
+      "value": 512700,
+      "file": "d2quest.c",
+      "line": 20,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestPriceThunk",
+      "value": 50858,
+      "file": "d2quest.c",
+      "line": 21,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_UnitSelectable",
+      "value": 405888,
+      "file": "d2selfcheck.c",
+      "line": 35,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PanelSide",
+      "value": 1167472,
+      "file": "d2selfcheck.c",
+      "line": 36,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SellPrice",
+      "value": 635551,
+      "file": "d2sell.c",
+      "line": 27,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SellMode",
+      "value": 635537,
+      "file": "d2sell.c",
+      "line": 28,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SellSite",
+      "value": 635567,
+      "file": "d2sell.c",
+      "line": 29,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GamePacketTable",
+      "value": 1025688,
+      "file": "d2server.c",
+      "line": 20,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameWaypointPkt",
+      "value": 445040,
+      "file": "d2server.c",
+      "line": 21,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameSendStat",
+      "value": 426592,
+      "file": "d2server.c",
+      "line": 22,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DataTables",
+      "value": 668656,
+      "file": "d2server.c",
+      "line": 213,
+      "module": "D2Common.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_LevelWarpUnit",
+      "value": 384960,
+      "file": "d2server.c",
+      "line": 274,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PlaceUnit",
+      "value": 455584,
+      "file": "d2server.c",
+      "line": 275,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameSelectSkillPkt",
+      "value": 438752,
+      "file": "d2server.c",
+      "line": 464,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_RepairOne",
+      "value": 500594,
+      "file": "d2shop.c",
+      "line": 44,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_RepairAllPush",
+      "value": 500569,
+      "file": "d2shop.c",
+      "line": 45,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_RepairCall",
+      "value": 500630,
+      "file": "d2shop.c",
+      "line": 46,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BuySite",
+      "value": 500531,
+      "file": "d2shop.c",
+      "line": 48,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BuySoundSite",
+      "value": 500538,
+      "file": "d2shop.c",
+      "line": 57,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ItemSound",
+      "value": 760576,
+      "file": "d2shop.c",
+      "line": 58,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_Send17",
+      "value": 747920,
+      "file": "d2shop.c",
+      "line": 59,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PriceCall",
+      "value": 512700,
+      "file": "d2shop.c",
+      "line": 60,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_PriceThunk",
+      "value": 50858,
+      "file": "d2shop.c",
+      "line": 61,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ShopDifficulty",
+      "value": 1167832,
+      "file": "d2shop.c",
+      "line": 62,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ShopQuestFlags",
+      "value": 1054899,
+      "file": "d2shop.c",
+      "line": 63,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ListX",
+      "value": 1052744,
+      "file": "d2skilllist.c",
+      "line": 9,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ListY",
+      "value": 1052984,
+      "file": "d2skilllist.c",
+      "line": 10,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ListSkill",
+      "value": 1053224,
+      "file": "d2skilllist.c",
+      "line": 11,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ListLoop",
+      "value": 686285,
+      "file": "d2skilllist.c",
+      "line": 12,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ListLoopEnd",
+      "value": 686555,
+      "file": "d2skilllist.c",
+      "line": 13,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_DrawCursorItem",
+      "value": 390272,
+      "file": "d2sort.c",
+      "line": 57,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_ItemRatio",
+      "value": 675492,
+      "file": "d2spielweise.c",
+      "line": 15,
+      "module": "D2Common.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameNoDropCmp",
+      "value": 934331,
+      "file": "d2spielweise.c",
+      "line": 25,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameNoDropOn",
+      "value": 934340,
+      "file": "d2spielweise.c",
+      "line": 26,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameNoDropSkip",
+      "value": 934543,
+      "file": "d2spielweise.c",
+      "line": 27,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_GameSave",
+      "value": 236576,
+      "file": "d2stash.c",
+      "line": 22,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_QuestCreateItem",
+      "value": 864080,
+      "file": "d2stash.c",
+      "line": 389,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_RemoveItem",
+      "value": 738608,
+      "file": "d2stash.c",
+      "line": 390,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_SendPacket",
+      "value": 898944,
+      "file": "d2stash.c",
+      "line": 391,
+      "module": "D2Game.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_XpBarCall",
+      "value": 119969,
+      "file": "d2xpbar.c",
+      "line": 32,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_XpBarCallee",
+      "value": 101920,
+      "file": "d2xpbar.c",
+      "line": 33,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_XpPanelCall",
+      "value": 120214,
+      "file": "d2xpbar.c",
+      "line": 34,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_XpPanelCallee",
+      "value": 455424,
+      "file": "d2xpbar.c",
+      "line": 35,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BeltUnfolded",
+      "value": 1167300,
+      "file": "d2xpbar.c",
+      "line": 40,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BeltDrawCall",
+      "value": 455527,
+      "file": "d2xpbar.c",
+      "line": 41,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BeltDraw",
+      "value": 454256,
+      "file": "d2xpbar.c",
+      "line": 42,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_BeltUnfoldedUse",
+      "value": 454410,
+      "file": "d2xpbar.c",
+      "line": 43,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_CtrlPanelCells",
+      "value": 1063792,
+      "file": "d2xpbar.c",
+      "line": 44,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    },
+    {
+      "name": "RVA_CtrlPanelLoad",
+      "value": 447762,
+      "file": "d2xpbar.c",
+      "line": 45,
+      "module": "D2Client.dll",
+      "module_confidence": "explicit"
+    }
+  ],
+  "inline": [
+    {
+      "value": 635728,
+      "file": "d2equip.c",
+      "line": 54,
+      "text": "BYTE *a = (BYTE*) (client + 0x9B350), *b = (BYTE*) (client + 0x9A778), *c = (BYTE*) (client + 0x9A6A9),"
+    },
+    {
+      "value": 632696,
+      "file": "d2equip.c",
+      "line": 54,
+      "text": "BYTE *a = (BYTE*) (client + 0x9B350), *b = (BYTE*) (client + 0x9A778), *c = (BYTE*) (client + 0x9A6A9),"
+    },
+    {
+      "value": 632489,
+      "file": "d2equip.c",
+      "line": 54,
+      "text": "BYTE *a = (BYTE*) (client + 0x9B350), *b = (BYTE*) (client + 0x9A778), *c = (BYTE*) (client + 0x9A6A9),"
+    },
+    {
+      "value": 636891,
+      "file": "d2equip.c",
+      "line": 55,
+      "text": "*d = (BYTE*) (client + 0x9B7DB);"
+    },
+    {
+      "value": 98750,
+      "file": "d2gold.c",
+      "line": 29,
+      "text": "goldSitesOk = bytesAre(client + 0x181BE, movControls, 2) && addressAt(client, 0x181C0, RVA_GoldDialogControls)"
+    },
+    {
+      "value": 98782,
+      "file": "d2gold.c",
+      "line": 30,
+      "text": "&& bytesAre(client + 0x181DE, movAmount, 1) && addressAt(client, 0x181DF, RVA_GoldDialogAmount)"
+    },
+    {
+      "value": 98787,
+      "file": "d2gold.c",
+      "line": 31,
+      "text": "&& bytesAre(client + 0x181E3, cmpAction, 2) && addressAt(client, 0x181E5, RVA_GoldDialogAction)"
+    },
+    {
+      "value": 98793,
+      "file": "d2gold.c",
+      "line": 32,
+      "text": "&& readable((void*) (client + 0x181E9), 1) && *(BYTE*) (client + 0x181E9) == GOLD_ACTION_WITHDRAW;"
+    },
+    {
+      "value": 98793,
+      "file": "d2gold.c",
+      "line": 32,
+      "text": "&& readable((void*) (client + 0x181E9), 1) && *(BYTE*) (client + 0x181E9) == GOLD_ACTION_WITHDRAW;"
+    },
+    {
+      "value": 1245184,
+      "file": "d2sound.c",
+      "line": 21,
+      "text": "return at >= client && at < client + 0x130000;"
+    },
+    {
+      "value": 303422,
+      "file": "d2take.c",
+      "line": 28,
+      "text": "BYTE* a = (BYTE*) (client + 0x4A13E);"
+    },
+    {
+      "value": 303191,
+      "file": "d2take.c",
+      "line": 29,
+      "text": "BYTE* b = (BYTE*) (client + 0x4A057);"
+    }
+  ]
+}

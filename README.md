@@ -243,6 +243,17 @@ playable on a phone, not to change the game.
 - **Your own Diablo II and Lord of Destruction:** two CD keys (Classic and LoD), or a game folder at version 1.13d.
 - Optional: a gamepad (Bluetooth or USB).
 
+## 1.13c (experimental)
+
+The same touch layer also builds against 1.13c. `tools/build-mod.sh` now emits `d2android-mod-113c.dll`
+next to `d2android-mod.dll`, and the app installs the 1.13c one (under the usual file name) when the game
+folder reports 1.13c. Same loader, same mod, different offset table (`mod/d2off_113c.h`).
+
+State of the table: 226 of 243 offsets located, 143 verified byte-for-byte, 11 unlocated (the mod's
+runtime check refuses those instead of writing). Known broken on 1.13c: big stash. Per-site evidence is
+in `source/tools/rva/offsets/compat-113c.csv`, method and regeneration steps in
+[`source/tools/rva/README.md`](source/tools/rva/README.md).
+
 ## Installation
 
 1. Download `D2Android-<version>.apk` from the [latest release](https://github.com/N1v0k/D2Android-Releases/releases/latest)

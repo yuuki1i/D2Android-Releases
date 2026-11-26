@@ -7,10 +7,6 @@
 
 
 
-#define RVA_LabelItemCheck   0x4E60E
-#define RVA_LabelItemJump    0x4E611
-#define RVA_LabelItemNext    0x4E617
-#define RVA_LabelUnitSkip    0x4E9A9
 #define CMD_LABELS 12
 #define LABEL_NEW 1
 #define LABEL_NEAR 2

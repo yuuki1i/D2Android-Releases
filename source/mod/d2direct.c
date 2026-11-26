@@ -30,18 +30,6 @@
 
 #define PKT_DIRECT             15
 #define DIRECT_MARKER          "d2android-direct"
-#define RVA_LaunchSinglePlayer 0x13A00
-#define RVA_LaunchCharOk       0x199D0
-#define RVA_LaunchDiffPress0   0x19D50
-#define RVA_LaunchStartGame    0x19930
-#define RVA_LaunchCharList     0x25AE0
-#define RVA_LaunchCharSelected 0x20BD8
-#define RVA_LaunchModeVar      0x25B48
-#define RVA_LaunchBusyVar      0x25AC4
-#define RVA_LaunchNewChar      0x111A0
-#define RVA_LaunchToClasses    0xF830
-#define RVA_LaunchTitlePress   0x11190
-#define RVA_LaunchToMainMenu   0x107A0
 #define D2GFX_GET_HWND         10007
 #define DIRECT_NEW             ":neu"
 #define CHAR_NAME              0x000
@@ -50,7 +38,6 @@
 
 #define CHAR_NEXT              0x34C
 #define CHAR_NAME_MAX          16
-#define RVA_WinFirstControl    0x8DB34
 #define CONTROL_FLAGS          0x08
 #define CONTROL_ENABLED        0x01
 #define CONTROL_PRESS          0x34

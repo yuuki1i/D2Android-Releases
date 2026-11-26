@@ -1,3 +1,5 @@
+/* D2Android: version-specific D2Client offsets (see d2off.h) */
+#include "d2off.h"
 
 
 
@@ -30,108 +32,40 @@
 
 
 #define GAMELOOP_PATCH_RVA      0x45280
-#define RVA_GetPlayerUnit       0x613C0
-#define RVA_GetUiVar_I          0x17C50
-#define RVA_GetSelectedUnit     0x17280
-#define RVA_SetSelectedUnit_I   0x17060
-#define RVA_ClickMap            0x2B420
 #define SELECTED_CALL_RVA       0x2B494
 
 
 
 
-#define RVA_ClickTakenThisFrame 0x11D2CC
-#define RVA_ClickTakenCheck     0x2B42F
-#define RVA_FindServerSideUnit  0x620D0
-#define RVA_FindClientSideUnit  0x620B0
-#define RVA_ViewportX           0x106844
-#define RVA_ViewportY           0x106840
-#define RVA_AlwaysRun           0x11D234
-#define RVA_GetMouseXOffset     0x5BC20
-#define RVA_GetUnitX            0x1210
-#define RVA_GetUnitY            0x1240
-#define RVA_GetUnitName_I       0x622E0
-#define RVA_GetMouseYOffset     0x5BC30
-#define RVA_ScreenSizeX         0xF7034
-#define RVA_ScreenSizeY         0xF7038
-#define RVA_MouseX              0x11C950
-#define RVA_MouseY              0x11C94C
-
-#define RVA_DrawStatueLeft      0x6D549
-#define RVA_DrawStatueRight     0x6D626
-#define RVA_GfxDrawThunk        0xCFCE
-#define RVA_DrawCursorCall      0x14EF9
-#define RVA_DrawCursorCall2     0x14D77
 
 
 
 
-#define RVA_DrawHelpButtonCall  0x1D5C7
-#define RVA_DrawHelpButton      0xAB830
-#define RVA_DrawQuestButtonCall 0x1D5FC
-#define RVA_DrawQuestButton     0x8CEF0
-#define RVA_UiVarHelpButton     0x11C918
 
 
 
-#define RVA_HelpButtonDown      0xAA640
-#define RVA_HelpButtonUp        0xAB621
-#define RVA_HelpButtonLock      0x11CAE8
 
-#define RVA_QuestButtonDownHit  0x8C62F
-#define RVA_QuestButtonUpHit    0x8E210
-#define RVA_QuestButtonHit      0x8B3D0
-#define RVA_DrawManaOrbCall     0x6F349
-#define RVA_DrawLifeOrbCall     0x6F34E
-#define RVA_DrawManaOrb         0x6DDE0
-#define RVA_DrawLifeOrb         0x6DCA0
-#define RVA_DrawDurabilityCall  0x1D481
-#define RVA_DrawDurability      0x6E950
+
 #ifndef DURA_WARN_PERCENT
 #define DURA_WARN_PERCENT 20
 #endif
 
 
-#define RVA_UiVarGameMenu       0x11C8B4
 
 
-#define RVA_UiVars              0x11C890
 #define UI_SHOWITEMS            0x0D
 
 
 
-#define RVA_EscCloseList        0xD4078
-#define RVA_EscCloseListRead    0x1851D
 
 
 
-#define RVA_LabelsTipClearCall  0x4EA3B
-#define RVA_SetHoverTextThunk   0xD28C
-#define RVA_GetItemUseSound     0xB9A30
-#define RVA_PlaySound           0x26270
-#define RVA_SoundCheckVar       0x11D2F0
 
 
-#define RVA_NpcMenuTable        0xF1A90
-#define RVA_NpcMenuCount        0xF21E0
-#define RVA_NpcMenuSearch       0x7B580
-#define RVA_GetCurrentNpc       0x790D0
-#define RVA_GetLocaleText       0xD10C
-#define RVA_SetPlayersThunk     0xCF5C
-#define RVA_SetPlayersImport    0xCFA6C
-#define RVA_GamePlayers         0x111C44
-#define RVA_GameType            0x11D1DC
-#define RVA_NpcDialog           0x101A58
 #define NPCMENU_SIZE            0x27
-#define RVA_DrawGameMenuCall    0x1D43F
-#define RVA_DrawGameMenu        0xC34D0
-
-#define RVA_HotkeySkill         0x101410
-#define RVA_HotkeyLeft          0x101500
 
 
-#define RVA_GameRunDrainCall    0x931D4
-#define RVA_GameRunDrain        0x91B30
+
 #define STAT_STAMINA            10
 #define STAT_STATPOINTS         4
 #define STAT_SKILLPOINTS        5
@@ -143,39 +77,16 @@
 #define STATE_MANAPOT           106
 #define STATE_STAMINAPOT        180
 
-#define RVA_GfxLoadRenderer     0xAA03
-#define RVA_GfxLoadLibraryIat   0xD11C
 
 
 
 
 
-#define RVA_StormStreamFill     0x2B620
-#define RVA_StormStreamFillRead 0x2B632
-#define RVA_StormStreamFillExit 0x2B76B
-#define RVA_StormStreamLock     0x55934
 
 
-#define RVA_GameSaveFlag        0xBE6D4
-
-#define RVA_GamePlugYPacket     0x676C3
 
 
-#define RVA_RevealAutomapRoom   0x73160
-#define RVA_InitAutomapLayer    0x733D0
-#define RVA_NewAutomapCell      0x703C0
-#define RVA_AddAutomapCell      0x71EA0
-#define RVA_AutomapCellPool     0x11CF20
-#define RVA_AutomapLayerList    0x11CF24
-#define RVA_AutomapLayer        0x11CF28
-#define RVA_AutomapDivisor      0xF34F8
-#define RVA_AutomapOffsetX      0x11CF5C
-#define RVA_AutomapOffsetY      0x11CF60
-#define RVA_AutomapMode         0x11CF14
-#define RVA_AutomapCorner       0x11CFA4
-#define RVA_AutomapCornerTop    0x11CE34
-#define RVA_DrawAutomapCall     0x1D49C
-#define RVA_DrawAutomap         0x73420
+
 #define ORD_GetLevel            10122
 #define ORD_InitLevel           10736
 #define ORD_AddRoomData         10890
@@ -1427,7 +1338,6 @@ static void updateHeld(DWORD now) {
 
 
 
-#define RVA_ClickBlocked 0x11C8B4
 static volatile int replaying;
 static int realHeld;
 static struct {
@@ -2092,7 +2002,6 @@ static void updatePlugYSave(void) {
 
 
 
-#define RVA_PlugYWindowStartX 0x31B48
 #define PLUGY_STATS_PAGE_WIDTH 320
 static const DWORD plugyPageChecks[] = {0x197A8, 0x19910};
 static int plugyPagesState;
@@ -4549,9 +4458,6 @@ static void noteGame(void* player, DWORD now) {
 
 
 
-#define RVA_WorldUiCall  0x453CB
-#define RVA_WorldUi      0x1D3E0
-#define RVA_WorldUiFlag  0x11C8D8
 DWORD worldDrawUi;
 void worldDrawStub(void);
 __asm__(
@@ -5074,7 +4980,6 @@ static void sendStatus(void) {
 
 
 
-#define RVA_WinFocusedControl 0x8DB44
 #define CONTROL_EDITBOX 1
 
 #define CONTROL_TEXT 0x5C
@@ -5137,8 +5042,6 @@ static void checkMenuField(int force) {
 
 
 
-#define RVA_LaunchBattleNet   0x12350
-#define RVA_LaunchMultiplayer 0xF790
 #define MENU_ENTRY_SIZE       0x30
 static const struct { DWORD entry, y, text, press; } MENU_LOCKS[] = {
     {0x21270, 0x16E, 0x13F3, RVA_LaunchBattleNet},
@@ -5190,8 +5093,6 @@ static void lockMultiplayerMenu(void) {
 
 
 
-#define RVA_LaunchExitEntry 0x21210
-#define RVA_LaunchExit      0xA580
 static volatile LONG exitEscChecked;
 
 static void unbindMainMenuEsc(void) {
@@ -5225,7 +5126,6 @@ static void logStormStreamSkips(void);
 
 
 
-#define RVA_PlayerUnitVar 0x11D050
 static void* volatile* heroVar(void) {
     static int checked;
     static void* volatile* var;
@@ -5420,7 +5320,6 @@ static void installPlugYHook(void) {
 
 
 
-#define RVA_LaunchMovieCheck 0x12114
 static const BYTE launchMovieCheck[] = {0x85, 0xC0, 0x74, 0x6C, 0xE8};
 typedef HMODULE (WINAPI* LoadLibraryA_t)(LPCSTR);
 static LoadLibraryA_t gameLoadLibraryA;

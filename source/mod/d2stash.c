@@ -19,7 +19,6 @@
 
 #include "d2stashcore.c"
 
-#define RVA_GameSave          0x39C20
 #define STASH_CODE_DEPOSIT    SRV_CODE_STASH_DEPOSIT
 #define STASH_CODE_WITHDRAW   SRV_CODE_STASH_WITHDRAW
 #define STASH_CODE_DEPOSITALL SRV_CODE_STASH_ALL
@@ -386,9 +385,6 @@ __asm__(
     "  ret $8\n");
 
 
-#define RVA_QuestCreateItem 0xD2F50
-#define RVA_RemoveItem      0xB4530
-#define RVA_SendPacket      0xDB780
 #define PDATA_CLIENT        0x9C
 #define ITEMQUAL_NORMAL     2
 

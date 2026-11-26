@@ -32,8 +32,6 @@
 
 #include "d2selfrules.h"
 
-#define RVA_UnitSelectable 0x63180
-#define RVA_PanelSide      0x11D070
 #define CMD_SELECTABLE     32
 #define PKT_SELECTABLE     16
 #define SC_REPORT_MS       5000

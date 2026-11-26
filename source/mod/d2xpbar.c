@@ -29,20 +29,10 @@
 
 
 
-#define RVA_XpBarCall       0x1D4A1
-#define RVA_XpBarCallee     0x18E20
-#define RVA_XpPanelCall     0x1D596
-#define RVA_XpPanelCallee   0x6F300
 #define XPB_MIDDLE_HALF 64
 
 
 
-#define RVA_BeltUnfolded    0x11CFC4
-#define RVA_BeltDrawCall    0x6F367
-#define RVA_BeltDraw        0x6EE70
-#define RVA_BeltUnfoldedUse 0x6EF0A
-#define RVA_CtrlPanelCells  0x103B70
-#define RVA_CtrlPanelLoad   0x6D512
 #define ORD_GfxDrawRect     10028
 #define XPB_HALF 283
 #define XPB_HALF_COMPACT 235

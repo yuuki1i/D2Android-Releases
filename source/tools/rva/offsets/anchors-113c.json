@@ -1,0 +1,65 @@
+{
+  "note": "1.13c \u4fa7\u5b9e\u5730\u786e\u8ba4\u7684\u951a\u70b9\uff08\u4e0d\u4f9d\u8d56 1.13d \u4e8c\u8fdb\u5236\uff0c\u9760\u4e0a\u6e38\u6e90\u7801\u91cc\u7684\u5f3a\u6821\u9a8c\u6a21\u5f0f\u5b9a\u4f4d\uff09",
+  "anchors": [
+    {
+      "module": "D2Common.dll",
+      "kind": "code_site",
+      "name": "RVA_InvTableStore",
+      "rva_113c": null,
+      "rva_113d": 445481,
+      "delta": null,
+      "proof": "RETRACTED 2026-11-26: \u8be5\u5f62\u72b6\u5728 1.13c \u7684 imm \u662f 0x03\uff0c\u800c 1.13d \u662f 0x20\uff08BI_RECORDS=32\uff09\uff0c\u4e24\u8005\u4e0d\u662f\u540c\u4e00\u5904\u4ee3\u7801\u3002\u771f\u6b63\u80fd\u7528\u7684\u8bc1\u636e\u662f 7 \u6761\u5f15\u7528\u6307\u4ee4\u53cd\u63a8\u51fa\u6765\u7684\u6570\u636e\u5730\u5740 0x9FA5C\u3002",
+      "confidence": "retracted"
+    },
+    {
+      "module": "D2Common.dll",
+      "kind": "data",
+      "name": "RVA_InvTable",
+      "rva_113c": 653916,
+      "rva_113d": 674988,
+      "delta": -21072,
+      "proof": "1.13d \u91cc 7 \u5904\u5f15\u7528 0x6FDA4CAC \u7684\u6307\u4ee4\u9010\u6761\u6620\u5c04\u5230 1.13c \u540e\u8bfb\u64cd\u4f5c\u6570\uff0c\u4e00\u81f4\u6307\u5411 0x9FA5C",
+      "confidence": "high"
+    },
+    {
+      "module": "D2Common.dll",
+      "kind": "data",
+      "name": "RVA_InvCount",
+      "rva_113c": 653912,
+      "rva_113d": 674984,
+      "delta": -21072,
+      "proof": "\u540c\u4e0a\uff0c\u4e0e InvTable \u76f8\u5dee 4 \u5b57\u8282",
+      "confidence": "high"
+    },
+    {
+      "module": "D2Client.dll",
+      "kind": "code_site",
+      "name": "RVA_PanelPath6_ref",
+      "rva_113c": 163287,
+      "rva_113d": 450535,
+      "delta": -287248,
+      "proof": "\u552f\u4e00\u4e00\u5904 BE <abs> \u6307\u5411 \"Panel\\\\InvChar6\" \u5b57\u7b26\u4e32\u7684\u6307\u4ee4",
+      "confidence": "high"
+    },
+    {
+      "module": "D2Client.dll",
+      "kind": "string",
+      "name": "Panel\\\\InvChar6",
+      "rva_113c": 879704,
+      "rva_113d": 875184,
+      "delta": 4520,
+      "proof": "\u5b57\u7b26\u4e32\u672c\u4f53\u5728\u955c\u50cf\u4e2d\u552f\u4e00",
+      "confidence": "high"
+    },
+    {
+      "module": "D2Client.dll",
+      "kind": "code_site",
+      "name": "selfcheck_site",
+      "rva_113c": 682208,
+      "rva_113d": 405888,
+      "delta": 276320,
+      "proof": "A1 <abs> 83 EC 28 48 55 8B 6C 24 30 \u552f\u4e00\u547d\u4e2d\uff0c\u4f46\u53ea\u6bd4\u4e86 14 \u5b57\u8282\uff0c\u53ef\u80fd\u662f\u76f8\u4f3c\u51fd\u6570",
+      "confidence": "tentative"
+    }
+  ]
+}

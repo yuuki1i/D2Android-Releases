@@ -54,7 +54,6 @@ static int sortFaultNext;
 
 
 
-#define RVA_DrawCursorItem      0x5F480
 static struct {
     DWORD rva;
     BYTE original[5];

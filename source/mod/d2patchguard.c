@@ -16,7 +16,6 @@
 
 
 
-#define RVA_D2DXFpsFix 0x45EA1
 static const BYTE D2DX_FPSFIX_ORIGINAL[4] = {0x39, 0x1D, 0xF0, 0x46};
 #define D2DX_WAIT_MS 3000
 #define PATCH_GUARD_MAX 200

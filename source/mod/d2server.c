@@ -17,9 +17,6 @@
 
 
 
-#define RVA_GamePacketTable   0xFA698
-#define RVA_GameWaypointPkt   0x6CA70
-#define RVA_GameSendStat      0x68260
 #define ORD_SetUnitStat       10590
 #define ORD_GetMaxLife        10574
 
@@ -210,7 +207,6 @@ static DWORD srvEffectFrame;
 
 
 #define SL_SKILL          0x1C
-#define RVA_DataTables    0xA33F0
 #define DT_SKILLS         0xB98
 #define DT_SKILL_COUNT    0xBA0
 #define SKILL_RECORD      0x23C
@@ -271,8 +267,6 @@ static LONG srvEffects(void* game, void* unit) {
 #define SRV_CODE_INVUL_OFF  0xA0D20124u
 #define SRV_CODE_DIFFICULTY 0xA0D20125u
 #define SRV_CODE_DIRECT     0xA0D20127u
-#define RVA_LevelWarpUnit   0x5DFC0
-#define RVA_PlaceUnit       0x6F3A0
 #define GAME_DIFFICULTY     0x6D
 #define SU_FLAGS            0xC4
 #define SU_ATTACKABLE       0xCu
@@ -461,7 +455,6 @@ static LONG srvInvulnerable(void* unit, int on, LONG* count) {
 
 #define SRV_CODE_SELECT        0xA0D21286u
 #define SRV_CODE_LEVELS        0xA0D21287u
-#define RVA_GameSelectSkillPkt 0x6B1E0
 #define SRV_SEL_LEFT           0x80000000u
 #define SRV_SEL_FORCE          0x40000000u
 static const BYTE selectStart[] = {0x83, 0x7C, 0x24, 0x08, 0x09, 0x55, 0x8B, 0xEA, 0x74, 0x09, 0xB8, 0x03, 0x00, 0x00,

@@ -11,15 +11,6 @@
 
 
 
-#define RVA_DialogTop        0x11D584
-#define RVA_DialogTopStore   0x15DDA
-#define RVA_DialogAddLine    0x154B0
-#define RVA_DialogClickCall  0x15922
-#define RVA_NpcLists         0x1018CF
-#define RVA_NpcListMain      0x1018DB
-#define RVA_NpcListTopics    0x1018DF
-#define RVA_NpcListMainStore 0x7B4EA
-#define RVA_NpcListTopicsStore 0x7C711
 #define NPC_LISTS            8
 #define DLG_SIZE             0xB10
 #define DLG_SELECTED         0x44

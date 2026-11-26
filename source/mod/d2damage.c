@@ -40,19 +40,7 @@
 
 
 
-#define RVA_DrawUnitInfoCall 0x1D457
-#define RVA_DrawUnitInfo     0x1A730
-#define RVA_GameDamage       0x8BCB0
-#define RVA_GameDamageLife   0x8BE32
-#define RVA_GameDamageSet    0x8BE54
-#define RVA_GameSetStatThunk 0xA3C4
-#define RVA_GameRegen        0x86390
-#define RVA_GameRegenSet     0x8649A
-#define RVA_GamePlayerRegen  0x91C60
-#define RVA_GamePlayerRegenSet 0x91CC2
-#define RVA_GameStateListThunk 0xA49C
 #define ORD_GetStatListWithState 10429
-#define RVA_GameListStatThunk 0xA97C
 #define ORD_GetStatListStat  10190
 #define STATE_POISON 2
 #define STATE_BURNING 115

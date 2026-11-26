@@ -23,14 +23,6 @@
 
 #define BI_MARKER          "d2android-biginv"
 #define CAP3_BIGINV        0x01
-#define RVA_InvTable       0xA4CAC
-#define RVA_InvCount       0xA4CA8
-#define RVA_InvTableStore  0x6CC29
-#define RVA_PanelLoadCall  0x6DFF3
-#define RVA_PanelPath6     0xD5AB0
-#define RVA_PanelPath      0xD5AA0
-#define RVA_PanelCell      0x103B60
-#define RVA_UiPicture      0x191F0
 #define ORD_LangGetLanguage 10001
 
 static int biWanted;

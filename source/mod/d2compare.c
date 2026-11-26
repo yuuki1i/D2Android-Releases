@@ -13,17 +13,6 @@
 
 
 
-#define RVA_DrawHoverCall   0x1D791
-#define RVA_DrawHoverThunk  0xD35E
-#define RVA_ItemHover       0x97820
-#define RVA_HoverGrid       0x11CB18
-#define RVA_HoverBody       0x11CB1C
-#define RVA_HoverItem       0x11CB28
-#define RVA_HoverItem2      0x11CB2C
-#define RVA_HoverSlot       0x11CB58
-#define RVA_TradeMode       0x11CB24
-#define RVA_HoverAnchor     0xEE49C
-#define RVA_BodySlots       0x11CB90
 #define ORD_DrawHover       10124
 #define ORD_SetHover        10137
 #define ORD_TextSize        10179

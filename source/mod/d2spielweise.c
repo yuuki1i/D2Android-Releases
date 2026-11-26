@@ -12,7 +12,6 @@
 #include "d2spielweisecore.c"
 
 #define SW_MARKER "d2android-spielweise"
-#define RVA_ItemRatio      0xA4EA4
 #define DT_UNIQUES         0xC24
 #define DT_EXPERIENCE      0xC78
 #define DT_DIFFICULTY      0xC7C
@@ -22,9 +21,6 @@
 
 
 
-#define RVA_GameNoDropCmp  0xE41BB
-#define RVA_GameNoDropOn   0xE41C4
-#define RVA_GameNoDropSkip 0xE428F
 
 static unsigned char swStage[SW_REGULATORS];
 static int swRead;

@@ -41,11 +41,7 @@
 
 
 
-#define RVA_RepairOne        0x7A372
-#define RVA_RepairAllPush    0x7A359
-#define RVA_RepairCall       0x7A396
 #define REPAIR_MAX           16
-#define RVA_BuySite          0x7A333
 
 
 
@@ -54,13 +50,6 @@
 
 
 
-#define RVA_BuySoundSite     0x7A33A
-#define RVA_ItemSound        0xB9B00
-#define RVA_Send17           0xB6990
-#define RVA_PriceCall        0x7D2BC
-#define RVA_PriceThunk       0xC6AA
-#define RVA_ShopDifficulty   0x11D1D8
-#define RVA_ShopQuestFlags   0x1018B3
 #define ORD_GetItemPrice     10186
 #define UI_SHOP              0x0C
 #define SHOP_JOB_MAX_MS      90000

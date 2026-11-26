@@ -6,11 +6,6 @@
 
 
 
-#define RVA_ListX         0x101048
-#define RVA_ListY         0x101138
-#define RVA_ListSkill     0x101228
-#define RVA_ListLoop      0xA78CD
-#define RVA_ListLoopEnd   0xA79DB
 #define LIST_ENTRIES      60
 #define LIST_ICON         48
 #define LIST_NONE         0xFFFF
