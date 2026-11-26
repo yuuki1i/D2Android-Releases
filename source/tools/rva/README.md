@@ -37,30 +37,35 @@ python3 tools/rva/audit_compat.py --d-dir <113d folder> --c-dir <113c folder> \
    references agreeing is treated as proof.
 4. **Import-table matching** — RVAs that are `jmp [IAT]` thunks are resolved through the import tables of
    both modules by DLL and function name.
-5. **`rel32` call recovery** — for code addresses, find callers, map them, and re-read the relative
+5. **Site rebuild** (`recover_site.py`) — a site whose surroundings moved can still be found once its
+   data addresses are known: take the 1.13d bytes, replace every embedded absolute with its 1.13c value,
+   search the target. This is how the big-stash store site and two others were recovered.
+6. **`rel32` call recovery** — for code addresses, find callers, map them, and re-read the relative
    displacement. The opcode before the displacement must still match, otherwise the candidate is dropped.
-6. **Geometry fallback** is reported separately and never counted as verified.
+7. **Geometry fallback** is reported separately and never counted as verified.
 
 ## Current state (1.13c)
 
 | | count |
 |---|---|
 | offsets in the table | 243 |
-| located | 226 (93%) |
+| located | 229 (94%) |
 | byte-identical, patch applies as-is | 143 |
 | minor drift (likely the same site) | 8 |
 | changed (the mod's own check rejects them) | 12 |
 | in the zero-fill area, unverifiable statically | 63 |
-| unlocated | 11 |
+| unlocated | 8 |
 | no 1.13d reference (PlugY ×5, one cross-module) | 6 |
 
-Of the 163 sites with byte evidence, 151 match (93%).
+Of the 166 sites with byte evidence, 151 match (91%); the three rebuilt sites are identical instruction
+for instruction but differ in their embedded addresses, which the raw byte count reports as "changed".
 
 Known gaps:
 
-- `d2biginv` — the stash write instruction changed shape in 1.13c (`imm 0x20` became something else).
-  The data pointers are right (`0x9FA5C` / `0x9FA58`), the hook is not, so big stash stays off.
-- 11 unlocated sites keep their 1.13d value with an `UNMAPPED` comment; the mod's site check refuses
+- `d2biginv` is fine: `RVA_InvTable = 0x9FA5C`, `RVA_InvCount = 0x9FA58` and the store site is `0x82CA9`
+  in `D2Common.dll`, same `mov [table], eax; cmp [count], 0x20` sequence as 1.13d. An earlier candidate
+  (`0x6078F`, `cmp ..., 3`) belongs to a different table and was a red herring.
+- 8 unlocated sites keep their 1.13d value with an `UNMAPPED` comment; the mod's site check refuses
   them at runtime, so nothing is written to a wrong address.
 - PlugY offsets assume PlugY 14.0.3.0 on both sides and were not verified against a 1.13d build.
 

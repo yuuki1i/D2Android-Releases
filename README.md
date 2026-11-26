@@ -249,9 +249,10 @@ The same touch layer also builds against 1.13c. `tools/build-mod.sh` now emits `
 next to `d2android-mod.dll`, and the app installs the 1.13c one (under the usual file name) when the game
 folder reports 1.13c. Same loader, same mod, different offset table (`mod/d2off_113c.h`).
 
-State of the table: 226 of 243 offsets located, 143 verified byte-for-byte, 11 unlocated (the mod's
-runtime check refuses those instead of writing). Known broken on 1.13c: big stash. Per-site evidence is
-in `source/tools/rva/offsets/compat-113c.csv`, method and regeneration steps in
+State of the table: 229 of 243 offsets located, 143 verified byte-for-byte, 8 unlocated (the mod's
+runtime check refuses those instead of writing). Big stash works on 1.13c: its site is the same
+instruction sequence as 1.13d at `0x82CA9` in `D2Common.dll`, record count is still 32. Per-site evidence
+is in `source/tools/rva/offsets/compat-113c.csv`, method and regeneration steps in
 [`source/tools/rva/README.md`](source/tools/rva/README.md).
 
 ## Installation

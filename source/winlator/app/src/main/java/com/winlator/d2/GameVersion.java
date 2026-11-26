@@ -65,14 +65,26 @@ public final class GameVersion {
 
 
     private final Map<String, String> reference;
+    /** 1.13c catalog; empty when the asset is missing, then 1.13c stays structurally verified only. */
+    private final Map<String, String> reference113c;
     private final List<String> names = new ArrayList<>();
 
     public GameVersion(Map<String, String> reference) {
-        this.reference = new LinkedHashMap<>();
-        for (Map.Entry<String, String> entry : reference.entrySet()) {
-            this.reference.put(entry.getKey().toLowerCase(Locale.ROOT), entry.getValue().toLowerCase(Locale.ROOT));
-            names.add(entry.getKey());
+        this(reference, java.util.Collections.emptyMap());
+    }
+
+    public GameVersion(Map<String, String> reference, Map<String, String> reference113c) {
+        this.reference = lower(reference);
+        this.reference113c = lower(reference113c);
+        for (String name : reference.keySet()) names.add(name);
+    }
+
+    private static Map<String, String> lower(Map<String, String> in) {
+        Map<String, String> out = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : in.entrySet()) {
+            out.put(entry.getKey().toLowerCase(Locale.ROOT), entry.getValue().toLowerCase(Locale.ROOT));
         }
+        return out;
     }
 
 
@@ -118,12 +130,13 @@ public final class GameVersion {
             boolean version113c = "1.13c".equals(detectedVersion);
             boolean version113d = "1.13d".equals(detectedVersion);
             if (!version113c && !version113d) return new Result(Status.WRONG_VERSION, dir, detectedVersion);
-            // 1.13c has a different official binary set than the 1.13d checksum
-            // catalog. Do not label its stock Game.exe as modified just because it
-            // cannot match the 1.13d hash.
-            if (!version113c && !matches(gameExe, "game.exe")) modified.add(gameExe.getName());
+            // 1.13c ships its own binary set, so its Game.exe cannot match the 1.13d
+            // hash; the version resource is what identifies it. Patched launchers
+            // are common, so 1.13c keeps the exe out of the hash check on purpose.
+            if (!version113c && !matches(gameExe, "game.exe", reference)) modified.add(gameExe.getName());
             String exeStructure = pe32(gameExe);
             if (exeStructure != null) modified.add(gameExe.getName() + " (" + exeStructure + ")");
+            Map<String, String> catalog = version113c && !reference113c.isEmpty() ? reference113c : reference;
             List<String> missing = new ArrayList<>();
             for (String name : names) {
                 if (isOptional(name)) continue;
@@ -131,24 +144,22 @@ public final class GameVersion {
                 if (file == null || !file.isFile() || file.length() == 0) missing.add(name);
             }
             if (!missing.isEmpty()) return new Result(Status.MISSING, dir, String.join(", ", missing));
-            if (version113d) {
-                for (String name : HASHED) {
-                    String key = name.toLowerCase(Locale.ROOT);
-                    if (key.equals("game.exe")) continue;
-                    if (reference.containsKey(key) && !matches(files.get(key), key)) modified.add(files.get(key).getName());
-                }
+            for (String name : HASHED) {
+                String key = name.toLowerCase(Locale.ROOT);
+                if (key.equals("game.exe")) continue;
+                if (catalog.containsKey(key) && !matches(files.get(key), key, catalog)) modified.add(files.get(key).getName());
             }
-            else if (version113c) {
-                // 1.13c is intentionally checked against structural invariants here:
-                // this project does not ship a verified 1.13c checksum catalog.
-                // Validate x86 PE headers for its code files and MPQ signatures
-                // for archives to catch mixed-version/broken folders.
+            if (version113c) {
+                // Second net on top of the 1.13c catalog: the catalog only covers the
+                // binaries the mod hooks, so validate x86 PE headers for the rest of
+                // the code files and MPQ signatures for the archives.
                 for (String name : HASHED) {
                     if (name.equalsIgnoreCase("game.exe")) continue;
                     File dll = files.get(name.toLowerCase(Locale.ROOT));
                     String why = pe32(dll);
                     if (why != null) modified.add(name + " (" + why + ")");
                 }
+                // The 1.13c catalog has no archive entries, so take the known MPQ names.
                 for (String name : names) {
                     if (!name.toLowerCase(Locale.ROOT).endsWith(".mpq") || isOptional(name)) continue;
                     File archive = files.get(name.toLowerCase(Locale.ROOT));
@@ -160,8 +171,8 @@ public final class GameVersion {
             if (needWritable && !writable(dir)) return new Result(Status.NOT_WRITABLE, dir, null);
 
             if (!modified.isEmpty()) return new Result(Status.MODIFIED, dir, detectedVersion + ": " + String.join(", ", modified));
-            if (version113c) return new Result(Status.MODIFIED, dir,
-                "1.13c: 文件结构检查通过；未使用1.13d校验码，无法证明文件为原版");
+            if (version113c && reference113c.isEmpty()) return new Result(Status.MODIFIED, dir,
+                "1.13c: 文件结构检查通过；无校验码表，无法证明文件为原版");
             return new Result(Status.OK, dir, detectedVersion);
         }
         catch (IOException e) {
@@ -203,8 +214,8 @@ public final class GameVersion {
         return false;
     }
 
-    private boolean matches(File file, String key) throws IOException {
-        String want = reference.get(key);
+    private boolean matches(File file, String key, Map<String, String> catalog) throws IOException {
+        String want = catalog.get(key);
         return want != null && file != null && want.equals(sha256(file));
     }
 

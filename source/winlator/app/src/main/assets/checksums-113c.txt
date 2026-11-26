@@ -1,0 +1,12 @@
+# Diablo II 1.13c core files, sha256, captured from a stock 1.13c install.
+# Only the binaries the mod hooks into are listed; every other file of a 1.13c
+# folder is checked structurally (PE header, MPQ header) instead of by hash.
+# Game.exe of that install: 7baeda5e815fbe7a807d6a102aada579cd7a1b89383dd4a9b5d92f887ef165bf
+# (not enforced: patched launchers exist, the version resource 1.0.13.60 is checked instead)
+4b5fcaf87c98676e6be94f980b06b893c50f1505343cbbf038c5b331a2da2d5b  Storm.dll
+fa4157a745c20e7bf71e2873d6f053631500f416acfe961553c9d33b21ac0ca3  D2Client.dll
+b5c1e13c0c0e27b2a9c2f391ce8b7035549fdec505f8d779cb1e9ead1c7bf6e7  D2Common.dll
+8ee941a0731991298cdc68d151df5523ff5cbda3eaa9a1710966415cdcdd8bef  D2Game.dll
+5ff28367e36e4eae2fbeb37b253fdaab7292e8120ba2b3f26411888010f274ec  D2gfx.dll
+99cabc4751c95d035b5e77151b3605b809884fec2c10edf37d4c4e4e231e8479  D2Launch.dll
+2788dd62c2770cd613228776c712141987b7b6c66c16f6bc38d596c0205e0fde  D2Win.dll

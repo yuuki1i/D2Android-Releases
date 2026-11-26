@@ -6,7 +6,7 @@
 /* d2biginv.c */
 #define RVA_InvTable 0x9FA5C
 #define RVA_InvCount 0x9FA58
-#define RVA_InvTableStore 0x6CC29  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_InvTableStore 0x82CA9  /* site rebuilt: same instruction sequence as 1.13d, addresses translated */
 
 /* d2server.c */
 #define RVA_DataTables 0x99E1C
@@ -152,7 +152,7 @@
 #define RVA_DialogTop 0x11BC00
 #define RVA_DialogTopStore 0xA3F5A
 #define RVA_DialogAddLine 0xA36F0
-#define RVA_DialogClickCall 0x15922  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_DialogClickCall 0xA3CF2  /* site rebuilt: same instruction sequence as 1.13d, addresses translated */
 #define RVA_NpcLists 0x119757
 #define RVA_NpcListMain 0x119763
 #define RVA_NpcListTopics 0x119767
@@ -276,7 +276,7 @@
 /* d2direct.c */
 #define RVA_LaunchSinglePlayer 0x1B030
 #define RVA_LaunchCharOk 0xDEC0
-#define RVA_LaunchDiffPress0 0x19D50  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_LaunchDiffPress0 0xE240  /* site rebuilt: same instruction sequence as 1.13d, addresses translated */
 #define RVA_LaunchStartGame 0xDE20
 #define RVA_LaunchCharList 0x25EC8
 #define RVA_LaunchCharSelected 0x24DB0
