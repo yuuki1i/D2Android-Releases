@@ -243,7 +243,7 @@ public class D2SettingsActivity extends D2Activity {
             Toast.makeText(this, enabled ? "已启用 D2DX（下次启动生效）" : "已关闭 D2DX，尝试使用 DirectDraw（下次启动生效）", Toast.LENGTH_LONG).show();
         });
         root.addView(d2dxToggle);
-        TextView rendererHint = hint("若应用版本缺少 D2DX，可关闭此项尝试原生 DirectDraw 模式；不保证所有设备都能运行。");
+        View rendererHint = hint("若应用版本缺少 D2DX，可关闭此项尝试原生 DirectDraw 模式；不保证所有设备都能运行。");
         root.addView(rendererHint);
 
         savesStatus = null;

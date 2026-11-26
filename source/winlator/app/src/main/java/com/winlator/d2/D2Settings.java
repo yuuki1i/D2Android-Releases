@@ -35,11 +35,20 @@ public final class D2Settings {
 
 
     public static String renderer(Context context) {
-        return GameShadow.RENDERER_D2DX;
+        String stored = prefs(context).getString(KEY_RENDERER, GameShadow.RENDERER_D2DX);
+        return stored == null || stored.isEmpty() ? GameShadow.RENDERER_D2DX : stored;
     }
 
     public static void setRenderer(Context context, String renderer) {
         prefs(context).edit().putString(KEY_RENDERER, renderer).apply();
+    }
+
+    public static boolean useD2DX(Context context) {
+        return GameShadow.RENDERER_D2DX.equals(renderer(context));
+    }
+
+    public static void setUseD2DX(Context context, boolean enabled) {
+        setRenderer(context, enabled ? GameShadow.RENDERER_D2DX : GameShadow.RENDERER_D2GL);
     }
 
 
