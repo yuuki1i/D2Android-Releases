@@ -3309,6 +3309,8 @@ static void stashTest(BYTE op, BYTE value);
 #include "d2skilllist.c"
 #include "d2points.c"
 
+static void logChain(void);
+
 /* v41: the app's 16 skill slots were only kept on the phone side. Push them into the
    game once per session, so F1..F8 actually carry the skills the user assigned. */
 static volatile LONG appSlotsApplied;
@@ -3414,6 +3416,7 @@ static void handleCommands(void* player, int stale) {
         if (cmd == CMD_PLUGY && n >= 9 && player) plugyCommand(buf[8]);
         if (cmd == CMD_SELECT_SKILL && n >= 11 && player && !pauseApplied) selectSkill(player, buf[8] == 0, *(WORD*) (buf + 9), n >= 12 && buf[11] == 1, n >= 13 && buf[12] == 1);
         applyAppSlots(player);
+        if (player) logChain();
         if (cmd == CMD_SLOTS && n >= 8 + 32) {
             int changed = !appSlotsSet;
             for (int i = 0; i < 16; i++) {
@@ -5729,6 +5732,23 @@ static void readGuestCodepage(void) {
     lstrcpyA(slash + 1, "d2android-mod.ini");
     guestCodepage = (DWORD) GetPrivateProfileIntA("TEXT", "Codepage", 936, path);
     if (!guestCodepage) logLine("codepage: left to the host (TEXT Codepage=0)");
+}
+
+/* v45: one line per run that tells exactly which parts of the pack are inside the process,
+   so "same as Winlator" can be checked instead of guessed. */
+static void logChain(void) {
+    static int done;
+    if (done) return;
+    static const char* names[] = {"PlugY.dll", "patchload.dll", "D2Ext.dll", "d2hackmap.dll", "_d2hackmap.dll", "d2dx.dll", "d2dx_sgd2freeres.dll", NULL};
+    char line[256];
+    line[0] = 0;
+    for (int i = 0; names[i]; i++) {
+        if (!GetModuleHandleA(names[i])) continue;
+        if (line[0]) lstrcatA(line, " ");
+        lstrcatA(line, names[i]);
+    }
+    done = 1;
+    logLine("chain: %s", line[0] ? line : "none of the pack's plugins are loaded");
 }
 
 static void ensureCodepage(void) {

@@ -77,7 +77,7 @@ public class D2TouchOverlay extends View {
         KIND_EDIT_DONE = 11, KIND_EDIT_RESET = 12, KIND_EDIT_BIGGER = 13, KIND_EDIT_SMALLER = 14, KIND_EDIT_DEBUG = 15,
         KIND_INTERACT = 16, KIND_MENU_TOGGLE = 17, KIND_PAUSE = 18, KIND_PORTAL = 19, KIND_RESPEC = 21, KIND_SHOP_POTIONS = 22, KIND_SORT = 23,
         KIND_RECIPES = 24,
-        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27;
+        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27, KIND_MORE = 28;
 
     private static final int ICON_TEXT = -1, ICON_RUN = 100, ICON_ARROW = 101, ICON_LINES = 102, ICON_PAUSE = 103, ICON_PORTAL = 104,
         ICON_CUBE = 105;
@@ -369,6 +369,10 @@ public class D2TouchOverlay extends View {
     private long pauseSentAt;
     private int hudLayout;
     private boolean menuOpen;
+
+    /** v45: the key row is gone. Four keys stand at the right edge, everything else lives
+        in the grid that the "..." key opens. */
+    private boolean barMore;
 
 
 
@@ -1087,6 +1091,7 @@ public class D2TouchOverlay extends View {
         java.util.ArrayList<String> captionList = new java.util.ArrayList<>();
         for (int i = 0; i < labels.length; i++) {
             String id = ids[i], label = glass ? glassLabel(ids[i], labels[i]) : labels[i];
+            if (!barMore && !barPrimary(id)) continue;
             idList.add(id);
             labelList.add(label);
             kindList.add(kinds[i]);
@@ -1125,6 +1130,13 @@ public class D2TouchOverlay extends View {
             captionList.add(null);
         }
 
+        idList.add("more");
+        labelList.add("\u22EF");
+        kindList.add(KIND_MORE);
+        keyList.add(0);
+        iconList.add(ICON_TEXT);
+        captionList.add(null);
+
         int count = labelList.size();
         String[] allIds = idList.toArray(new String[0]);
         float rowGap = graphics != null ? menuRowGap(2 * half) : gap;
@@ -1146,10 +1158,23 @@ public class D2TouchOverlay extends View {
             halfWidths[i] = hw;
         }
 
-        int[] rowLines = new int[count];
-        float[] rights = D2MenuRow.rightEdges(allIds, halfWidths, toggle, pinnedMenu, menuShownOpen() || graphics == null,
-            w - 8 * dp - rightShift, rowGap, 8 * dp, rowLines);
-        for (int i = 0; i < count; i++) addRect(row[i], rights[i] - halfWidths[i], y + rowLines[i] * (2 * half + 10 * dp), halfWidths[i], half);
+        float rightEdge = w - 8 * dp - rightShift;
+        if (!barMore) {
+            for (int i = 0; i < count; i++) {
+                addRect(row[i], rightEdge - halfWidths[i], y + i * (2 * half + 8 * dp), halfWidths[i], half);
+            }
+        }
+        else {
+            float cell = 0;
+            for (int i = 0; i < count; i++) cell = Math.max(cell, 2 * halfWidths[i]);
+            cell += 8 * dp;
+            int cols = count > 12 ? 4 : 3;
+            for (int i = 0; i < count; i++) {
+                int col = i % cols, rowNo = i / cols;
+                float cx = rightEdge - (cols - 1 - col) * (cell + 6 * dp) - halfWidths[i];
+                addRect(row[i], cx, y + rowNo * (2 * half + 8 * dp), halfWidths[i], half);
+            }
+        }
 
 
         if (graphics != null) {
@@ -3098,6 +3123,12 @@ public class D2TouchOverlay extends View {
 
 
     /** The label shown on a glass key: short, so the whole bar stays one line. */
+    /** Only these four stay on screen; "..." opens the rest as a grid. */
+    private static boolean barPrimary(String id) {
+        return "inv".equals(id) || "skills".equals(id) || "char".equals(id) || "esc".equals(id);
+    }
+
+
     private String glassLabel(String id, String label) {
         if (id == null) return label;
         switch (id) {
@@ -5060,6 +5091,11 @@ public class D2TouchOverlay extends View {
 
                 if (!controlsVisible) setControlsVisible(true, false);
                 else setEditMode(true);
+                break;
+            case KIND_MORE:
+                barMore = !barMore;
+                if (getWidth() > 0) layoutButtons(getWidth(), getHeight());
+                invalidate();
                 break;
             case KIND_MENU:
                 if (openMenu != null) openMenu.run();
