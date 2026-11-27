@@ -54,10 +54,10 @@ final class D2BigInventoryGuard {
 
     static String keepOnForStart(Context context, File gameDir, D2ModInfo.Mod mod) throws java.io.IOException {
         if (!D2BigInventory.guarded(mod != null && mod.inventory)) return null;
-        boolean possible = GameShadow.isModBundled(context) && D2BigInventory.languageOk(D2Settings.gameLanguage(context));
+        boolean possible = GameShadow.isModBundled(context);
         boolean modOn = D2Settings.modEnabled(context);
         if (possible && modOn && D2Settings.bigInventory(context)) return null;
-        List<D2StashEdge.Place> places = check(gameDir, mod);
+        List<D2StashEdge.Place> places = keepable(check(gameDir, mod));
         if (places.isEmpty()) return null;
         String in = mod != null ? " in mod " + mod.id : "";
         if (!possible) {
@@ -70,5 +70,17 @@ final class D2BigInventoryGuard {
 
         return D2Text.get(context, modOn ? R.string.big_inv_kept_on_start : R.string.big_inv_kept_on_start_mod,
             where(context, places));
+    }
+
+
+    /** A character file the checker cannot read is no proof of items outside 10 x 4: it must never keep the game shut.
+        Such a save is only noted, the character still gets loaded by the game itself. */
+    static List<D2StashEdge.Place> keepable(List<D2StashEdge.Place> places) {
+        List<D2StashEdge.Place> out = new ArrayList<>();
+        for (D2StashEdge.Place p : places) {
+            if (p.unreadable) D2ExitLog.note("big inventory: " + p.character + " unreadable, starting anyway");
+            else out.add(p);
+        }
+        return out;
     }
 }

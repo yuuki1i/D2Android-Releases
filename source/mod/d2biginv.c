@@ -23,7 +23,6 @@
 
 #define BI_MARKER          "d2android-biginv"
 #define CAP3_BIGINV        0x01
-#define ORD_LangGetLanguage 10001
 
 static int biWanted;
 static int biPanelSite;
@@ -184,26 +183,22 @@ static void biInstallPanel(DWORD clientBase) {
 
 
 
-static LONG biLanguage(void) {
-    HMODULE lang = GetModuleHandleA("D2Lang.dll");
-    FARPROC get = lang ? GetProcAddress(lang, (LPCSTR) ORD_LangGetLanguage) : NULL;
-    return get ? (LONG) ((DWORD (__stdcall*)(void)) get)() : -1;
-}
-
-
+/* No D2Lang call here. Ordinal 10001 is GetLanguage only in the 1.13d D2Lang.dll; the 1.13c one (and every
+   localised rebuild, e.g. the Chinese patch) answers a different export, and calling it without arguments
+   crashed the game with a write to 00000000 right when a character entered the world. The grid is decided from
+   what can be checked without touching D2Lang: the panel site, the rebuilt 10 x 8 panel and the table itself. */
 void __cdecl biTableLoaded(BYTE* table) {
     *(BYTE**) (biCommon + RVA_InvTable) = table;
     int count = (int) RD32(biCommon, RVA_InvCount);
-    LONG language = biLanguage();
     int result = -2;
-    if (biPanelSite && language >= 0 && (language < 6 || language > 9) && biPanelReady())
-        result = biTableApply(table, count);
+    if (biPanelSite && biPanelReady()) result = biTableApply(table, count);
     InterlockedExchange(&biBig, result >= 0);
     invGridH = result >= 0 ? BI_ROWS : INV_H;
     static int logged;
     if (logged++ < 20 || result < 0)
-        logLine("big inventory: table loaded (language %ld): %s", language,
-            result > 0 ? "10 x 8 written" : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, left 10 x 4" : "left 10 x 4");
+        logLine("big inventory: table loaded: %s", result > 0 ? "10 x 8 written"
+            : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, left 10 x 4"
+            : "panel not ready, left 10 x 4");
 }
 
 void biTableStub(void);

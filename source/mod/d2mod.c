@@ -4735,7 +4735,10 @@ static void gameTick(void) {
 
 
 __attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void) {
-    if (!gameThreadId) gameThreadId = GetCurrentThreadId();
+    if (!gameThreadId) {
+        gameThreadId = GetCurrentThreadId();
+        logLine("game loop: first tick, thread %04lX", (unsigned long) gameThreadId);
+    }
     gameTick();
     crashStep = NULL;
 }

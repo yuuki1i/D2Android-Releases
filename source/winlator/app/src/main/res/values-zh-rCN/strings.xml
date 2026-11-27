@@ -1724,7 +1724,7 @@
     <string name="big_inv_game_running">请先退出游戏，背包内容可能仍在变化。%1$s</string>
     <string name="big_inv_kept_on_start">已重新启用大型背包：物品位于第 5–8 行，关闭大型背包会删除这些物品。
 %1$s</string>
-    <string name="big_inv_start_refused">游戏无法启动：背包第 5–8 行有物品，而此游戏语言不支持大型背包。关闭后物品会被删除。请在支持大型背包的角色中将物品移至前四行：
+    <string name="big_inv_start_refused">游戏无法启动：背包第 5–8 行有物品，而这套游戏文件没有大背包支持（应用内的 mod 没有装上）。关闭后这些物品会被删除。请先在能开大背包的角色里把物品移到前四行：
 %1$s</string>
     <string name="launch_kept_on_title">已重新开启</string>
     <string name="big_inv_kept_on_start_mod">大型背包和应用游戏辅助已重新开启：物品位于背包第 5–8 行，关闭后会被删除。

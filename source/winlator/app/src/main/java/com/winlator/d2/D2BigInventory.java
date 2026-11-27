@@ -21,8 +21,6 @@ public final class D2BigInventory {
 
     public static final String FILE = "d2android-biginv";
 
-    static final String[] OWN_PANEL_LANGUAGES = {"jpn", "kor", "sin", "chi"};
-
     private D2BigInventory() {}
 
 
@@ -55,9 +53,8 @@ public final class D2BigInventory {
     }
 
 
+    /** The mod builds its own 10 x 8 panel from the game's InvChar6 frames, so no language is left out any more. */
     public static boolean languageOk(String language) {
-        if (language == null) return true;
-        for (String l : OWN_PANEL_LANGUAGES) if (l.equals(language)) return false;
         return true;
     }
 }
