@@ -209,6 +209,31 @@ public class D2GameActivity extends D2Activity {
         }
 
 
+        imeSink = new android.widget.EditText(this);
+        imeSink.setSingleLine(true);
+        imeSink.setAlpha(0f);
+        imeSink.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        imeSink.addTextChangedListener(new android.text.TextWatcher() {
+            private boolean busy;
+
+            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) { }
+            @Override public void onTextChanged(CharSequence s, int a, int b, int c) { }
+
+            @Override public void afterTextChanged(android.text.Editable e) {
+                if (busy) return;
+                String text = e.toString();
+                if (text.isEmpty()) return;
+                busy = true;
+                e.clear();
+                busy = false;
+                if (textKeyboard == null) textKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+                textKeyboard.typeText(text);
+            }
+        });
+        root.addView(imeSink, new FrameLayout.LayoutParams(2, 2));
+
         screen = new D2GuestScreen(this, root, true, true);
         screen.setVortek(getIntent().getBooleanExtra(EXTRA_VORTEK, false));
         xServer = screen.getXServer();
@@ -702,6 +727,9 @@ public class D2GameActivity extends D2Activity {
 
     private com.winlator.xserver.Keyboard textKeyboard;
 
+    /** Invisible field that takes the Android keyboard's text and pushes it into the guest. */
+    private android.widget.EditText imeSink;
+
     /** The Android keyboard cannot type into the game window, so the text is collected here
         and pushed to the guest as key presses. */
     private void showTextInput() {
@@ -736,10 +764,11 @@ public class D2GameActivity extends D2Activity {
             (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm == null) return;
         if (!show) {
-
+            if (imeSink != null) imeSink.clearFocus();
             imm.hideSoftInputFromWindow(decor.getWindowToken(), 0);
             return;
         }
+        if (imeSink != null) imeSink.requestFocus();
 
         D2Keyboard.show(new D2Keyboard.Ime() {
             @Override
