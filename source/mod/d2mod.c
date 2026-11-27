@@ -3310,6 +3310,7 @@ static void stashTest(BYTE op, BYTE value);
 #include "d2points.c"
 
 static void logChain(void);
+static void loadPackChain(void);
 
 /* v41: the app's 16 skill slots were only kept on the phone side. Push them into the
    game once per session, so F1..F8 actually carry the skills the user assigned. */
@@ -3417,6 +3418,7 @@ static void handleCommands(void* player, int stale) {
         if (cmd == CMD_SELECT_SKILL && n >= 11 && player && !pauseApplied) selectSkill(player, buf[8] == 0, *(WORD*) (buf + 9), n >= 12 && buf[11] == 1, n >= 13 && buf[12] == 1);
         applyAppSlots(player);
         logChain();
+        loadPackChain();
         if (cmd == CMD_SLOTS && n >= 8 + 32) {
             int changed = !appSlotsSet;
             for (int i = 0; i < 16; i++) {
@@ -5734,11 +5736,33 @@ static void readGuestCodepage(void) {
     if (!guestCodepage) logLine("codepage: left to the host (TEXT Codepage=0)");
 }
 
+/* v50: PlugY only loads its DllToLoad list when its memory check passes, which it never does
+   next to a mod that patches sites. So the chain is pulled in here, four seconds in, once the
+   game has its window and PlugY is done. */
+static DWORD packStartTick;
+static volatile int packTried;
+static void loadPackChain(void) {
+    if (packTried || !packStartTick || GetTickCount() - packStartTick < 4000) return;
+    packTried = 1;
+    if (GetModuleHandleA("patchload.dll")) { logLine("pack: patchload.dll already in the process"); return; }
+    if (GetFileAttributesA("patchload.dll") == INVALID_FILE_ATTRIBUTES) {
+        logLine("pack: no patchload.dll in the game folder");
+        return;
+    }
+    HMODULE chain = LoadLibraryA("patchload.dll");
+    logLine("pack: patchload.dll %s", chain ? "loaded" : "refused to load");
+    if (!chain) return;
+    for (int i = 0; i < 20 && !GetModuleHandleA("D2Ext.dll"); i++) Sleep(50);
+    logLine("pack: D2Ext.dll %s, d2hackmap.dll %s",
+        GetModuleHandleA("D2Ext.dll") ? "loaded" : "missing",
+        (GetModuleHandleA("d2hackmap.dll") || GetModuleHandleA("_d2hackmap.dll")) ? "loaded" : "missing");
+}
+
 /* v45: one line per run that tells exactly which parts of the pack are inside the process,
    so "same as Winlator" can be checked instead of guessed. */
 static void logChain(void) {
-    static int done;
-    if (done) return;
+    static int said;
+    if (said >= 4) return;
     static const char* names[] = {"PlugY.dll", "patchload.dll", "D2Ext.dll", "d2hackmap.dll", "_d2hackmap.dll", "d2dx.dll", "d2dx_sgd2freeres.dll", NULL};
     char line[256];
     line[0] = 0;
@@ -5747,7 +5771,7 @@ static void logChain(void) {
         if (line[0]) lstrcatA(line, " ");
         lstrcatA(line, names[i]);
     }
-    done = 1;
+    said++;
     logLine("chain: %s", line[0] ? line : "none of the pack's plugins are loaded");
 }
 
@@ -6198,6 +6222,7 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
     (void) reserved;
     if (reason == DLL_PROCESS_ATTACH) {
         hSelf = instance;
+        packStartTick = GetTickCount();
         exeBase = (DWORD) GetModuleHandleA(NULL);
         DisableThreadLibraryCalls(instance);
         GetModuleFileNameA(instance, logPath, sizeof(logPath));

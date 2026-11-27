@@ -127,6 +127,13 @@ public class Keyboard {
         return true;
     }
 
+    /** One backspace, straight into the guest. */
+    public void backspace() {
+        xServer.injectKeyPress(XKeycode.KEY_BKSP, 65288);
+        AppUtils.runDelayed(() -> xServer.injectKeyRelease(XKeycode.KEY_BKSP), 40);
+    }
+
+
     /** Types a string straight into the guest: the Android IME never reaches the game window,
         so text goes in as key presses one character at a time. */
     public void typeText(String text) {

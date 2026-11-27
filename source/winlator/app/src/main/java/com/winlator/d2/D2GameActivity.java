@@ -754,6 +754,9 @@ public class D2GameActivity extends D2Activity {
     /** The Android keyboard cannot type into the game window, so the text is collected here
         and pushed to the guest as key presses. */
     private void showTextInput() {
+        if (textKeyboard == null) textKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+        D2TypingPad.show(this, textKeyboard);
+        if (true) return;
         android.widget.EditText input = new android.widget.EditText(this);
         input.setSingleLine(true);
         input.setHint(D2Text.get(this, R.string.menu_text_hint));
