@@ -10080,6 +10080,11 @@ public class D2TouchOverlay extends View {
     }
 
 
+    /** One tap = one press of a key the pack itself binds (see D2PackKeys). */
+    public void tapKey(int vk) {
+        pressKey(vk);
+    }
+
     private void pressKey(int vk) {
         if (altDown) sendKey(VK_MENU, true);
         sendKey(vk, false);

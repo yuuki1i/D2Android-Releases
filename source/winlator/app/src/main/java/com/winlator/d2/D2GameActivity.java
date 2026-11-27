@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 public class D2GameActivity extends D2Activity {
 
     private static final int MENU_HELPERS = 0, MENU_KEYBOARD = 1, MENU_IDLE = 2, MENU_QUIT = 3, MENU_BUILD = 4, MENU_INTRO = 5,
-        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8, MENU_PACKCHECK = 9;
+        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8, MENU_PACKCHECK = 9, MENU_PACKKEYS = 10;
 
     public static final String EXTRA_DIR = "d2_dir";
     public static final String EXTRA_PROGRAM = "d2_program";
@@ -628,6 +628,8 @@ public class D2GameActivity extends D2Activity {
         items.add(D2Text.get(this, R.string.menu_keyboard));
         ids.add(MENU_TEXT);
         items.add(D2Text.get(this, R.string.menu_text));
+        ids.add(MENU_PACKKEYS);
+        items.add("整合包快捷键");
         ids.add(MENU_PACKCHECK);
         items.add(D2Text.get(this, R.string.menu_packcheck));
         if (withIdle) {
@@ -664,6 +666,7 @@ public class D2GameActivity extends D2Activity {
                 else if (which == MENU_KEYBOARD) AppUtils.showKeyboard(this);
                 else if (which == MENU_TEXT) showTextInput();
                 else if (which == MENU_PACKCHECK) showPackCheck();
+                else if (which == MENU_PACKKEYS) D2PackKeys.show(this, overlay);
 
                 else if (com.winlator.BuildConfig.D2_INTERNAL && which == MENU_IDLE) D2IdleDialog.show(this, overlay.idleQuest(), (minutes, retreat) -> overlay.requestIdle(pausedAtMenu, minutes, retreat));
                 else {
