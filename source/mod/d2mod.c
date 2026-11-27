@@ -31,8 +31,8 @@
 
 
 
-#define GAMELOOP_PATCH_RVA      0x45280
-#define SELECTED_CALL_RVA       0x2B494
+#define GAMELOOP_PATCH_RVA      RVA_GameLoop
+#define SELECTED_CALL_RVA       RVA_SelectedCall
 
 
 
@@ -4831,6 +4831,24 @@ static void installHighlightHook(void) {
 
 #include "d2patchguard.c"
 
+/* PlugY's cow-portal patch fails because the byte at D2Game+0x67508 is no longer the original
+   0x85 (see PlugY.log). Log the byte whenever we pass a milestone so the log shows who got
+   there first. */
+static void probeGameSites(const char* stage) {
+    HMODULE gameModule = GetModuleHandleA("D2Game.dll");
+    if (!gameModule) {
+        logLine("probe %s: D2Game not loaded yet", stage);
+        return;
+    }
+    const BYTE* at = (const BYTE*) gameModule + RVA_GameCowPortal;
+    if (!readable((void*) at, 8)) {
+        logLine("probe %s: D2Game+0x%lX unreadable", stage, (unsigned long) RVA_GameCowPortal);
+        return;
+    }
+    logLine("probe %s: D2Game+0x%lX = %02X %02X %02X %02X %02X %02X %02X", stage,
+        (unsigned long) RVA_GameCowPortal, at[0], at[1], at[2], at[3], at[4], at[5], at[6]);
+}
+
 static int installHook(void) {
     BYTE* site = (BYTE*) (client + GAMELOOP_PATCH_RVA);
     if (memcmp(site, GAMELOOP_ORIGINAL, sizeof(GAMELOOP_ORIGINAL)) != 0) {
@@ -5147,7 +5165,9 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     setStatus(STATUS_WAITING, "waiting for D2Client.dll");
     directBegin();
     int plugyWaitLogged = 0;
+    probeGameSites("at setup start");
     for (int i = 0; !client; i++) {
+        biInstall();
         if (!plugyInitPending) {
             lockMultiplayerMenu();
             unbindMainMenuEsc();
@@ -5170,6 +5190,8 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     lockMultiplayerMenu();
     unbindMainMenuEsc();
     biInstallPanel(client);
+    biInstall();
+    probeGameSites("after D2Client is up");
 
     if (!menuLockChecked || !exitEscChecked)
         logLine(gameLoadLibraryA ? "setup: D2Launch not loaded yet, the menu patches follow when Game.exe loads it"
@@ -5177,8 +5199,10 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     Sleep(500);
     patchRaceStart();
     patchWaitForD2DX();
+    probeGameSites("before the game loop hook");
     if (!resolve()) setStatus(STATUS_FAILED, "functions not found");
     else if (installHook()) setStatus(STATUS_HOOKED, "connected");
+    probeGameSites("after the game loop hook");
 
 
     void* volatile* hero = heroVar();
@@ -5498,6 +5522,7 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
         installPlugYHook();
         installIntroSkip();
         biInstall();
+        probeGameSites("at DllMain");
         HANDLE thread = CreateThread(NULL, 0, setupThread, NULL, 0, NULL);
         if (thread) CloseHandle(thread);
     }

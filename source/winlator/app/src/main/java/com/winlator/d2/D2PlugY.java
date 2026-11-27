@@ -18,6 +18,13 @@ import java.io.InputStream;
 public final class D2PlugY {
     private static final String ASSET_DIR = "d2/plugy";
 
+    /** 1.13c: something else already rewrites PlugY's cow-portal site, so letting PlugY patch it aborts its install. */
+    private static boolean cowPortalSupported = true;
+
+    static void setCowPortalSupported(boolean supported) {
+        cowPortalSupported = supported;
+    }
+
     private D2PlugY() {}
 
     public static boolean isBundled(Context context) {
@@ -268,6 +275,10 @@ public final class D2PlugY {
             if (at < 0) throw new IllegalStateException("PlugY.ini without " + EXTRA_KEYS[i]);
             int end = ini.indexOf("\r\n", at + key.length());
             ini = ini.substring(0, at + key.length()) + (on[i] ? "1" : "0") + ini.substring(end);
+        }
+        if (!cowPortalSupported) {
+            ini = set(ini, "ActiveCowPortalWhenCowKingWasKilled", "0");
+            D2Trace.log("PlugY: cow portal option forced off for the 1.13c mod (its patch site is taken already)");
         }
         return ini;
     }

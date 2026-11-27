@@ -7,6 +7,7 @@
 #define RVA_InvTable 0x9FA5C
 #define RVA_InvCount 0x9FA58
 #define RVA_InvTableStore 0x82CA9  /* site rebuilt: same instruction sequence as 1.13d, addresses translated */
+#define RVA_GameCowPortal 0x67508  /* the 0x85 of 'test eax,eax' that PlugY's cow patch wants to change */
 
 /* d2server.c */
 #define RVA_DataTables 0x99E1C
@@ -22,6 +23,7 @@
 #define RVA_PanelPath 0xD6C48
 #define RVA_PanelCell 0x11A7C8
 #define RVA_UiPicture 0xBF6C0
+#define RVA_PanelInvBlock 0x27DD7  /* the BE / 75 05 / BE .. E8 .. BE .. A3 block around Panel\InvChar6 */
 
 /* d2compare.c */
 #define RVA_DrawHoverCall 0x1D791  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
@@ -323,3 +325,9 @@
 #define RVA_PlugYPage 0x32014  /* UNMAPPED (PlugY.dll) */
 #define RVA_PlugYLastPage 0x32018  /* UNMAPPED (PlugY.dll) */
 #define RVA_WorldUi 0x1D3E0  /* UNMAPPED (D2Client.dll/D2Game.dll/PlugY.dll) */
+
+/* d2mod.c: game loop prologue 83 EC 20 89 4C 24 0C (unique in 1.13c D2Client) */
+#define RVA_GameLoop 0x44230
+
+/* d2mod.c: the call to GetSelectedUnit inside ClickMap (1.13d 0x2B494 is ClickMap+0x74) */
+#define RVA_SelectedCall 0x1BF94

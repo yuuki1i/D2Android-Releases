@@ -46,6 +46,34 @@ final class D2PublicLogs {
     static void append(String text) {
         synchronized (LOCK) { writeLocked(text.endsWith("\n") ? text : text + "\n"); }
     }
+
+    /** Folds the tail of a guest side log into the session log so one file carries everything. */
+    static void appendFileTail(File file, String title, int maxBytes) {
+        synchronized (LOCK) {
+            if (file == null || !file.isFile()) {
+                writeLocked("=== " + title + ": no such file (" + (file == null ? "?" : file.getAbsolutePath()) + ") ===\n");
+                return;
+            }
+            long length = file.length();
+            long from = Math.max(0, length - maxBytes);
+            StringBuilder out = new StringBuilder();
+            out.append("=== ").append(title).append(": ").append(file.getName()).append(", ").append(length).append(" bytes");
+            if (from > 0) out.append(", last ").append(length - from);
+            out.append(" ===\n");
+            try (java.io.RandomAccessFile in = new java.io.RandomAccessFile(file, "r")) {
+                in.seek(from);
+                byte[] buffer = new byte[(int) (length - from)];
+                in.readFully(buffer);
+                out.append(new String(buffer, java.nio.charset.StandardCharsets.UTF_8));
+            }
+            catch (Exception e) {
+                out.append("cannot read: ").append(e).append('\n');
+            }
+            if (out.length() == 0 || out.charAt(out.length() - 1) != '\n') out.append('\n');
+            out.append("=== end of ").append(title).append(" ===\n");
+            writeLocked(out.toString());
+        }
+    }
     private static void writeLocked(String text) {
         try {
             if (sessionUri != null && app != null) {

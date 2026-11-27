@@ -5,11 +5,13 @@
 #define RVA_InvTable 0xA4CAC
 #define RVA_InvCount 0xA4CA8
 #define RVA_InvTableStore 0x6CC29
+#define RVA_GameCowPortal 0xEBEA  /* the 0F 85 of the cow-portal check PlugY patches */
 #define RVA_PanelLoadCall 0x6DFF3
 #define RVA_PanelPath6 0xD5AB0
 #define RVA_PanelPath 0xD5AA0
 #define RVA_PanelCell 0x103B60
 #define RVA_UiPicture 0x191F0
+#define RVA_PanelInvBlock 0x6DFE7
 
 /* d2compare.c */
 #define RVA_DrawHoverCall 0x1D791
@@ -287,3 +289,9 @@
 #define RVA_BeltUnfoldedUse 0x6EF0A
 #define RVA_CtrlPanelCells 0x103B70
 #define RVA_CtrlPanelLoad 0x6D512
+
+/* d2mod.c: game loop prologue 83 EC 20 89 4C 24 0C */
+#define RVA_GameLoop 0x45280
+
+/* d2mod.c: the call to GetSelectedUnit inside ClickMap */
+#define RVA_SelectedCall 0x2B494

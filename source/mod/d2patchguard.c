@@ -16,7 +16,12 @@
 
 
 
+/* the fps limiter counter D2DX nops out: cmp [abs], ebx - the absolute address differs per version */
+#if defined(D2VER_113C)
+static const BYTE D2DX_FPSFIX_ORIGINAL[4] = {0x39, 0x1D, 0x90, 0x34};
+#else
 static const BYTE D2DX_FPSFIX_ORIGINAL[4] = {0x39, 0x1D, 0xF0, 0x46};
+#endif
 #define D2DX_WAIT_MS 3000
 #define PATCH_GUARD_MAX 200
 

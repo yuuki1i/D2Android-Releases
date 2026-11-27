@@ -135,12 +135,15 @@ public final class GameShadow {
         }
 
 
-        if (isModBundled(context)) {
+        boolean modBundled = isModBundled(context);
+        String dll = modBundled ? modDll(context, gameDir) : MOD_DLL;
+        if (modBundled) {
             FileUtils.copy(context, MOD_ASSET_DIR + LOADER_EXE, new File(shadowDir, LOADER_EXE));
-            FileUtils.copy(context, MOD_ASSET_DIR + modDll(context, gameDir), new File(shadowDir, MOD_DLL));
+            FileUtils.copy(context, MOD_ASSET_DIR + dll, new File(shadowDir, MOD_DLL));
         }
 
-        boolean plugy = isModBundled(context) && D2Settings.modEnabled(context) && D2Settings.plugy(context);
+        D2PlugY.setCowPortalSupported(modBundled && !MOD_DLL_113C.equals(dll));
+        boolean plugy = modBundled && D2Settings.modEnabled(context) && D2Settings.plugy(context);
         D2PlugY.install(context, shadowDir, saveDir, plugy);
         if (plugy) plugyStatsHint(context, new File(new File(shadowDir, "PlugY"), D2PlugYTexts.STRINGS_FILE));
 
@@ -161,6 +164,7 @@ public final class GameShadow {
             if (link.exists() || FileUtils.isSymlink(link)) continue;
             FileUtils.symlink(entry, link);
         }
+        D2Trace.log("shadow: " + D2GameFiles.summary(context, shadowDir));
         return shadowDir;
     }
 
@@ -173,6 +177,7 @@ public final class GameShadow {
         if (!bundled(context, MOD_ASSET_DIR + MOD_DLL_113C)) return MOD_DLL;
         if (!"1.13c".equals(versionOf(gameDir))) return MOD_DLL;
         D2Trace.log("1.13c game folder detected; installing the 1.13c mod build");
+        D2Trace.log("game files: " + D2GameFiles.summary(context, gameDir));
         return MOD_DLL_113C;
     }
 

@@ -187,6 +187,12 @@ public final class D2Runtime {
         if (!ok || !new File(root, "usr/local/bin/box64").isFile()) throw new IOException(D2Text.get(context, R.string.runtime_unpack_failed));
         for (String dir : new String[]{"tmp", "home/xuser/.cache", "home/xuser/.config"}) new File(root, dir).mkdirs();
         if (!FileUtils.writeString(installedMarker(context), version + "\n")) throw new IOException(D2Text.get(context, R.string.runtime_finish_failed));
+        File box = new File(root, "usr/local/bin/box64");
+        try {
+            D2Trace.log("runtime: box64 file=" + box.isFile() + " canExec=" + box.canExecute() + " size=" + box.length()
+                + " loader=" + new File(root, "lib/ld-linux-aarch64.so.1").isFile());
+        }
+        catch (Throwable ignored) {}
     }
 
 

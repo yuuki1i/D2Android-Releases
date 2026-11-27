@@ -68,6 +68,7 @@ public class D2GameActivity extends D2Activity {
     private long stallResumedAt, dxvkLimitAt;
 
     private long presentsAtStart;
+    private boolean guestLogsDumped;
 
 
 
@@ -342,6 +343,7 @@ public class D2GameActivity extends D2Activity {
 
 
             D2Trace.log("game ended with status " + status + " (Wine desktop)");
+            dumpGuestLogs();
             if (early) {
                 D2Trace.log("game ended " + ranMs + " ms after its start: early end dialog"
                     + (refusedChip != null ? " (gpu refused by the driver, chip " + (refusedChip.isEmpty() ? "?" : refusedChip) + ")" : ""));
@@ -1381,8 +1383,24 @@ public class D2GameActivity extends D2Activity {
         D2FolderLock.releaseAll();
         D2KeepAliveService.stop(this);
         closeGuestLog();
+        dumpGuestLogs();
         D2SpieltestPort.stop();
         super.onDestroy();
+    }
+
+    /** The mod and PlugY write their own logs next to the game; fold them in so one file tells everything. */
+    private void dumpGuestLogs() {
+        if (guestLogsDumped) return;
+        guestLogsDumped = true;
+        try {
+            java.io.File dir = GameShadow.dir(this);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "d2android-mod.log"), "mod log", 262144);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "PlugY.log"), "PlugY log", 65536);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "wineboot.log"), "wineboot log", 65536);
+        }
+        catch (Throwable e) {
+            D2PublicLogs.append("guest logs not readable: " + e);
+        }
     }
 
     @Override

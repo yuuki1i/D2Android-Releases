@@ -33,7 +33,11 @@ static BYTE* biPending;
 static DWORD biCommon, biClient;
 DWORD biPanelOriginal;
 
+static int biRead;
+
 static void biReadFile(void) {
+    if (biRead) return;
+    biRead = 1;
     char path[MAX_PATH];
     lstrcpynA(path, logPath, sizeof(path));
     char* slash = strrchr(path, '\\');
@@ -161,12 +165,13 @@ static int biPatchCall(DWORD at, void* stub) {
 static void biInstallPanel(DWORD clientBase) {
     if (!biWanted || biPanelSite || !clientBase) return;
     static const BYTE jne[2] = {0x75, 0x05};
+    const DWORD B = RVA_PanelInvBlock;
     BYTE* at = (BYTE*) clientBase;
 
-    int ok = readable(at + 0x6DFE7, 0x1B) && at[0x6DFE7] == 0xBE && RD32(at, 0x6DFE8) == clientBase + RVA_PanelPath6
-        && memcmp(at + 0x6DFEC, jne, 2) == 0 && at[0x6DFEE] == 0xBE && RD32(at, 0x6DFEF) == clientBase + RVA_PanelPath
-        && callAt(clientBase, RVA_PanelLoadCall, RVA_UiPicture) && at[0x6DFF8] == 0xBE && at[0x6DFFD] == 0xA3
-        && RD32(at, 0x6DFFE) == clientBase + RVA_PanelCell
+    int ok = readable(at + B, 0x1B) && at[B] == 0xBE && RD32(at, B + 1) == clientBase + RVA_PanelPath6
+        && memcmp(at + B + 5, jne, 2) == 0 && at[B + 7] == 0xBE && RD32(at, B + 8) == clientBase + RVA_PanelPath
+        && callAt(clientBase, RVA_PanelLoadCall, RVA_UiPicture) && at[B + 0x11] == 0xBE && at[B + 0x16] == 0xA3
+        && RD32(at, B + 0x17) == clientBase + RVA_PanelCell
         && bytesAre(clientBase + RVA_PanelPath6, (const BYTE*) "Panel\\InvChar6", 15);
     if (ok) {
         biClient = clientBase;
@@ -215,13 +220,18 @@ __asm__(
 );
 
 
+static int biDone;
+
 static void biInstall(void) {
+    if (biDone) return;
     biReadFile();
     if (!biWanted) return;
     biCommon = (DWORD) GetModuleHandleA("D2Common.dll");
+    if (!biCommon) return;
+    biDone = 1;
     BYTE* at = (BYTE*) (biCommon + RVA_InvTableStore);
 
-    int ok = biCommon && readable(at, 12) && at[0] == 0xA3 && RD32(at, 1) == biCommon + RVA_InvTable && at[5] == 0x83
+    int ok = readable(at, 12) && at[0] == 0xA3 && RD32(at, 1) == biCommon + RVA_InvTable && at[5] == 0x83
         && at[6] == 0x3D && RD32(at, 7) == biCommon + RVA_InvCount && at[11] == BI_RECORDS
         && readable((void*) (biCommon + RVA_InvCount), 8);
     if (ok && RD32(biCommon, RVA_InvTable)) {
