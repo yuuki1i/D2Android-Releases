@@ -209,6 +209,9 @@ public class D2GameActivity extends D2Activity {
         }
 
 
+        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+            | android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+
         imeSink = new android.widget.EditText(this);
         imeSink.setSingleLine(true);
         imeSink.setAlpha(0f);

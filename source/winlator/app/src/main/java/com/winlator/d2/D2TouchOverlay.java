@@ -4081,8 +4081,10 @@ public class D2TouchOverlay extends View {
         boolean hit = menuTapX >= f[0] - m && menuTapX <= f[0] + f[2] + m && menuTapY >= f[1] - m && menuTapY <= f[1] + f[3] + m;
         if (hit && SystemClock.uptimeMillis() - menuTapAt < 1000) {
             menuTapAt = 0;
-            keyboardOpened = true;
-            keyboard.accept(true);
+            keyboardOpened = false;
+            if (keyboard != null) keyboard.accept(false);
+            if (typingKeyboard == null) typingKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+            D2TypingPad.show(getContext(), typingKeyboard);
         }
 
 
@@ -6480,7 +6482,7 @@ public class D2TouchOverlay extends View {
 
         long hudNow = SystemClock.uptimeMillis();
 
-        boolean pointer = hidePointer && s.pointerHideable && controlsVisible && !editMode && assignButton == null && !pauseWanted;
+        boolean pointer = hidePointer && controlsVisible && !editMode && assignButton == null && !pauseWanted;
         boolean ownHud = hud != null && s.canOwnHud();
 
         boolean unlimited = staminaMode == D2Settings.STAMINA_UNLIMITED && s.unlimitedStaminaPossible;
