@@ -471,6 +471,8 @@ public class D2SettingsActivity extends D2Activity {
                 return argsFree(box, e.label);
             case "glassKeys":
                 return glassKeys(box, e.label);
+            case "glassTheme":
+                return glassTheme(box, e.label);
             case "modsList":
                 return modsList(box);
             case "modsImport":
@@ -726,6 +728,38 @@ public class D2SettingsActivity extends D2Activity {
 
     private TextView argsLine, argsWarnings;
 
+
+    /** The look of the key bar: Xbox, Switch or PlayStation, all in the same graphite glass. */
+    private View glassTheme(LinearLayout box, String label) {
+        box.addView(label(label));
+        TextView value = new TextView(this);
+        value.setTextSize(15);
+        value.setPadding(dp(8), dp(6), dp(8), dp(6));
+        D2Style.text(value);
+        Runnable show = () -> value.setText(D2GlassKeys.name(D2Settings.glassTheme(this)));
+        show.run();
+        value.setOnClickListener((v) -> {
+            final int[] themes = {D2GlassKeys.XBOX, D2GlassKeys.SWITCH, D2GlassKeys.PLAYSTATION};
+            String[] names = new String[themes.length];
+            for (int i = 0; i < themes.length; i++) names[i] = D2GlassKeys.name(themes[i]);
+            int current = 0;
+            for (int i = 0; i < themes.length; i++) if (themes[i] == D2Settings.glassTheme(this)) current = i;
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                .setSingleChoiceItems(names, current, (d, which) -> {
+                    D2Settings.setGlassTheme(this, themes[which]);
+                    show.run();
+                    d.dismiss();
+                })
+                .create();
+            dialog.show();
+            D2Sound.attach(dialog);
+        });
+        LinearLayout.LayoutParams lp = matchWidth();
+        lp.leftMargin = dp(8);
+        box.addView(value, lp);
+        box.addView(hint(getString(R.string.settings_glass_theme_hint)));
+        return box;
+    }
 
     /** The keys of the glass bar, one "name:keycode" per entry, separated by semicolons. */
     private View glassKeys(LinearLayout box, String label) {

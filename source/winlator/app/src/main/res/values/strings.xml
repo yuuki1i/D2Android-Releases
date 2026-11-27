@@ -1300,6 +1300,8 @@
     <string name="settings_arg_direct">Read files from the folder (-direct)</string>
     <string name="settings_arg_txt">Read tables as text (-txt)</string>
     <string name="settings_arg_ns">Without sound (-ns)</string>
+    <string name="settings_glass_theme">Key bar theme</string>
+    <string name="settings_glass_theme_hint">Xbox, Switch or PlayStation: same graphite glass, different corners and accent</string>
     <string name="settings_glass_keys">Custom keys on the bar</string>
     <string name="settings_glass_keys_hint">Name and key code, separated by a semicolon, e.g. 转换:86;快施:76</string>
     <string name="settings_args_free">More parameters</string>
