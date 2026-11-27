@@ -5731,6 +5731,32 @@ static void readGuestCodepage(void) {
     if (!guestCodepage) logLine("codepage: left to the host (TEXT Codepage=0)");
 }
 
+/* v43: the pack ships its own plugin chain (patchload -> D2Ext / d2hackmap). Without it
+   the tables load but nothing runs the pack's own start-up, so a new hero gets no starter
+   gear, no cube and no 聚宝盆. Pull the chain in unless the ini says otherwise. */
+static void loadPackPlugins(void) {
+    static int done;
+    if (done) return;
+    done = 1;
+    char path[MAX_PATH];
+    lstrcpynA(path, logPath, sizeof(path));
+    char* slash = strrchr(path, '\\');
+    if (slash) lstrcpyA(slash + 1, "d2android-mod.ini");
+    int wanted = slash ? GetPrivateProfileIntA("PACK", "Plugins", 1, path) : 1;
+    if (!wanted) { logLine("pack: plugins left alone (PACK Plugins=0)"); return; }
+    if (GetModuleHandleA("patchload.dll")) { logLine("pack: patchload.dll already in the process"); return; }
+    if (GetFileAttributesA("patchload.dll") == INVALID_FILE_ATTRIBUTES) {
+        logLine("pack: no patchload.dll next to the game, nothing to load");
+        return;
+    }
+    logLine("pack: loading patchload.dll");
+    HMODULE chain = LoadLibraryA("patchload.dll");
+    logLine("pack: patchload.dll %s", chain ? "loaded" : "refused");
+    if (!chain) return;
+    HMODULE ext = GetModuleHandleA("D2Ext.dll");
+    logLine("pack: D2Ext.dll %s", ext ? "loaded" : (GetFileAttributesA("D2Ext.dll") == INVALID_FILE_ATTRIBUTES ? "missing" : "not loaded"));
+}
+
 static void ensureCodepage(void) {
     static const char* names[] = {"D2Lang.dll", "D2Win.dll", "D2Client.dll", "D2Common.dll", "D2Game.dll",
         "D2Launch.dll", "D2Multi.dll", "D2MCPClient.dll", "Game.exe", "PlugY.dll", NULL};
@@ -6189,6 +6215,7 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
         logLine("D2Android mod loaded");
         readGuestCodepage();
         patchTextAll();
+        loadPackPlugins();
         installPlugYHook();
         installIntroSkip();
         biInstall();

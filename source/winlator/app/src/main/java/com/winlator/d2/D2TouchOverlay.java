@@ -77,7 +77,7 @@ public class D2TouchOverlay extends View {
         KIND_EDIT_DONE = 11, KIND_EDIT_RESET = 12, KIND_EDIT_BIGGER = 13, KIND_EDIT_SMALLER = 14, KIND_EDIT_DEBUG = 15,
         KIND_INTERACT = 16, KIND_MENU_TOGGLE = 17, KIND_PAUSE = 18, KIND_PORTAL = 19, KIND_RESPEC = 21, KIND_SHOP_POTIONS = 22, KIND_SORT = 23,
         KIND_RECIPES = 24,
-        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27;
+        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27, KIND_MORE = 28;
 
     private static final int ICON_TEXT = -1, ICON_RUN = 100, ICON_ARROW = 101, ICON_LINES = 102, ICON_PAUSE = 103, ICON_PORTAL = 104,
         ICON_CUBE = 105;
@@ -369,6 +369,9 @@ public class D2TouchOverlay extends View {
     private long pauseSentAt;
     private int hudLayout;
     private boolean menuOpen;
+
+    /** v43: the key row starts compact and unfolds the rest behind the "..." key. */
+    private boolean barMore;
 
 
 
@@ -1087,6 +1090,7 @@ public class D2TouchOverlay extends View {
         java.util.ArrayList<String> captionList = new java.util.ArrayList<>();
         for (int i = 0; i < labels.length; i++) {
             String id = ids[i], label = glass ? glassLabel(ids[i], labels[i]) : labels[i];
+            if (!barMore && !barPrimary(id)) continue;
             idList.add(id);
             labelList.add(label);
             kindList.add(kinds[i]);
@@ -1124,6 +1128,13 @@ public class D2TouchOverlay extends View {
             iconList.add(ICON_TEXT);
             captionList.add(null);
         }
+
+        idList.add("more");
+        labelList.add("\u22EF");
+        kindList.add(KIND_MORE);
+        keyList.add(0);
+        iconList.add(ICON_TEXT);
+        captionList.add(null);
 
         int count = labelList.size();
         String[] allIds = idList.toArray(new String[0]);
@@ -3098,6 +3109,13 @@ public class D2TouchOverlay extends View {
 
 
     /** The label shown on a glass key: short, so the whole bar stays one line. */
+    /** Compact bar: only these stay on the row, everything else moves behind the "..." key. */
+    private static boolean barPrimary(String id) {
+        return "toggle".equals(id) || "drawer".equals(id) || "esc".equals(id) || "map".equals(id)
+            || "inv".equals(id) || "skills".equals(id) || "char".equals(id);
+    }
+
+
     private String glassLabel(String id, String label) {
         if (id == null) return label;
         switch (id) {
@@ -5060,6 +5078,11 @@ public class D2TouchOverlay extends View {
 
                 if (!controlsVisible) setControlsVisible(true, false);
                 else setEditMode(true);
+                break;
+            case KIND_MORE:
+                barMore = !barMore;
+                if (getWidth() > 0) layoutButtons(getWidth(), getHeight());
+                invalidate();
                 break;
             case KIND_MENU:
                 if (openMenu != null) openMenu.run();
