@@ -117,9 +117,19 @@ static int srvTake(LONG seq, LONG* answer, LONG* count) {
     SrvSlot* s = srvSlot(seq);
 
     if (!s || InterlockedCompareExchange(&s->state, SRV_DONE, SRV_DONE) != SRV_DONE) return 0;
-    *answer = s->answer;
-    if (count) *count = s->count;
+    LONG got = s->answer, extra = s->count;
     InterlockedExchange(&s->state, SRV_FREE);
+    if (got < -1 || got > 0xFFFF) {
+        static DWORD lastWarn;
+        DWORD now = GetTickCount();
+        if (!lastWarn || now - lastWarn >= 5000) {
+            lastWarn = now;
+            logLine("server: the answer %08lX for command %ld is no code: dropped", (unsigned long) got, (long) seq);
+        }
+        return 0;
+    }
+    *answer = got;
+    if (count) *count = extra;
     return 1;
 }
 

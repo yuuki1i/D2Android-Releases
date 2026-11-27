@@ -256,6 +256,16 @@ static void damageShieldPrepare(void* player);
 
 
 static void resumeCommand(void* player, const BYTE* buf, int n) {
+#ifdef D2VER_113C
+    /* The jump runs through the injected D2Game part, which answers with garbage on 1.13c
+       (a pointer instead of a code), so the whole resume dance is off for this version. */
+    static int once;
+    if (!once) {
+        once = 1;
+        logLine("resume: off in this build (the 1.13c server part does not answer the jump), the app keeps its own place");
+    }
+    return;
+#endif
     if (n >= 9 && buf[8] == 0) {
 
         if (rsm.phase && rsm.arrived) resumeArrived(GetTickCount(), RS_REFUSED, RR_CANCELLED, "cancelled by the app");
