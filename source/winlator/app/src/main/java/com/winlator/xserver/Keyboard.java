@@ -127,7 +127,26 @@ public class Keyboard {
         return true;
     }
 
-    private XKeycode getCustomXKeycodeForKeysym(int keysym) {
+    /** Types a string straight into the guest: the Android IME never reaches the game window,
+        so text goes in as key presses one character at a time. */
+    public void typeText(String text) {
+        typeText(text, 0);
+    }
+
+
+    private void typeText(String text, int index) {
+        if (text == null || index >= text.length()) return;
+        char c = text.charAt(index);
+        XKeycode keycode = getCustomXKeycodeForKeysym(c);
+        if (keycode != null) {
+            xServer.injectKeyPress(keycode, c);
+            AppUtils.runDelayed(() -> xServer.injectKeyRelease(keycode), 35);
+        }
+        AppUtils.runDelayed(() -> typeText(text, index + 1), 55);
+    }
+
+
+    public XKeycode getCustomXKeycodeForKeysym(int keysym) {
         XKeycode[] customKeys = XKeycode.getCustomKeys();
         for (XKeycode xKeycode : customKeys) if (hasKeysym(xKeycode.id, keysym)) return xKeycode;
         for (XKeycode xKeycode : customKeys) {

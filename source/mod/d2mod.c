@@ -3416,7 +3416,7 @@ static void handleCommands(void* player, int stale) {
         if (cmd == CMD_PLUGY && n >= 9 && player) plugyCommand(buf[8]);
         if (cmd == CMD_SELECT_SKILL && n >= 11 && player && !pauseApplied) selectSkill(player, buf[8] == 0, *(WORD*) (buf + 9), n >= 12 && buf[11] == 1, n >= 13 && buf[12] == 1);
         applyAppSlots(player);
-        if (player) logChain();
+        logChain();
         if (cmd == CMD_SLOTS && n >= 8 + 32) {
             int changed = !appSlotsSet;
             for (int i = 0; i < 16; i++) {

@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 public class D2GameActivity extends D2Activity {
 
     private static final int MENU_HELPERS = 0, MENU_KEYBOARD = 1, MENU_IDLE = 2, MENU_QUIT = 3, MENU_BUILD = 4, MENU_INTRO = 5,
-        MENU_SWITCH = 6, MENU_RECIPES = 7;
+        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8;
 
     public static final String EXTRA_DIR = "d2_dir";
     public static final String EXTRA_PROGRAM = "d2_program";
@@ -598,6 +598,8 @@ public class D2GameActivity extends D2Activity {
         items.add(D2Text.get(this, R.string.menu_intro));
         ids.add(MENU_KEYBOARD);
         items.add(D2Text.get(this, R.string.menu_keyboard));
+        ids.add(MENU_TEXT);
+        items.add(D2Text.get(this, R.string.menu_text));
         if (withIdle) {
             ids.add(MENU_IDLE);
             items.add(idleBlocked == null ? D2Text.get(this, R.string.menu_idle) : D2Text.get(this, R.string.menu_idle_blocked, idleBlocked));
@@ -630,6 +632,7 @@ public class D2GameActivity extends D2Activity {
                 else if (which == MENU_RECIPES) overlay.openRecipeBook(pausedAtMenu);
                 else if (which == MENU_INTRO) overlay.showHintsAgain();
                 else if (which == MENU_KEYBOARD) AppUtils.showKeyboard(this);
+                else if (which == MENU_TEXT) showTextInput();
 
                 else if (com.winlator.BuildConfig.D2_INTERNAL && which == MENU_IDLE) D2IdleDialog.show(this, overlay.idleQuest(), (minutes, retreat) -> overlay.requestIdle(pausedAtMenu, minutes, retreat));
                 else {
@@ -695,6 +698,33 @@ public class D2GameActivity extends D2Activity {
 
 
 
+
+
+    private com.winlator.xserver.Keyboard textKeyboard;
+
+    /** The Android keyboard cannot type into the game window, so the text is collected here
+        and pushed to the guest as key presses. */
+    private void showTextInput() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setSingleLine(true);
+        input.setHint(D2Text.get(this, R.string.menu_text_hint));
+        int pad = Math.round(16 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout box = new android.widget.FrameLayout(this);
+        box.setPadding(pad, pad / 2, pad, 0);
+        box.addView(input);
+        new AlertDialog.Builder(this)
+            .setTitle(D2Text.get(this, R.string.menu_text))
+            .setView(box)
+            .setPositiveButton(android.R.string.ok, (d, w) -> {
+                String text = input.getText().toString();
+                if (text.isEmpty()) return;
+                if (textKeyboard == null) textKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+                textKeyboard.typeText(text);
+            })
+            .setNegativeButton(android.R.string.cancel, null)
+            .show();
+        input.requestFocus();
+    }
 
 
     private void setKeyboardShown(boolean show) {
