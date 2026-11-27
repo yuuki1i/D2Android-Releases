@@ -5757,7 +5757,10 @@ static DWORD WINAPI setupThread(LPVOID arg) {
         else heroWithoutTick = 0;
         lastBeat = beat;
         checkMenuField(1);
+#ifdef D2VER_113C
+        /* The 1.13c archive of this build is GBK; the 1.13d tree keeps the host's code page. */
         ensureCodepage();
+#endif
         for (int i = 0; i < 4; i++) {
             Sleep(200);
             checkMenuField(0);
