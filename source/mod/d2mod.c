@@ -5799,8 +5799,20 @@ static void ensureCodepage(void) {
     }
 }
 
+static DWORD WINAPI packThread(LPVOID arg) {
+    (void) arg;
+    for (int i = 0; i < 60 && !GetModuleHandleA("D2Client.dll"); i++) Sleep(100);
+    Sleep(2500);
+    loadPackChain();
+    logChain();
+    return 0;
+}
+
+
 static DWORD WINAPI setupThread(LPVOID arg) {
     (void) arg;
+    HANDLE pack = CreateThread(NULL, 0, packThread, NULL, 0, NULL);
+    if (pack) CloseHandle(pack);
     fixStormStreamRace();
     openSockets();
     setStatus(STATUS_WAITING, "waiting for D2Client.dll");

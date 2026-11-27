@@ -77,7 +77,7 @@ public class D2TouchOverlay extends View {
         KIND_EDIT_DONE = 11, KIND_EDIT_RESET = 12, KIND_EDIT_BIGGER = 13, KIND_EDIT_SMALLER = 14, KIND_EDIT_DEBUG = 15,
         KIND_INTERACT = 16, KIND_MENU_TOGGLE = 17, KIND_PAUSE = 18, KIND_PORTAL = 19, KIND_RESPEC = 21, KIND_SHOP_POTIONS = 22, KIND_SORT = 23,
         KIND_RECIPES = 24,
-        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27;
+        KIND_SKILLSET = 25, KIND_WEAPON_SWAP = 26, KIND_THEME = 27, KIND_TYPING = 28;
 
     private static final int ICON_TEXT = -1, ICON_RUN = 100, ICON_ARROW = 101, ICON_LINES = 102, ICON_PAUSE = 103, ICON_PORTAL = 104,
         ICON_CUBE = 105;
@@ -369,6 +369,8 @@ public class D2TouchOverlay extends View {
     private long pauseSentAt;
     private int hudLayout;
     private boolean menuOpen;
+
+    private com.winlator.xserver.Keyboard typingKeyboard;
 
 
 
@@ -1056,26 +1058,26 @@ public class D2TouchOverlay extends View {
         D2Hud graphics = hud;
 
         String[] ids = graphics != null
-            ? new String[]{"toggle", "pause", "portal", "esc", "map", D2RezeptOeffnen.MENU_ID, "inv", "char", "skills", D2MenuRow.QUESTS, "run", "names", "keys", "drawer"}
-            : new String[]{"drawer", "pause", "portal", "esc", "map", D2RezeptOeffnen.MENU_ID, "inv", "char", "skills", "run", "names", "keys"};
+            ? new String[]{"toggle", "pause", "portal", "esc", "map", D2RezeptOeffnen.MENU_ID, "inv", "char", "skills", D2MenuRow.QUESTS, "run", "names", "keys", "text", "drawer"}
+            : new String[]{"drawer", "pause", "portal", "esc", "map", D2RezeptOeffnen.MENU_ID, "inv", "char", "skills", "run", "names", "keys", "text"};
         String pause = text(R.string.btn_pause), portal = text(R.string.btn_portal), map = text(R.string.btn_map), inv = text(R.string.btn_inv),
             chr = text(R.string.btn_char), skills = text(R.string.btn_skills), quests = text(R.string.btn_quests), names = text(R.string.btn_names),
-            run = text(R.string.btn_run), keysLabel = text(R.string.btn_keys), recipesLabel = text(R.string.menu_label_recipes);
+            run = text(R.string.btn_run), keysLabel = text(R.string.btn_keys), recipesLabel = text(R.string.menu_label_recipes), typingLabel = text(R.string.btn_typing);
         String[] labels = graphics != null
-            ? new String[]{"", pause, portal, "Esc", map, recipesLabel, inv, chr, skills, quests, run, names, keysLabel, "≡"}
-            : new String[]{"≡", pause, portal, "Esc", map, recipesLabel, inv, chr, skills, run, names, keysLabel};
+            ? new String[]{"", pause, portal, "Esc", map, recipesLabel, inv, chr, skills, quests, run, names, keysLabel, typingLabel, "≡"}
+            : new String[]{"≡", pause, portal, "Esc", map, recipesLabel, inv, chr, skills, run, names, keysLabel, typingLabel};
         int[] kinds = graphics != null
-            ? new int[]{KIND_MENU_TOGGLE, KIND_PAUSE, KIND_PORTAL, KIND_ESCAPE, KIND_KEY, KIND_RECIPES, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_KEY, KIND_LABELS, KIND_CONTROLS, KIND_MENU}
-            : new int[]{KIND_MENU, KIND_PAUSE, KIND_PORTAL, KIND_ESCAPE, KIND_KEY, KIND_RECIPES, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_KEY, KIND_LABELS, KIND_CONTROLS};
+            ? new int[]{KIND_MENU_TOGGLE, KIND_PAUSE, KIND_PORTAL, KIND_ESCAPE, KIND_KEY, KIND_RECIPES, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_KEY, KIND_LABELS, KIND_CONTROLS, KIND_TYPING, KIND_MENU}
+            : new int[]{KIND_MENU, KIND_PAUSE, KIND_PORTAL, KIND_ESCAPE, KIND_KEY, KIND_RECIPES, KIND_PANEL, KIND_PANEL, KIND_PANEL, KIND_KEY, KIND_LABELS, KIND_CONTROLS, KIND_TYPING};
         int[] keys = graphics != null
-            ? new int[]{0, 0, 0, VK_ESCAPE, VK_TAB, 0, VK_I, VK_C, VK_T, VK_Q, VK_R, 0, 0, 0}
-            : new int[]{0, 0, 0, VK_ESCAPE, VK_TAB, 0, VK_I, VK_C, VK_T, VK_R, 0, 0};
+            ? new int[]{0, 0, 0, VK_ESCAPE, VK_TAB, 0, VK_I, VK_C, VK_T, VK_Q, VK_R, 0, 0, 0, 0}
+            : new int[]{0, 0, 0, VK_ESCAPE, VK_TAB, 0, VK_I, VK_C, VK_T, VK_R, 0, 0, 0};
         int[] icons = {ICON_ARROW, ICON_PAUSE, ICON_PORTAL, D2Hud.ICON_MENU, D2Hud.ICON_MAP, ICON_CUBE, D2Hud.ICON_INV, D2Hud.ICON_CHAR, D2Hud.ICON_SKILLS, D2Hud.ICON_QUESTS,
-            ICON_RUN, ICON_TEXT, ICON_TEXT, ICON_LINES};
+            ICON_RUN, ICON_TEXT, ICON_TEXT, ICON_TEXT, ICON_LINES};
 
         String[] captions = {null, text(R.string.menu_label_pause), text(R.string.menu_label_portal), text(R.string.menu_label_menu),
             text(R.string.menu_label_map), recipesLabel, text(R.string.menu_label_inv), text(R.string.menu_label_char), text(R.string.menu_label_skills),
-            text(R.string.menu_label_quests), text(R.string.menu_label_run), null, null, null};
+            text(R.string.menu_label_quests), text(R.string.menu_label_run), null, null, null, null};
 
 
         boolean glass = glassTheme != D2GlassKeys.CLASSIC;
@@ -3102,6 +3104,7 @@ public class D2TouchOverlay extends View {
         if (id == null) return label;
         switch (id) {
             case "menu_keys": return "设置";
+            case "menu_text": return "打字";
             case "menu_names": return "物品";
             case "menu_quests": return "任务";
             case "menu_run": return "奔跑";
@@ -5060,6 +5063,10 @@ public class D2TouchOverlay extends View {
 
                 if (!controlsVisible) setControlsVisible(true, false);
                 else setEditMode(true);
+                break;
+            case KIND_TYPING:
+                if (typingKeyboard == null) typingKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+                D2TypingPad.show(getContext(), typingKeyboard);
                 break;
             case KIND_MENU:
                 if (openMenu != null) openMenu.run();

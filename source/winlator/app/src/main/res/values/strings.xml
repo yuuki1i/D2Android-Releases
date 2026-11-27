@@ -347,6 +347,7 @@
     <string name="btn_names">Show Items</string>
     <string name="btn_run">Run</string>
     <string name="btn_keys">Assign Keys</string>
+    <string name="btn_typing">Type</string>
     <string name="menu_label_run">Run</string>
     <string name="menu_label_quests">Quests</string>
     <string name="menu_label_skills">Skills</string>
