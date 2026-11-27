@@ -1641,7 +1641,7 @@ public class D2LaunchActivity extends D2Activity {
                     D2Trace.log("spielweise file not written");
 
 
-                D2BigInventory.apply(startDir, D2Settings.bigInventory(this));
+                D2BigInventory.apply(startDir, D2Settings.bigInventory(this) && !D2Settings.modCompat(this));
                 try {
 
                     D2IntroMovies.apply(startDir, directStart != null || D2Settings.skipIntro(this));

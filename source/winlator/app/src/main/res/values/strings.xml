@@ -1450,6 +1450,7 @@
     <string name="stash_guard_game_running">Quit the game first: its stash may still change. %1$s</string>
     <string name="stash_guard_kept_on_start">%1$s and the big stash switched on again: items lie outside 6 × 8 squares, without PlugY they would be deleted.\n%2$s</string>
 
+    <string name="settings_mod_compat">Integration mode (keep the pack inventory, panels and protection untouched)</string>
     <string name="settings_big_inventory">Big inventory (10 × 8 squares instead of 10 × 4)</string>
     <string name="settings_big_inventory_info">Applies from the next game start. Switching it off works only when no character has anything in rows 5–8; the app makes a backup first. On the PC or without the app the game deletes items in rows 5–8.</string>
     <string name="settings_big_inventory_needs_mod">Needs the app\'s game helpers (Game).</string>

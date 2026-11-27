@@ -56,7 +56,8 @@ final class D2BigInventoryGuard {
         if (!D2BigInventory.guarded(mod != null && mod.inventory)) return null;
         boolean possible = GameShadow.isModBundled(context);
         boolean modOn = D2Settings.modEnabled(context);
-        if (possible && modOn && D2Settings.bigInventory(context)) return null;
+        if (possible && modOn && D2Settings.bigInventory(context) && !D2Settings.modCompat(context)) return null;
+        if (D2Settings.modCompat(context)) return null;
         List<D2StashEdge.Place> places = keepable(check(gameDir, mod));
         if (places.isEmpty()) return null;
         String in = mod != null ? " in mod " + mod.id : "";

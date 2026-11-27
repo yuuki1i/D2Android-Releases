@@ -265,6 +265,16 @@ public final class D2Settings {
 
 
 
+    static final String KEY_MOD_COMPAT = "modCompat";
+
+
+    /** One switch for a ready-made integration: it brings its own界面, its own grids and its own
+        protection, so nothing of ours may rewrite its tables or its code. */
+    public static boolean modCompat(Context context) {
+        return prefs(context).getBoolean(KEY_MOD_COMPAT, true);
+    }
+
+
     public static boolean bigStash(Context context) {
         SharedPreferences p = prefs(context);
         if (p.contains(KEY_BIG_STASH)) return p.getBoolean(KEY_BIG_STASH, false);

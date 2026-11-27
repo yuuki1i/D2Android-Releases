@@ -11,8 +11,8 @@ android {
         minSdkVersion 26
         targetSdkVersion 28
 
-        versionCode((project.findProperty('d2VersionCode') ?: '60') as Integer)
-        versionName(project.findProperty('d2VersionName') ?: "39.0")
+        versionCode((project.findProperty('d2VersionCode') ?: '61') as Integer)
+        versionName(project.findProperty('d2VersionName') ?: "40.0")
     }
 
 

@@ -5652,18 +5652,17 @@ static int patchTextIat(HMODULE mod) {
 /* Every module that is already in the process, patched at once: the string tables are widened
    while the game starts, so the code page has to be in place before D2Lang reads them. */
 static int patchTextAll(void) {
-    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
-    if (snap == INVALID_HANDLE_VALUE) return 0;
-    MODULEENTRY32 entry;
-    entry.dwSize = sizeof(entry);
+    /* Only the game's own modules. A ready-made integration carries protection code that watches its
+       own import table; touching that made it drop out with its "fault" box right after the start. */
+    static const char* names[] = {"D2Lang.dll", "D2Win.dll", "D2Client.dll", "D2Common.dll", "D2Game.dll",
+        "D2Launch.dll", "D2Multi.dll", "D2MCPClient.dll", "Game.exe", "PlugY.dll", NULL};
     int patched = 0, modules = 0;
-    if (Module32First(snap, &entry)) {
-        do {
-            modules++;
-            patched += patchTextIat(entry.hModule);
-        } while (Module32Next(snap, &entry));
+    for (int i = 0; names[i]; i++) {
+        HMODULE mod = GetModuleHandleA(names[i]);
+        if (!mod) continue;
+        modules++;
+        patched += patchTextIat(mod);
     }
-    CloseHandle(snap);
     if (patched) logLine("codepage: %d text calls in %d modules read the archives as %lu from the start", patched, modules,
         (unsigned long) guestCodepage);
     return patched;
