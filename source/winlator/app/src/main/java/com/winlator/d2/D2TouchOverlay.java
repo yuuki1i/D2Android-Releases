@@ -5301,6 +5301,12 @@ public class D2TouchOverlay extends View {
 
     private void startSkill(int vk, Object owner, int rightSkill) {
 
+        // with the pack in charge its own F1..F8 bindings must reach the game; no slot logic,
+        // no empty-slot swallow
+        if (rightSkill < 0 && vk >= VK_F1 && vk <= VK_F1 + 7 && D2Settings.modCompat(getContext())) {
+            pressKey(vk);
+            return;
+        }
         if (swapCast.active() && owner != swapCastButton) abortSwapCast("other skill");
         D2Trace.log(rightSkill >= 0 ? "attack right: skill " + rightSkill : "skill F" + (vk - VK_F1 + 1));
         teleportHeld = false;
