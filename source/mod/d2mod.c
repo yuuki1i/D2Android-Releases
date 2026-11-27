@@ -4017,7 +4017,7 @@ static void probeLayout(void* player, void* act) {
         void* u = RDP(room, o);
         if (!unitLooksLike(u, act, room)) continue;
         int next = -1;
-        for (DWORD o2 = 0x04; o2 <= 0xF8; o2 += 4) {
+        for (DWORD o2 = 0x04; o2 <= 0x1F8; o2 += 4) {
             if (unitLooksLike(RDP(u, o2), act, room)) { next = (int) o2; break; }
         }
         lines++;
@@ -4075,7 +4075,19 @@ static void collectAndSend(void* player) {
     }
     void* act = RDP(player, U_ACT);
     void* path = RDP(player, calPathOff ? calPathOff : U_PATH);
-    if (!act || !path || !readable(path, 0x40)) {
+    if (!readable(act, 0x40)) {
+        /* Between two levels the hero pointer keeps pointing at a unit the game has already
+           thrown away, and its room pointer is whatever the freed block still holds. Reading
+           through that is what killed v19, so wait for the next tick instead. */
+        static DWORD lastStale;
+        DWORD at = GetTickCount();
+        if (!lastStale || at - lastStale >= 3000) {
+            lastStale = at;
+            logLine("send: hero %p has room data at %p that cannot be read, waiting for the next level", player, act);
+        }
+        return;
+    }
+    if (!path || !readable(path, 0x40)) {
         static DWORD lastWhy;
         DWORD at = GetTickCount();
         if (!lastWhy || at - lastWhy >= 3000) {
@@ -4084,7 +4096,6 @@ static void collectAndSend(void* player) {
                     act, path, path ? readable(path, 0x40) : 0, player);
         }
         path = NULL;
-        if (!act) return;
     }
     InterlockedIncrement(&cntGate);
 
@@ -4164,8 +4175,8 @@ static void collectAndSend(void* player) {
     if (calUnitsOff) actOff = calActOff, unitsOff = calUnitsOff, nextOff = calNextOff;
 #endif
     int rooms = 0, hist[8] = {0};
-    for (void* room = RDP(act, actOff); room && units < 4096; room = RDP(room, nextOff), rooms++) {
-        for (void* unit = RDP(room, unitsOff); unit && units < 4096; unit = RDP(unit, U_LISTNEXT), units++) {
+    for (void* room = RDP(act, actOff); room && units < 4096 && readable(room, 0x80); room = RDP(room, nextOff), rooms++) {
+        for (void* unit = RDP(room, unitsOff); unit && units < 4096 && readable(unit, 0x20); unit = RDP(unit, U_LISTNEXT), units++) {
             DWORD type = RD32(unit, U_TYPE);
             if (type < 8) hist[type]++;
             if (type == UNIT_PLAYER && !corpse.unit && isOwnCorpse(unit, player)) {
