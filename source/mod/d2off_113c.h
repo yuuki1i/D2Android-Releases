@@ -87,7 +87,7 @@
 #define RVA_MouseX 0x11B828
 #define RVA_MouseY 0x11B824
 #define RVA_DrawStatueLeft 0x27459
-#define RVA_DrawStatueRight 0x6D626  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_DrawStatueRight 0x27536  /* E8 -> RVA_GfxDrawThunk; twin of the 1.13d 0x6D626 body */
 #define RVA_GfxDrawThunk 0xD096
 #define RVA_DrawCursorCall 0x16A79
 #define RVA_DrawCursorCall2 0x168F7
@@ -324,7 +324,7 @@
 #define RVA_PlugYRealm 0x31FCA  /* UNMAPPED (PlugY.dll) */
 #define RVA_PlugYPage 0x32014  /* UNMAPPED (PlugY.dll) */
 #define RVA_PlugYLastPage 0x32018  /* UNMAPPED (PlugY.dll) */
-#define RVA_WorldUi 0x1D3E0  /* UNMAPPED (D2Client.dll/D2Game.dll/PlugY.dll) */
+#define RVA_WorldUi 0xC39E0  /* D2Client: 51 A1 C8 AD BA 6F 53 33 DB, flag = RVA_WorldUiFlag */
 
 /* d2mod.c: game loop prologue 83 EC 20 89 4C 24 0C (unique in 1.13c D2Client) */
 #define RVA_GameLoop 0x44230

@@ -1678,7 +1678,12 @@ static void checkHudSites(void) {
         DWORD target = (DWORD) at + 5 + *(DWORD*) (at + 1);
         hudSites[i].verified = at[0] == 0xE8 && target == client + hudSites[i].target;
         if (hudSites[i].verified) memcpy(hudSites[i].original, at, 5);
-        else if (i < 4) ok = 0;
+        else {
+            if (i < 4) ok = 0;
+            logLine("hud site %d at D2Client+0x%05lX not as expected (%02X, target %08lX, want %08lX)",
+                    i, (unsigned long) hudSites[i].rva, readable(at, 1) ? at[0] : 0, (unsigned long) target,
+                    (unsigned long) (client + hudSites[i].target));
+        }
     }
     hudAvailable = ok;
     duraAvailable = hudSites[4].verified;
@@ -4252,8 +4257,8 @@ static void collectAndSend(void* player) {
     DWORD purseLevel = fGetUnitStat(player, 12, 0), purseGold = fGetUnitStat(player, 14, 0);
     int purseFull = purseLevel > 0 && purseGold >= 10000 * purseLevel;
     putU8(&p, (RD32(client, RVA_AlwaysRun) ? 1 : 0) | (cursorAvailable ? 2 : 0) | (cursorHidden ? 4 : 0)
-        | (RD32(client, RVA_NpcDialog) ? 8 : 0) | (worldHooked && heroVarOk ? 16 : 0)
-        | (worldHooked && heroVarOk && worldFrames > 0 ? 32 : 0) | (purseFull ? 64 : 0));
+        | (RD32(client, RVA_NpcDialog) ? 8 : 0) | (worldHooked ? 16 : 0)
+        | (worldHooked && worldFrames > 0 ? 32 : 0) | (purseFull ? 64 : 0));
 
     int charges = 0;
     findPortal(player, NULL, &charges);
@@ -4491,8 +4496,9 @@ static void installWorldDrawHook(void) {
     int game = target == client + RVA_WorldUi, plugy = !game && target && inModule(GetModuleHandleA("PlugY.dll"), target);
     if (!target || (!game && !plugy) || site[-1] != 0x52 || !readable(fn, 9) || fn[0] != 0x51 || fn[1] != 0xA1
         || *(const DWORD*) (fn + 2) != client + RVA_WorldUiFlag || fn[6] != 0x53 || fn[7] != 0x33 || fn[8] != 0xDB) {
-        logLine("world: the interface call is not as known (%02X, target %08lX), no picture count",
-                readable(site, 1) ? site[0] : 0, (unsigned long) target);
+        logLine("world: the interface call is not as known at D2Client+0x%05lX (%02X, target %08lX, want %08lX), no picture count",
+                (unsigned long) RVA_WorldUiCall, readable(site, 1) ? site[0] : 0, (unsigned long) target,
+                (unsigned long) (client + RVA_WorldUi));
         return;
     }
     worldDrawUi = target;
@@ -4502,8 +4508,8 @@ static void installWorldDrawHook(void) {
     VirtualProtect(site, 5, old, &old);
     FlushInstructionCache(GetCurrentProcess(), site, 5);
     worldHooked = 1;
-    logLine("world: picture count at D2Client+0x453CB installed (on to %s %08lX)", plugy ? "PlugY" : "the game",
-            (unsigned long) target);
+    logLine("world: picture count at D2Client+0x%05lX installed (on to %s %08lX)", (unsigned long) RVA_WorldUiCall,
+            plugy ? "PlugY" : "the game", (unsigned long) target);
 }
 
 
@@ -4515,8 +4521,8 @@ static void noteWorldFrames(DWORD now) {
     DWORD target = site[0] == 0xE8 ? (DWORD) site + 5 + *(const DWORD*) (site + 1) : 0;
     if (target != (DWORD) worldDrawStub) {
         worldHooked = 0;
-        logLine("world: the call at D2Client+0x453CB was bent again (%02X, target %08lX): no picture signal any more",
-                site[0], (unsigned long) target);
+        logLine("world: the call at D2Client+0x%05lX was bent again (%02X, target %08lX): no picture signal any more",
+                (unsigned long) RVA_WorldUiCall, site[0], (unsigned long) target);
         return;
     }
     if (worldFrames == 0) {
@@ -4644,6 +4650,15 @@ static void gameTick(void) {
     }
     void* player = fGetPlayerUnit();
     DWORD now = GetTickCount();
+    {
+        static DWORD lastNote;
+        if (!lastNote || now - lastNote >= 5000) {
+            lastNote = now;
+            logLine("tick: player %08lX, world %d (%ld pictures), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) heroVarOk,
+                    hudAvailable, cursorAvailable, edgeAvailable);
+        }
+    }
     STEP(noteGame(player, now));
     STEP(noteWorldFrames(now));
     if (!player) STEP(forgetStackRows());

@@ -69,6 +69,7 @@ public class D2GameActivity extends D2Activity {
 
     private long presentsAtStart;
     private boolean guestLogsDumped;
+    private long modLogAt = -1;
 
 
 
@@ -128,6 +129,15 @@ public class D2GameActivity extends D2Activity {
         for (String line : D2StallSnapshot.packed(D2StallSnapshot.threads(proc, game))) D2Trace.log("stall: Game.exe threads " + line);
     }
     private final Runnable suspendGuest = () -> screen.pauseGuest();
+
+    private static final long MOD_LOG_STEP_MS = 3000;
+    private final Runnable modLogTail = new Runnable() {
+        @Override
+        public void run() {
+            tailModLog();
+            if (!isFinishing() && !isDestroyed()) handler.postDelayed(this, MOD_LOG_STEP_MS);
+        }
+    };
 
     private static D2GameActivity savingAfterRelaunch;
 
@@ -213,6 +223,7 @@ public class D2GameActivity extends D2Activity {
 
         overlay.setModExpected(GameShadow.LOADER_EXE.equals(getIntent().getStringExtra(EXTRA_PROGRAM)));
         screen.addOverlay(overlay);
+        handler.postDelayed(modLogTail, MOD_LOG_STEP_MS);
 
 
         root.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -1317,6 +1328,7 @@ public class D2GameActivity extends D2Activity {
     protected void onStop() {
         super.onStop();
         noteWindow("stop", D2ExitText.WINDOW_STOPPED);
+        tailModLog();
     }
 
 
@@ -1369,6 +1381,9 @@ public class D2GameActivity extends D2Activity {
         }
         D2Text.setListener(null);
         handler.removeCallbacks(suspendGuest);
+        handler.removeCallbacks(modLogTail);
+        tailModLog();
+        dumpGuestLogs();
         if (D2Relaunch.onDestroy(isChangingConfigurations(), screen.isStarted(), exiting) == D2Relaunch.SAVE_AND_QUIT) {
 
             savingAfterRelaunch = this;
@@ -1389,6 +1404,34 @@ public class D2GameActivity extends D2Activity {
     }
 
     /** The mod and PlugY write their own logs next to the game; fold them in so one file tells everything. */
+    /**
+     * Follow the mod's own log while the game runs. The mod writes next to the game and only the end of
+     * session dump used to pick it up, so a session that was killed from the launcher lost every line of it.
+     */
+    private void tailModLog() {
+        try {
+            java.io.File f = new java.io.File(GameShadow.dir(this), "d2android-mod.log");
+            if (!f.isFile()) return;
+            long len = f.length();
+            if (modLogAt < 0 || len < modLogAt) modLogAt = 0;
+            if (len <= modLogAt) return;
+            int take = (int) Math.min(len - modLogAt, 16384);
+            byte[] buf = new byte[take];
+            try (java.io.RandomAccessFile in = new java.io.RandomAccessFile(f, "r")) {
+                in.seek(modLogAt);
+                in.readFully(buf);
+            }
+            String text = new String(buf, java.nio.charset.StandardCharsets.UTF_8);
+            int cut = text.lastIndexOf('\n');
+            if (cut < 0) return;
+            String whole = text.substring(0, cut + 1);
+            modLogAt += whole.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+            for (String line : whole.split("\n")) if (!line.isEmpty()) D2Trace.log("mod| " + line);
+        }
+        catch (Throwable ignored) {
+        }
+    }
+
     private void dumpGuestLogs() {
         if (guestLogsDumped) return;
         guestLogsDumped = true;
