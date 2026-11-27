@@ -372,7 +372,7 @@ static volatile LONG outOfGameSeen;
 volatile LONG worldFrames;
 volatile LONG ticksDone;
 volatile LONG statesSent;
-static volatile LONG cntTail, cntGate, cntG2, cntG3, cntG4, cntG5, cntPre, cntErr;
+static volatile LONG cntTail, cntG0, cntG1, cntGate, cntG2, cntG3, cntG4, cntG5, cntPre, cntErr;
 static int worldHooked;
 static volatile LONG heroVarOk;
 
@@ -4061,7 +4061,18 @@ static void probeLayout(void* player, void* act) {
 
 
 static void collectAndSend(void* player) {
-    if (!plausibleUnit(player)) return;
+    if (!plausibleUnit(player)) {
+        static DWORD lastNo;
+        DWORD at = GetTickCount();
+        if (!lastNo || at - lastNo >= 3000) {
+            lastNo = at;
+            logLine("send: player %p is not a unit (type %lu mode %lu readable %d)",
+                    player, player ? (unsigned long) RD32(player, U_TYPE) : 0xFFFFFFFF,
+                    player ? (unsigned long) RD32(player, U_MODE) : 0xFFFFFFFF,
+                    player ? readable(player, 0x60) : 0);
+        }
+        return;
+    }
     void* act = RDP(player, U_ACT);
     void* path = RDP(player, calPathOff ? calPathOff : U_PATH);
     if (!act || !path || !readable(path, 0x40)) {
@@ -4825,9 +4836,9 @@ static void gameTick(void) {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
             lastNote = now;
-            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld g0 %ld g1 %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
                     (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) statesSent,
-                    (long) cntTail, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
+                    (long) cntTail, (long) cntG0, (long) cntG1, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
                     (int) ntohs(appAddr.sin_port), (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
         }
     }
@@ -4891,7 +4902,9 @@ static void gameTick(void) {
     STEP(updateServerEffects(player, now));
     STEP(updateServerSelects(now));
     STEP(updateServerLevels(player, now));
+#ifndef D2VER_113C
     STEP(updateResume(player, now));
+#endif
     STEP(updateDamage(player, now));
 #ifdef D2MOD_TESTCMDS
     STEP(updateServerQueueTest(now));
@@ -4920,7 +4933,11 @@ static void gameTick(void) {
     InterlockedIncrement(&cntTail);
     if (now - lastSend < 40) return;
     lastSend = now;
-    if (player) STEP(collectAndSend(player));
+    InterlockedIncrement(&cntG0);
+    if (player) {
+        InterlockedIncrement(&cntG1);
+        STEP(collectAndSend(player));
+    }
 }
 
 
