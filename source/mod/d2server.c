@@ -87,6 +87,18 @@ static SrvSlot* srvSlot(LONG seq) {
 
 
 static LONG srvSubmitEx(DWORD code, LONG arg, LONG arg2, LONG arg3, LONG arg4) {
+#ifdef D2VER_113C
+    /* Nothing is sent to the game side on 1.13c: the injected D2Game part answers with
+       garbage there (a pointer instead of a code) and both sides start reading stack junk
+       as the hero. Everything that needs it (resume, heal, damage numbers, shield, server
+       repairs and levels) is off until its 1.13c sites are known. */
+    static int once;
+    if (!once) {
+        once = 1;
+        logLine("server: the game side is off in this build (1.13c sites not known), nothing is sent there");
+    }
+    return 0;
+#endif
     SrvSlot* s = NULL;
     for (int i = 0; i < SRV_QUEUE && !s; i++) if (srvQueue[i].state == SRV_FREE) s = &srvQueue[i];
     if (!s) return 0;

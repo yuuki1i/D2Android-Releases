@@ -3527,6 +3527,14 @@ static int keepNearest(Candidate* list, int count, int keep) {
 }
 
 
+/** A unit pointer has to look like heap memory: the stack and the modules do not. */
+static int plausibleUnit(void* p) {
+    DWORD at = (DWORD) p;
+    if (at < 0x01000000 || at >= 0x70000000 || !readable(p, 0x60)) return 0;
+    return RD32(p, U_TYPE) == UNIT_PLAYER && RD32(p, U_MODE) != 0xFF;
+}
+
+
 static int readable(const void* p, UINT_PTR size) {
     return p && !IsBadReadPtr(p, size);
 }
@@ -3945,9 +3953,10 @@ static void sendGoals(void* player, DWORD levelNo) {
 static DWORD seenId[32], seenMode[32], seenNext;
 
 static void collectAndSend(void* player) {
+    if (!plausibleUnit(player)) return;
     void* act = RDP(player, U_ACT);
     void* path = RDP(player, U_PATH);
-    if (!act || !path) return;
+    if (!act || !path || !readable(path, 0x40)) return;
 
     View view;
     view.offX = (long) fGetMouseXOffset();
@@ -4471,9 +4480,6 @@ __asm__(
     ".text\n"
     ".globl _worldDrawStub\n"
     "_worldDrawStub:\n"
-    "    pushal\n"
-    "    call _worldDrawTick\n"
-    "    popal\n"
     "    lock incl _worldFrames\n"
     "    jmp *_worldDrawUi\n"
 );
@@ -4623,12 +4629,7 @@ static volatile LONG foreignDrawTicks;
 static void* lastGoodPlayer;
 
 
-/** A unit pointer has to look like heap memory: the stack and the modules do not. */
-static int plausibleUnit(void* p) {
-    DWORD at = (DWORD) p;
-    if (at < 0x01000000 || at >= 0x70000000 || !readable(p, 0x60)) return 0;
-    return RD32(p, U_TYPE) == UNIT_PLAYER && RD32(p, U_MODE) != 0xFF;
-}
+
 
 
 static void gameTick(void) {
