@@ -4938,11 +4938,25 @@ static void gameTick(void) {
         static LONG pace;
         if (InterlockedIncrement(&pace) % 3) return;
     }
-    lastSend = now;
-    InterlockedIncrement(&cntG0);
-    if (player) {
+    /* The local copy of the hero pointer goes empty somewhere between the layout probe and
+       this line, so take it again from the game here: whatever happens above must not be
+       able to starve the app of state packets. */
+    {
+        void* beat = fGetPlayerUnit();
+        if (!plausibleUnit(beat)) beat = plausibleUnit(lastGoodPlayer) ? lastGoodPlayer : NULL;
+        lastSend = GetTickCount();
+        InterlockedIncrement(&cntG0);
+        if (!beat) return;
+        if (!player) {
+            static DWORD lastEmpty;
+            if (!lastEmpty || now - lastEmpty >= 5000) {
+                lastEmpty = now;
+                logLine("beat: the local hero was %08lX, the game still says %08lX", (unsigned long) (DWORD) player,
+                        (unsigned long) (DWORD) beat);
+            }
+        }
         InterlockedIncrement(&cntG1);
-        STEP(collectAndSend(player));
+        STEP(collectAndSend(beat));
     }
 }
 
