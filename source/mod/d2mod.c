@@ -4087,15 +4087,14 @@ static void collectAndSend(void* player) {
         }
         return;
     }
-    if (!path || !readable(path, 0x40)) {
+    if (!readable(path, 0x40)) {
         static DWORD lastWhy;
         DWORD at = GetTickCount();
         if (!lastWhy || at - lastWhy >= 3000) {
             lastWhy = at;
-            logLine("send: act %p path %p (readable %d) for player %p: sending without the path",
-                    act, path, path ? readable(path, 0x40) : 0, player);
+            logLine("send: act %p but the path at %p cannot be read, waiting", act, path);
         }
-        path = NULL;
+        return;
     }
     InterlockedIncrement(&cntGate);
 
@@ -4953,21 +4952,37 @@ static void gameTick(void) {
        this line, so take it again from the game here: whatever happens above must not be
        able to starve the app of state packets. */
     {
+        static void* steadyHero;
+        static int steady;
         void* beat = fGetPlayerUnit();
-        if (!plausibleUnit(beat)) beat = plausibleUnit(lastGoodPlayer) ? lastGoodPlayer : NULL;
+        if (!plausibleUnit(beat)) {
+            steadyHero = NULL;
+            steady = 0;
+        }
+        else if (beat == steadyHero) {
+            if (steady < 8) steady++;
+        }
+        else {
+            steadyHero = beat;
+            steady = 1;
+        }
         lastSend = GetTickCount();
         InterlockedIncrement(&cntG0);
-        if (!beat) return;
-        if (!player) {
-            static DWORD lastEmpty;
-            if (!lastEmpty || now - lastEmpty >= 5000) {
-                lastEmpty = now;
-                logLine("beat: the local hero was %08lX, the game still says %08lX", (unsigned long) (DWORD) player,
-                        (unsigned long) (DWORD) beat);
+        /* Only send for a hero the game itself still hands out, and only after the same pointer
+           has come back a few ticks running. Right after a level the game keeps handing out the
+           unit it has already released, and pushing that into D2Common's stat calls took down
+           v19 and v20. */
+        if (steady < 3) {
+            static DWORD lastWait;
+            if (!lastWait || now - lastWait >= 5000) {
+                lastWait = now;
+                logLine("send: holding back, the hero is %08lX and has been for %d ticks", (unsigned long) (DWORD) beat,
+                        steady);
             }
+            return;
         }
         InterlockedIncrement(&cntG1);
-        STEP(collectAndSend(beat));
+        STEP(collectAndSend(steadyHero));
     }
 }
 
