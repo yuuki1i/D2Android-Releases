@@ -297,6 +297,7 @@ public class D2TouchOverlay extends View {
     private final Paint glassText = new Paint(Paint.ANTI_ALIAS_FLAG);
     private D2SkillSlots skillSlots;
     private String skillSlotsKey;
+    private long slotsRetryAt;
     private long slotsSentAt, attackSkillCheckedAt;
 
 
@@ -1077,40 +1078,26 @@ public class D2TouchOverlay extends View {
             text(R.string.menu_label_quests), text(R.string.menu_label_run), null, null, null};
 
 
-        float rowGap = graphics != null ? menuRowGap(2 * half) : gap;
-        Button[] row = new Button[labels.length];
-        float[] halfWidths = new float[labels.length];
-        int toggle = -1;
+        boolean glass = glassTheme != D2GlassKeys.CLASSIC;
+        java.util.ArrayList<String> idList = new java.util.ArrayList<>();
+        java.util.ArrayList<String> labelList = new java.util.ArrayList<>();
+        java.util.ArrayList<Integer> kindList = new java.util.ArrayList<>();
+        java.util.ArrayList<Integer> keyList = new java.util.ArrayList<>();
+        java.util.ArrayList<Integer> iconList = new java.util.ArrayList<>();
+        java.util.ArrayList<String> captionList = new java.util.ArrayList<>();
         for (int i = 0; i < labels.length; i++) {
-            Button b = new Button("menu_" + ids[i], labels[i], kinds[i], keys[i], GROUP_MENU, true);
-            float hw = half;
-            if (graphics != null) {
-                b.icon = icons[i];
-                b.caption = captions[i];
-                if (b.icon == ICON_TEXT) hw = Math.max(half, menuLabelHalf(graphics, labels[i]));
-                if (b.icon == ICON_ARROW) hw = 14 * dp;
-            }
-            if (b.kind == KIND_MENU_TOGGLE) toggle = i;
-            row[i] = b;
-            halfWidths[i] = hw;
+            String id = ids[i], label = glass ? glassLabel(ids[i], labels[i]) : labels[i];
+            idList.add(id);
+            labelList.add(label);
+            kindList.add(kinds[i]);
+            keyList.add(keys[i]);
+            iconList.add(icons[i]);
+            captionList.add(glass ? null : captions[i]);
         }
-
-
-
-        int[] rowLines = new int[labels.length];
-        float[] rights = D2MenuRow.rightEdges(ids, halfWidths, toggle, pinnedMenu, menuShownOpen() || graphics == null,
-            w - 8 * dp - rightShift, rowGap, 8 * dp, rowLines);
-        for (int i = 0; i < labels.length; i++) addRect(row[i], rights[i] - halfWidths[i], y + rowLines[i] * (2 * half + 10 * dp), halfWidths[i], half);
-
-        if (glassTheme != D2GlassKeys.CLASSIC) {
-            int used = 0;
-            for (int i = 0; i < rowLines.length; i++) used = Math.max(used, rowLines[i]);
-            float step = 2 * half + 10 * dp;
-            float ex = w - 8 * dp - rightShift, ey = y + (used + 1) * step;
+        if (glass) {
             String spec = glassKeySpec != null ? glassKeySpec : "";
-            String[] parts = spec.split(";");
             int added = 0;
-            for (String part : parts) {
+            for (String part : spec.split(";")) {
                 int colon = part.lastIndexOf(':');
                 if (colon <= 0 || added >= 8) continue;
                 String name = part.substring(0, colon).trim();
@@ -1122,20 +1109,47 @@ public class D2TouchOverlay extends View {
                     continue;
                 }
                 if (name.isEmpty() || vk <= 0 || vk > 255) continue;
-                Button b = new Button("extra_" + vk, name, KIND_KEY, vk, GROUP_MENU, true);
-                b.icon = ICON_TEXT;
-                float hwid = Math.max(half, Math.min(1.6f * half, half * (0.42f * name.length() + 0.5f)));
-                ex -= hwid;
-                addRect(b, ex, ey, hwid, half);
-                ex -= 6 * dp;
+                idList.add("extra_" + vk);
+                labelList.add(name);
+                kindList.add(KIND_KEY);
+                keyList.add(vk);
+                iconList.add(ICON_TEXT);
+                captionList.add(null);
                 added++;
             }
-            Button theme = new Button("glass_theme", D2GlassKeys.name(glassTheme), KIND_THEME, 0, GROUP_MENU, true);
-            theme.icon = ICON_TEXT;
-            float hwid = Math.max(half, Math.min(2.2f * half, half * (0.42f * theme.label.length() + 0.5f)));
-            ex -= hwid;
-            addRect(theme, ex, ey, hwid, half);
+            idList.add("glass_theme");
+            labelList.add(D2GlassKeys.name(glassTheme));
+            kindList.add(KIND_THEME);
+            keyList.add(0);
+            iconList.add(ICON_TEXT);
+            captionList.add(null);
         }
+
+        int count = labelList.size();
+        String[] allIds = idList.toArray(new String[0]);
+        float rowGap = graphics != null ? menuRowGap(2 * half) : gap;
+        Button[] row = new Button[count];
+        float[] halfWidths = new float[count];
+        int toggle = -1;
+        for (int i = 0; i < count; i++) {
+            String label = labelList.get(i);
+            Button b = new Button("menu_" + allIds[i], label, kindList.get(i), keyList.get(i), GROUP_MENU, true);
+            b.icon = iconList.get(i);
+            b.caption = captionList.get(i);
+            float hw;
+            if (glass) hw = glassHalf(label, iconList.get(i));
+            else if (b.icon == ICON_TEXT) hw = Math.max(half, menuLabelHalf(graphics, label));
+            else if (b.icon == ICON_ARROW) hw = 14 * dp;
+            else hw = half;
+            if (b.kind == KIND_MENU_TOGGLE) toggle = i;
+            row[i] = b;
+            halfWidths[i] = hw;
+        }
+
+        int[] rowLines = new int[count];
+        float[] rights = D2MenuRow.rightEdges(allIds, halfWidths, toggle, pinnedMenu, menuShownOpen() || graphics == null,
+            w - 8 * dp - rightShift, rowGap, 8 * dp, rowLines);
+        for (int i = 0; i < count; i++) addRect(row[i], rights[i] - halfWidths[i], y + rowLines[i] * (2 * half + 10 * dp), halfWidths[i], half);
 
 
         if (graphics != null) {
@@ -3083,6 +3097,36 @@ public class D2TouchOverlay extends View {
     }
 
 
+    /** The label shown on a glass key: short, so the whole bar stays one line. */
+    private String glassLabel(String id, String label) {
+        if (id == null) return label;
+        switch (id) {
+            case "menu_keys": return "设置";
+            case "menu_names": return "物品";
+            case "menu_quests": return "任务";
+            case "menu_run": return "奔跑";
+            case "menu_skills": return "技能";
+            case "menu_char": return "角色";
+            case "menu_inv": return "背包";
+            case "menu_recipes": return "配方";
+            case "menu_map": return "地图";
+            case "menu_portal": return "传送";
+            case "menu_pause": return "暂停";
+            case "menu_esc": return "Esc";
+            default: return label;
+        }
+    }
+
+
+    /** Half width of a glass key, measured from its own label so nothing has to be wrapped. */
+    private float glassHalf(String label, int icon) {
+        if (label == null || label.isEmpty()) return 15 * dp;
+        glassText.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        glassText.setTextSize(12 * dp * (scale > 0 ? scale : 1));
+        return Math.max(20 * dp, glassText.measureText(label) / 2 + 9 * dp);
+    }
+
+
     private String glassGlyph(Button button) {
         switch (button.icon) {
             case ICON_ARROW: return menuShownOpen() ? "\u2039" : "\u2261";
@@ -3102,28 +3146,15 @@ public class D2TouchOverlay extends View {
 
         String label = button.label != null && !button.label.isEmpty() ? button.label : glassGlyph(button);
         if (label == null || label.isEmpty()) return;
-        float inner = 2 * Math.min(button.hw, button.r) * 0.80f;
+        float inner = 2 * Math.min(button.hw, button.r) * 0.86f;
         glassText.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         glassText.setTextAlign(Paint.Align.CENTER);
-        glassText.setColor(Color.argb(240, 246, 250, 253));
-        float size = 12 * dp * scale;
+        glassText.setColor(Color.argb(242, 246, 250, 253));
+        float size = 12 * dp * (scale > 0 ? scale : 1);
         glassText.setTextSize(size);
-
-        int lines = label.length() > 2 ? 2 : 1;
-        int per = lines == 1 ? label.length() : Math.min(3, (label.length() + 1) / 2);
-        if (lines == 2) per = Math.max(per, label.length() - per);
-        float widest = 0;
-        for (int i = 0; i < lines; i++) {
-            String part = part(label, per, i);
-            widest = Math.max(widest, glassText.measureText(part));
-        }
+        float widest = glassText.measureText(label);
         if (widest > inner && widest > 0) glassText.setTextSize(Math.max(7 * dp, size * inner / widest));
-        float step = glassText.getTextSize() * 1.05f;
-        for (int i = 0; i < lines; i++) {
-            String part = part(label, per, i);
-            if (part.isEmpty()) continue;
-            canvas.drawText(part, button.cx, button.cy + (i - (lines - 1) / 2f) * step + glassText.getTextSize() * 0.35f, glassText);
-        }
+        canvas.drawText(label, button.cx, button.cy + glassText.getTextSize() * 0.35f, glassText);
 
         if (button.icon == ICON_PORTAL && mod != null && mod.portals >= 0) {
             String count = Integer.toString(mod.portals);
@@ -4161,11 +4192,28 @@ public class D2TouchOverlay extends View {
     private void updateSkillSlots(D2ModState s) {
         String name = modLink.currentCharacterName();
         String key = D2SkillSlots.key(s.characterClass, name);
-        if (key == null || key.equals(skillSlotsKey)) return;
-        D2SkillSlots loaded = D2SkillSlots.parse(prefs.getString(key, null));
-        if (loaded == null) {
+        if (key == null) return;
+        boolean same = key.equals(skillSlotsKey);
+        if (same && skillSlots != null && !skillSlots.allEmpty()) return;
+        // The hotkeys only appear once the character is in a game and the mod has read them, so an
+        // empty snapshot must not be written down: that is what left the whole bar on -1 for good.
+        if (same && SystemClock.uptimeMillis() < slotsRetryAt) return;
+        String stored = prefs.getString(key, null);
+        D2SkillSlots loaded = stored != null ? D2SkillSlots.parse(stored) : null;
+        boolean fromGame = false;
+        if (loaded == null || loaded.allEmpty()) {
             String old = "attackRight." + s.characterClass + "." + name;
-            loaded = D2SkillSlots.takeOver(s.hotkeySkill, prefs.getInt(old, -1), s.leftSkill);
+            D2SkillSlots seen = D2SkillSlots.takeOver(s.hotkeySkill, prefs.getInt(old, -1), s.leftSkill);
+            if (seen.allEmpty() && (loaded == null || loaded.allEmpty())) {
+                skillSlots = loaded != null ? loaded : seen;
+                skillSlotsKey = key;
+                slotsRetryAt = SystemClock.uptimeMillis() + 1500;
+                return;
+            }
+            loaded = seen;
+            fromGame = true;
+        }
+        if (fromGame || stored == null) {
             prefs.edit().putString(key, loaded.format()).apply();
             D2Trace.log("skill slots: taken over from the game's hotkeys: " + loaded.format());
         }

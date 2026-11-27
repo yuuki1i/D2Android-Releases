@@ -180,7 +180,7 @@
 #define RVA_SetHotkey 0xA5A20  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
 #define RVA_HotkeyItem 0x119DD0
 #define RVA_CharScreenCall 0xC3B48
-#define RVA_CharScreenPage 0xBCEA0
+#define RVA_CharScreenPage 0x6CEA0  /* target of the char screen call at 0xC3B48 */
 
 /* d2quest.c */
 #define RVA_QuestFlagsLoad 0x47FD4
@@ -307,8 +307,8 @@
 /* ===== D2Gfx.dll ===== */
 
 /* d2mod.c */
-#define RVA_GfxLoadRenderer 0xAA03  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
-#define RVA_GfxLoadLibraryIat 0xD11C  /* low confidence */
+#define RVA_GfxLoadRenderer 0x87E8  /* call [LoadLibraryA] then store the module */
+#define RVA_GfxLoadLibraryIat 0xD178  /* IAT slot used by the renderer load */
 
 /* ===== Storm.dll ===== */
 

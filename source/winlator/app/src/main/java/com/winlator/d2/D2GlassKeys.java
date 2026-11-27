@@ -41,10 +41,11 @@ public final class D2GlassKeys {
     /** Corner radius of the glass body, in pixels. */
     public static float radius(RectF r, int theme) {
         float small = Math.min(r.width(), r.height());
+        float wide = Math.min(r.height() * 0.26f, r.width() * 0.30f);
         switch (theme) {
-            case SWITCH: return small * 0.5f;
-            case PLAYSTATION: return small * 0.22f;
-            default: return small * 0.36f;
+            case SWITCH: return Math.min(small * 0.5f, r.height() * 0.5f);
+            case PLAYSTATION: return Math.min(wide * 0.7f, r.height() * 0.3f);
+            default: return wide;
         }
     }
 

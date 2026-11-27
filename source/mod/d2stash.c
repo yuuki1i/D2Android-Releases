@@ -475,7 +475,11 @@ static void* stashServerItem(void* player, DWORD id, int* kind) {
 
 
 static void stashHook(void) {
+#ifdef D2VER_113C
+    static const DWORD sites[] = {0x54411, 0x7980F, 0x2C8AA, 0x2C93A, 0x2C9B6, 0x2D74C, 0x2D8D9, 0x2DE9E};
+#else
     static const DWORD sites[] = {0x39D11, 0x93C3F, 0xBE6DA, 0xBE77A, 0xBE7F6, 0xBF3AC, 0xBF5D9, 0xBFB9E};
+#endif
     DWORD game = (DWORD) GetModuleHandleA("D2Game.dll");
     if (!game || (stashHooked && stashHookedGame == game)) return;
     stashHookedGame = game;
