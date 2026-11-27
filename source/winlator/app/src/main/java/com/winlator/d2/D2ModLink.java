@@ -1004,7 +1004,7 @@ public final class D2ModLink {
     public void selectSkill(boolean left, int skill) {
         D2Trace.log("-> select skill " + skill + (left ? " left" : " right"));
 
-        send(command(CMD_SELECT_SKILL, 4).put((byte) (left ? 0 : 1)).putShort((short) skill).put((byte) 1));
+        send(command(CMD_SELECT_SKILL, 4).put((byte) (left ? 0 : 1)).putShort((short) skill).put((byte) 0));
     }
 
 

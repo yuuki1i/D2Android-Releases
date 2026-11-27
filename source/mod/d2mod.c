@@ -3199,6 +3199,7 @@ static int classSkill(DWORD cls, WORD skill) {
 
 
 static void* usableSkillEntry(void* player, WORD skill);
+static int ownSkill(void* player, WORD skill);
 #define SKILL_CHARGES 0x38
 #define SKILL_CHARGED 0x3C
 static int srvSelectAsk(WORD skill, int left, int force);
@@ -3207,7 +3208,10 @@ static void selectSkill(void* player, int left, WORD skill, int anySource, int f
 
 
 
-    if (!classSkill(RD32(player, U_TXTNO), skill) && !(anySource && (skill < 217 || skill > 220))) {
+    /* v42: the pack ships its own skill tree, so the vanilla class-skill ranges are not
+       authoritative any more. A skill the hero really owns is always legitimate. */
+    if (!classSkill(RD32(player, U_TXTNO), skill) && !ownSkill(player, skill)
+        && !(anySource && (skill < 217 || skill > 220))) {
         logLine("select: skill %u not in the class's tree, nothing sent", skill);
         return;
     }
@@ -3221,7 +3225,7 @@ static void selectSkill(void* player, int left, WORD skill, int anySource, int f
     }
     void* entry = usableSkillEntry(player, skill);
     DWORD source = entry ? RD32(entry, SKILL_ITEM) : 0xFFFFFFFF;
-    if (!entry || (!anySource && source != 0xFFFFFFFF)) {
+    if (!entry) {
         logLine("select: skill %u: no usable source, nothing sent", skill);
         return;
     }
