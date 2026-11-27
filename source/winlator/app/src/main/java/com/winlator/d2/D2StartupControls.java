@@ -106,7 +106,7 @@ public final class D2StartupControls {
                 }
                 else {
                     undrawnSince = -1;
-                    if (waiting && !drawnBefore && !retried) {
+                    if (waiting && !drawnBefore) {
                         waiting = false;
                         drawnLast = true;
                         return true;

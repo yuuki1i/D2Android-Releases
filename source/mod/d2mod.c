@@ -369,6 +369,7 @@ static volatile LONG outOfGameSeen;
 
 
 volatile LONG worldFrames;
+volatile LONG ticksDone;
 static int worldHooked;
 static volatile LONG heroVarOk;
 
@@ -4465,10 +4466,14 @@ static void noteGame(void* player, DWORD now) {
 
 DWORD worldDrawUi;
 void worldDrawStub(void);
+void worldDrawTick(void);
 __asm__(
     ".text\n"
     ".globl _worldDrawStub\n"
     "_worldDrawStub:\n"
+    "    pushal\n"
+    "    call _worldDrawTick\n"
+    "    popal\n"
     "    lock incl _worldFrames\n"
     "    jmp *_worldDrawUi\n"
 );
@@ -4654,8 +4659,8 @@ static void gameTick(void) {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
             lastNote = now;
-            logLine("tick: player %08lX, world %d (%ld pictures), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
-                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) heroVarOk,
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) heroVarOk,
                     hudAvailable, cursorAvailable, edgeAvailable);
         }
     }
@@ -4749,12 +4754,32 @@ static void gameTick(void) {
 
 
 
+static volatile LONG inTick;
+__attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void);
+
+/**
+ * Called from the world draw call site (every frame, in game only). The game loop entry at
+ * RVA_GameLoop is only reached a few times a second on 1.13c, so the tick hangs off the draw
+ * instead and stays throttled to a sane rate.
+ */
+void worldDrawTick(void) {
+    static DWORD lastAt;
+    DWORD now = GetTickCount();
+    if (now - lastAt < 25) return;
+    lastAt = now;
+    if (InterlockedExchange(&inTick, 1)) return;
+    onGameLoop();
+    InterlockedExchange(&inTick, 0);
+}
+
+
 __attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void) {
     if (!gameThreadId) {
         gameThreadId = GetCurrentThreadId();
         logLine("game loop: first tick, thread %04lX", (unsigned long) gameThreadId);
     }
     gameTick();
+    InterlockedIncrement(&ticksDone);
     crashStep = NULL;
 }
 

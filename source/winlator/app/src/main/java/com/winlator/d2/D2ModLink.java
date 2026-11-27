@@ -31,6 +31,11 @@ public final class D2ModLink {
 
     private static final long STATE_TIMEOUT_MS = 500;
 
+    /** How old a state packet may be before the app gives up on it. The mod sends every
+     *  frame, but the game thread can stall for a moment, so this has to be generous
+     *  enough not to drop the controls on a single slow frame. */
+    private static final long STATE_FRESH_MS = 2000;
+
 
 
 
@@ -435,7 +440,7 @@ public final class D2ModLink {
 
 
     public D2ModState state() {
-        return Stamped.fresh(state, STATE_TIMEOUT_MS);
+        return Stamped.fresh(state, STATE_FRESH_MS);
     }
 
 
@@ -1368,7 +1373,7 @@ public final class D2ModLink {
         if (s == null || port <= 0) return;
         Stamped<D2ModState> current = state;
         long now = SystemClock.uptimeMillis();
-        if (current != null && now - current.time < STATE_TIMEOUT_MS) commandWatch.sent(now);
+        if (current != null && now - current.time < STATE_FRESH_MS) commandWatch.sent(now);
         final byte[] data = buffer.array();
         sender.execute(() -> {
             if (changes != commandPortChanges) return;
