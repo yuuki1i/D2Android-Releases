@@ -40,8 +40,16 @@
 
 
 
+#ifdef D2VER_113C
+#define ORD_GetStatListWithState 10871
+#else
 #define ORD_GetStatListWithState 10429
-#define ORD_GetStatListStat  10190
+#endif
+#ifdef D2VER_113C
+#define ORD_GetStatListStat      10680
+#else
+#define ORD_GetStatListStat      10190
+#endif
 #define STATE_POISON 2
 #define STATE_BURNING 115
 #define STATE_OPENWOUNDS 62
@@ -299,7 +307,11 @@ static void checkDamageSites(void) {
     dmgGame = (DWORD) GetModuleHandleA("D2Game.dll");
     DWORD game = dmgGame;
     BYTE* thunk = (BYTE*) (game + RVA_GameSetStatThunk);
+#ifdef D2VER_113C
+    dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10887);
+#else
     dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10590);
+#endif
     int server = game && bytesAre(game + RVA_GameDamage, prologue, sizeof(prologue))
         && bytesAre(game + RVA_GameDamageLife, life, sizeof(life)) && bytesAre(game + RVA_GameDamageSet - sizeof(set), set, sizeof(set))
         && (callAt(game, RVA_GameDamageSet, RVA_GameSetStatThunk) || dmgCallTarget(game + RVA_GameDamageSet) == (DWORD) damageStub)

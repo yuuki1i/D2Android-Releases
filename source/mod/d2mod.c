@@ -87,21 +87,76 @@
 
 
 
-#define ORD_GetLevel            10122
-#define ORD_InitLevel           10736
-#define ORD_AddRoomData         10890
-#define ORD_RemoveRoomData      10208
-#define ORD_GetLevelText        10142
-
-#define ORD_GetLevelDef         10087
-#define ORD_GetObjectTxt        10319
-#define ORD_DrawText            10076
-#define ORD_GetTextWidth        10150
-#define ORD_SetTextSize         10047
-#define ORD_GetUnitStat         10550
-#define ORD_GetUnitState        10706
-#define ORD_GetItemText         10994
-#define ORD_MapToAbsScreen      10115
+#ifdef D2VER_113C
+#define ORD_GetLevel             10419
+#else
+#define ORD_GetLevel             10122
+#endif
+#ifdef D2VER_113C
+#define ORD_InitLevel            10322
+#else
+#define ORD_InitLevel            10736
+#endif
+#ifdef D2VER_113C
+#define ORD_AddRoomData          10401
+#else
+#define ORD_AddRoomData          10890
+#endif
+#ifdef D2VER_113C
+#define ORD_RemoveRoomData       11099
+#else
+#define ORD_RemoveRoomData       10208
+#endif
+#ifdef D2VER_113C
+#define ORD_GetLevelText         10014
+#else
+#define ORD_GetLevelText         10142
+#endif
+#ifdef D2VER_113C
+#define ORD_GetLevelDef          10749
+#else
+#define ORD_GetLevelDef          10087
+#endif
+#ifdef D2VER_113C
+#define ORD_GetObjectTxt         10688
+#else
+#define ORD_GetObjectTxt         10319
+#endif
+#ifdef D2VER_113C
+#define ORD_DrawText             10150
+#else
+#define ORD_DrawText             10076
+#endif
+#ifdef D2VER_113C
+#define ORD_GetTextWidth         10028
+#else
+#define ORD_GetTextWidth         10150
+#endif
+#ifdef D2VER_113C
+#define ORD_SetTextSize          10184
+#else
+#define ORD_SetTextSize          10047
+#endif
+#ifdef D2VER_113C
+#define ORD_GetUnitStat          10973
+#else
+#define ORD_GetUnitStat          10550
+#endif
+#ifdef D2VER_113C
+#define ORD_GetUnitState         10494
+#else
+#define ORD_GetUnitState         10706
+#endif
+#ifdef D2VER_113C
+#define ORD_GetItemText          10695
+#else
+#define ORD_GetItemText          10994
+#endif
+#ifdef D2VER_113C
+#define ORD_MapToAbsScreen       11087
+#else
+#define ORD_MapToAbsScreen       10115
+#endif
 #define ORD_SendPacket          10015
 
 static const BYTE GAMELOOP_ORIGINAL[7] = {0x83, 0xEC, 0x20, 0x89, 0x4C, 0x24, 0x0C};
@@ -5066,6 +5121,9 @@ static int resolve(void) {
     fGetItemText = (GetItemText_t) GetProcAddress((HMODULE) common, (LPCSTR) ORD_GetItemText);
     fMapToAbsScreen = (MapToAbsScreen_t) GetProcAddress((HMODULE) common, (LPCSTR) ORD_MapToAbsScreen);
     fSendPacket = (SendPacket_t) GetProcAddress((HMODULE) net, (LPCSTR) ORD_SendPacket);
+    if (!fGetUnitStat || !fGetItemText || !fMapToAbsScreen || !fSendPacket)
+        logLine("functions: stat %p item text %p screen %p packet %p (D2Common %08lX, D2Net %08lX)",
+                fGetUnitStat, fGetItemText, fMapToAbsScreen, fSendPacket, common, net);
     return fGetUnitStat && fGetItemText && fMapToAbsScreen && fSendPacket;
 }
 

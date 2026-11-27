@@ -9,7 +9,11 @@
 
 
 
-#define ORD_GetSkillLevel  10007
+#ifdef D2VER_113C
+#define ORD_GetSkillLevel        10306
+#else
+#define ORD_GetSkillLevel        10007
+#endif
 #define SKILL_LEVEL        0x28
 
 typedef int (__stdcall *GetSkillLevel_t)(void* unit, void* skill, BOOL total);

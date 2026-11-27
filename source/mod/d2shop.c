@@ -50,7 +50,11 @@
 
 
 
-#define ORD_GetItemPrice     10186
+#ifdef D2VER_113C
+#define ORD_GetItemPrice         10107
+#else
+#define ORD_GetItemPrice         10186
+#endif
 #define UI_SHOP              0x0C
 #define SHOP_JOB_MAX_MS      90000
 #define SHOP_WAIT_MS         1000

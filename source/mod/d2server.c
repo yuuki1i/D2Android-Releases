@@ -17,7 +17,11 @@
 
 
 
-#define ORD_SetUnitStat       10590
+#ifdef D2VER_113C
+#define ORD_SetUnitStat          10887
+#else
+#define ORD_SetUnitStat          10590
+#endif
 #define ORD_GetMaxLife        10574
 
 #define SRV_PACKET            0x49
@@ -326,9 +330,21 @@ static const BYTE placeStart[] = {0x83, 0xEC, 0x2C, 0x53, 0x55, 0x8B, 0x6C, 0x24
 
 
 
-#define ORD_StreamRoom      10501
-#define ORD_SrvGetLevel     10122
-#define ORD_SrvInitLevel    10736
+#ifdef D2VER_113C
+#define ORD_StreamRoom           10053
+#else
+#define ORD_StreamRoom           10501
+#endif
+#ifdef D2VER_113C
+#define ORD_SrvGetLevel          10419
+#else
+#define ORD_SrvGetLevel          10122
+#endif
+#ifdef D2VER_113C
+#define ORD_SrvInitLevel         10322
+#else
+#define ORD_SrvInitLevel         10736
+#endif
 typedef void* (__stdcall *StreamRoom_t)(void*, DWORD, DWORD);
 typedef BYTE* (__stdcall *SrvGetLevel_t)(void*, DWORD);
 typedef void (__stdcall *SrvInitLevel_t)(void*);

@@ -32,21 +32,11 @@
 
 
 
-#define ORD_GetBaseStat     10216
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef D2VER_113C
+#define ORD_GetBaseStat          10587
+#else
+#define ORD_GetBaseStat          10216
+#endif
 #define CAP_POINTS          0x01
 #define CAP_COMPARE         0x02
 #define CAP_DAMAGE          0x08

@@ -13,13 +13,31 @@
 
 
 
-#define ORD_DrawHover       10124
-#define ORD_SetHover        10137
-#define ORD_TextSize        10179
-#define ORD_BodyLocItem     10292
-#define ORD_ItemIsType      10601
-
-
+#ifdef D2VER_113C
+#define ORD_DrawHover            10110
+#else
+#define ORD_DrawHover            10124
+#endif
+#ifdef D2VER_113C
+#define ORD_SetHover             10085
+#else
+#define ORD_SetHover             10137
+#endif
+#ifdef D2VER_113C
+#define ORD_TextSize             10177
+#else
+#define ORD_TextSize             10179
+#endif
+#ifdef D2VER_113C
+#define ORD_BodyLocItem          11139
+#else
+#define ORD_BodyLocItem          10292
+#endif
+#ifdef D2VER_113C
+#define ORD_ItemIsType           10744
+#else
+#define ORD_ItemIsType           10601
+#endif
 #define ITYPE_SHIELD 2
 #define ITYPE_ARMOR 3
 #define ITYPE_BOWQUIVER 5

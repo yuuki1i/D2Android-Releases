@@ -14,7 +14,11 @@
 
 
 #define PKT_QUESTS            9
-#define ORD_QuestItemPrice    10186
+#ifdef D2VER_113C
+#define ORD_QuestItemPrice       10107
+#else
+#define ORD_QuestItemPrice       10186
+#endif
 #define QUEST_BITS            0x300
 #define QUEST_WORDS           (QUEST_BITS / 16)
 #define QUEST_REPEAT_MS       5000
