@@ -264,6 +264,7 @@
     <string name="menu_helpers">设置</string>
     <string name="menu_keyboard">键盘</string>
     <string name="menu_text">输入文字</string>
+    <string name="menu_packcheck">整合包自检</string>
     <string name="menu_text_hint">输入的内容直接打进游戏（角色名只能是英文/数字）</string>
     <string name="menu_idle">挂机模式…</string>
     <string name="menu_quit">退出</string>

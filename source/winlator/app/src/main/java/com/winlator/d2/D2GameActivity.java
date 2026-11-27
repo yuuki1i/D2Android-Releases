@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 public class D2GameActivity extends D2Activity {
 
     private static final int MENU_HELPERS = 0, MENU_KEYBOARD = 1, MENU_IDLE = 2, MENU_QUIT = 3, MENU_BUILD = 4, MENU_INTRO = 5,
-        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8;
+        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8, MENU_PACKCHECK = 9;
 
     public static final String EXTRA_DIR = "d2_dir";
     public static final String EXTRA_PROGRAM = "d2_program";
@@ -625,6 +625,8 @@ public class D2GameActivity extends D2Activity {
         items.add(D2Text.get(this, R.string.menu_keyboard));
         ids.add(MENU_TEXT);
         items.add(D2Text.get(this, R.string.menu_text));
+        ids.add(MENU_PACKCHECK);
+        items.add(D2Text.get(this, R.string.menu_packcheck));
         if (withIdle) {
             ids.add(MENU_IDLE);
             items.add(idleBlocked == null ? D2Text.get(this, R.string.menu_idle) : D2Text.get(this, R.string.menu_idle_blocked, idleBlocked));
@@ -658,6 +660,7 @@ public class D2GameActivity extends D2Activity {
                 else if (which == MENU_INTRO) overlay.showHintsAgain();
                 else if (which == MENU_KEYBOARD) AppUtils.showKeyboard(this);
                 else if (which == MENU_TEXT) showTextInput();
+                else if (which == MENU_PACKCHECK) showPackCheck();
 
                 else if (com.winlator.BuildConfig.D2_INTERNAL && which == MENU_IDLE) D2IdleDialog.show(this, overlay.idleQuest(), (minutes, retreat) -> overlay.requestIdle(pausedAtMenu, minutes, retreat));
                 else {
@@ -726,6 +729,24 @@ public class D2GameActivity extends D2Activity {
 
 
     private com.winlator.xserver.Keyboard textKeyboard;
+
+
+    private void showPackCheck() {
+        String dir = getIntent().getStringExtra(D2LaunchActivity.EXTRA_GAME_DIR);
+        java.io.File gameDir = new java.io.File(dir != null ? dir : "");
+        java.io.File shadow = new java.io.File(new java.io.File(D2Runtime.driveC(this), D2Runtime.DRIVE_C_SHADOW), "");
+        String text = D2PackCheck.report(gameDir, shadow);
+        android.widget.TextView view = new android.widget.TextView(this);
+        view.setText(text);
+        view.setTextSize(11);
+        view.setTypeface(android.graphics.Typeface.MONOSPACE);
+        int pad = Math.round(12 * getResources().getDisplayMetrics().density);
+        android.widget.ScrollView scroll = new android.widget.ScrollView(this);
+        view.setPadding(pad, pad, pad, pad);
+        scroll.addView(view);
+        new AlertDialog.Builder(this).setTitle(D2Text.get(this, R.string.menu_packcheck)).setView(scroll)
+            .setPositiveButton(android.R.string.ok, null).show();
+    }
 
     /** Invisible field that takes the Android keyboard's text and pushes it into the guest. */
     private android.widget.EditText imeSink;

@@ -544,6 +544,7 @@
     <string name="menu_helpers">Settings</string>
     <string name="menu_keyboard">Keyboard</string>
     <string name="menu_text">Type text</string>
+    <string name="menu_packcheck">Pack self-check</string>
     <string name="menu_text_hint">Characters go straight into the game (ASCII only for names)</string>
     <string name="menu_idle">Idle mode …</string>
     <string name="menu_idle_blocked">Idle mode: %1$s</string>
