@@ -372,6 +372,7 @@ static volatile LONG outOfGameSeen;
 volatile LONG worldFrames;
 volatile LONG ticksDone;
 volatile LONG statesSent;
+static volatile LONG cntTail, cntGate, cntG2, cntG3, cntG4, cntG5, cntPre, cntErr;
 static int worldHooked;
 static volatile LONG heroVarOk;
 
@@ -704,6 +705,7 @@ static void sendPacket(Packet* p) {
     if (sock == INVALID_SOCKET) return;
     if (sendto(sock, (const char*) p->data, p->len, 0, (struct sockaddr*) &appAddr, sizeof(appAddr)) == SOCKET_ERROR) {
         int error = WSAGetLastError();
+        InterlockedIncrement(&cntErr);
 
         if ((error == WSANOTINITIALISED || error == WSAENOTSOCK) && InterlockedExchange(&socketsBroken, 1) == 0) {
             logLine("sockets lost (error %d)", error);
@@ -4073,6 +4075,7 @@ static void collectAndSend(void* player) {
         path = NULL;
         if (!act) return;
     }
+    InterlockedIncrement(&cntGate);
 
     View view;
     view.offX = (long) fGetMouseXOffset();
@@ -4097,6 +4100,7 @@ static void collectAndSend(void* player) {
     putU32(&p, uiHigh);
     putU16(&p, levelNo);
     putU8(&p, isTown(levelNo) ? 1 : 0);
+    InterlockedIncrement(&cntG2);
 
 
 
@@ -4119,6 +4123,7 @@ static void collectAndSend(void* player) {
     putU32(&p, hovered ? RD32(hovered, U_ID) : 0xFFFFFFFF);
     putU8(&p, lastDrink);
     putU8(&p, commandsReceived);
+    InterlockedIncrement(&cntG3);
 
 
     BYTE belt[16] = {0};
@@ -4135,6 +4140,7 @@ static void collectAndSend(void* player) {
         item = RDP(data, IDATA_NEXTINV);
     }
     for (int i = 0; i < 16; i++) putU8(&p, belt[i]);
+    InterlockedIncrement(&cntG4);
 
 
     static Candidate monsterList[MAX_CANDIDATES], itemList[MAX_CANDIDATES], objectList[MAX_CANDIDATES], corpseList[MAX_CANDIDATES];
@@ -4220,6 +4226,7 @@ static void collectAndSend(void* player) {
         }
     }
 
+    InterlockedIncrement(&cntG5);
     {
         static DWORD lastUnitLog;
         DWORD nowU = GetTickCount();
@@ -4513,6 +4520,7 @@ static void collectAndSend(void* player) {
     putHoverItem(&p, player);
 
     putU8(&p, path && readable((BYTE*) path + PATH_DIR, 1) && RD8(path, PATH_DIR) < 64 ? RD8(path, PATH_DIR) : 0xFF);
+    InterlockedIncrement(&cntPre);
     sendPacket(&p);
     InterlockedIncrement(&statesSent);
 
@@ -4817,9 +4825,10 @@ static void gameTick(void) {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
             lastNote = now;
-            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
                     (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) statesSent,
-                    (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
+                    (long) cntTail, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
+                    (int) ntohs(appAddr.sin_port), (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
         }
     }
 #ifdef D2VER_113C
@@ -4908,6 +4917,7 @@ static void gameTick(void) {
 
         if (!player) walk.stopping = 0;
     }
+    InterlockedIncrement(&cntTail);
     if (now - lastSend < 40) return;
     lastSend = now;
     if (player) STEP(collectAndSend(player));
