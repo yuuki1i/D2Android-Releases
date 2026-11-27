@@ -4252,6 +4252,9 @@ public class D2TouchOverlay extends View {
     private void sendSlots(long now) {
         if (skillSlots == null || (slotsSentAt != 0 && now - slotsSentAt < 2000)) return;
         slotsSentAt = now;
+        // the pack keeps its own 16 hotkeys (its skill circles are configured in the pack),
+        // so never overwrite them when the pack is in charge
+        if (D2Settings.modCompat(getContext())) return;
         modLink.slots(skillSlots.skills());
     }
 

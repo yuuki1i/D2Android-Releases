@@ -3315,7 +3315,27 @@ static void loadPackChain(void);
 /* v41: the app's 16 skill slots were only kept on the phone side. Push them into the
    game once per session, so F1..F8 actually carry the skills the user assigned. */
 static volatile LONG appSlotsApplied;
+
+/* The pack (完美珍藏版) ships its own patchload.dll next to the exe; when it is there the
+   pack owns skills, hotkeys and the big stash, and nothing of ours may rewrite them. */
+static int packPresent(void) {
+    static int cached = -1;
+    if (cached >= 0) return cached;
+    char path[MAX_PATH];
+    DWORD n = GetModuleFileNameA(NULL, path, sizeof(path));
+    cached = 0;
+    if (n > 0 && n < sizeof(path) - 16) {
+        char* slash = strrchr(path, '\\');
+        strcpy(slash ? slash + 1 : path, "patchload.dll");
+        DWORD attr = GetFileAttributesA(path);
+        cached = attr != INVALID_FILE_ATTRIBUTES && !(attr & FILE_ATTRIBUTE_DIRECTORY);
+    }
+    if (cached) logLine("pack: patchload.dll in the game directory, the pack keeps skills and stash");
+    return cached;
+}
+
 static void applyAppSlots(void* player) {
+    if (packPresent()) return;
     if (!appSlotsSet || appSlotsApplied || !player || !singlePlayerGame() || !fSendPacket) return;
     if (!(pointOps & PTS_KEY)) return;
     DWORD* skills = (DWORD*) (client + RVA_HotkeySkill);
