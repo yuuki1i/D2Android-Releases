@@ -5553,6 +5553,119 @@ static void* volatile* heroVar(void) {
     return var;
 }
 
+
+/* The archives of this repack hold their strings as GBK bytes and the game asks Windows for the
+   ANSI code page to widen them. On a host that reports UTF-8 (or 1252) every Chinese byte becomes
+   '?' - NPC names, speech, the HUD - while ASCII and PlugY's own wide strings stay fine. The game
+   side therefore always gets 936, whatever locale the container pretends to have. */
+static DWORD guestCodepage = 936;
+
+static UINT (WINAPI* realGetACP)(void);
+static int (WINAPI* realWiden)(UINT, DWORD, LPCCH, int, LPWSTR, int);
+
+static UINT WINAPI guestGetACP(void) {
+    return guestCodepage;
+}
+
+static int WINAPI guestWiden(UINT cp, DWORD flags, LPCCH text, int cb, LPWSTR out, int cch) {
+    if (cp == CP_ACP || cp == 0 || cp == 1252) cp = guestCodepage;
+    return realWiden ? realWiden(cp, flags, text, cb, out, cch) : 0;
+}
+
+static int (WINAPI* realLocaleInfoA)(LCID, LCTYPE, LPSTR, int);
+static int (WINAPI* realLocaleInfoW)(LCID, LCTYPE, LPWSTR, int);
+
+static int WINAPI guestLocaleInfoA(LCID lcid, LCTYPE type, LPSTR buf, int cch) {
+    if (type == LOCALE_IDEFAULTANSICODEPAGE) {
+        char text[16];
+        wsprintfA(text, "%lu", (unsigned long) guestCodepage);
+        if (buf && cch >= (int) lstrlenA(text) + 1) lstrcpyA(buf, text);
+        return lstrlenA(text) + 1;
+        return 4;
+    }
+    return realLocaleInfoA ? realLocaleInfoA(lcid, type, buf, cch) : 0;
+}
+
+static int WINAPI guestLocaleInfoW(LCID lcid, LCTYPE type, LPWSTR buf, int cch) {
+    if (type == LOCALE_IDEFAULTANSICODEPAGE) {
+        wchar_t text[16];
+        wsprintfW(text, L"%lu", (unsigned long) guestCodepage);
+        if (buf && cch >= (int) lstrlenW(text) + 1) lstrcpyW(buf, text);
+        return lstrlenW(text) + 1;
+        return 4;
+    }
+    return realLocaleInfoW ? realLocaleInfoW(lcid, type, buf, cch) : 0;
+}
+
+static int patchTextIat(HMODULE mod) {
+    BYTE* base = (BYTE*) mod;
+    if (!base || !readable(base, 0x40)) return 0;
+    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*) base;
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) return 0;
+    IMAGE_NT_HEADERS* nt = (IMAGE_NT_HEADERS*) (base + dos->e_lfanew);
+    if (nt->Signature != IMAGE_NT_SIGNATURE) return 0;
+    DWORD rva = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+    if (!rva) return 0;
+    int patched = 0;
+    for (IMAGE_IMPORT_DESCRIPTOR* d = (IMAGE_IMPORT_DESCRIPTOR*) (base + rva); d->Name; d++) {
+        const char* dll = (const char*) (base + d->Name);
+        if (lstrcmpiA(dll, "KERNEL32.dll") && lstrcmpiA(dll, "KERNELBASE.dll")) continue;
+        IMAGE_THUNK_DATA* orig = (IMAGE_THUNK_DATA*) (base + (d->OriginalFirstThunk ? d->OriginalFirstThunk : d->FirstThunk));
+        IMAGE_THUNK_DATA* iat = (IMAGE_THUNK_DATA*) (base + d->FirstThunk);
+        if (!readable(orig, 4) || !readable(iat, 4)) continue;
+        for (; orig->u1.AddressOfData; orig++, iat++) {
+            if (orig->u1.Ordinal & IMAGE_ORDINAL_FLAG) continue;
+            IMAGE_IMPORT_BY_NAME* name = (IMAGE_IMPORT_BY_NAME*) (base + orig->u1.AddressOfData);
+            if (!readable(name, 2)) break;
+            void* replacement = NULL;
+            if (!lstrcmpA((const char*) name->Name, "GetACP")) replacement = (void*) guestGetACP;
+            else if (!lstrcmpA((const char*) name->Name, "MultiByteToWideChar")) replacement = (void*) guestWiden;
+            else if (!lstrcmpA((const char*) name->Name, "GetLocaleInfoA")) replacement = (void*) guestLocaleInfoA;
+            else if (!lstrcmpA((const char*) name->Name, "GetLocaleInfoW")) replacement = (void*) guestLocaleInfoW;
+            if (!replacement || iat->u1.Function == (DWORD) (UINT_PTR) replacement) continue;
+            DWORD old;
+            if (!VirtualProtect(&iat->u1.Function, 4, PAGE_READWRITE, &old)) continue;
+            iat->u1.Function = (DWORD) (UINT_PTR) replacement;
+            VirtualProtect(&iat->u1.Function, 4, old, &old);
+            patched++;
+        }
+    }
+    return patched;
+}
+
+static void ensureCodepage(void) {
+    static const char* names[] = {"D2Lang.dll", "D2Win.dll", "D2Client.dll", "D2Common.dll", "D2Game.dll",
+        "D2Launch.dll", "D2Multi.dll", "D2MCPClient.dll", "Game.exe", "PlugY.dll", NULL};
+    static char done[16];
+    if (!realWiden) {
+        char path[MAX_PATH];
+        lstrcpynA(path, logPath, sizeof(path));
+        char* slash = strrchr(path, '\\');
+        if (slash) {
+            lstrcpyA(slash + 1, "d2android-mod.ini");
+            guestCodepage = (DWORD) GetPrivateProfileIntA("TEXT", "Codepage", 936, path);
+        }
+        if (!guestCodepage) {
+            logLine("codepage: left to the host (TEXT Codepage=0)");
+            return;
+        }
+        HMODULE kernel = GetModuleHandleA("kernel32.dll");
+        realGetACP = kernel ? (UINT (WINAPI*)(void)) GetProcAddress(kernel, "GetACP") : NULL;
+        realWiden = kernel ? (int (WINAPI*)(UINT, DWORD, LPCCH, int, LPWSTR, int)) GetProcAddress(kernel, "MultiByteToWideChar") : NULL;
+        realLocaleInfoA = kernel ? (int (WINAPI*)(LCID, LCTYPE, LPSTR, int)) GetProcAddress(kernel, "GetLocaleInfoA") : NULL;
+        realLocaleInfoW = kernel ? (int (WINAPI*)(LCID, LCTYPE, LPWSTR, int)) GetProcAddress(kernel, "GetLocaleInfoW") : NULL;
+        if (!realWiden) return;
+    }
+    for (int i = 0; names[i]; i++) {
+        if (done[i]) continue;
+        HMODULE mod = GetModuleHandleA(names[i]);
+        if (!mod) continue;
+        int n = patchTextIat(mod);
+        done[i] = 1;
+        logLine("codepage: %s widens its text as %lu (%d calls)", names[i], (unsigned long) guestCodepage, n);
+    }
+}
+
 static DWORD WINAPI setupThread(LPVOID arg) {
     (void) arg;
     fixStormStreamRace();
@@ -5629,6 +5742,7 @@ static DWORD WINAPI setupThread(LPVOID arg) {
         else heroWithoutTick = 0;
         lastBeat = beat;
         checkMenuField(1);
+        ensureCodepage();
         for (int i = 0; i < 4; i++) {
             Sleep(200);
             checkMenuField(0);
