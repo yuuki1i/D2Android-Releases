@@ -144,7 +144,7 @@ public final class GameShadow {
 
         D2PlugY.setCowPortalSupported(modBundled && !MOD_DLL_113C.equals(dll));
         boolean plugy = modBundled && D2Settings.modEnabled(context) && D2Settings.plugy(context);
-        D2PlugY.install(context, shadowDir, saveDir, plugy);
+        D2PlugY.install(context, shadowDir, saveDir, plugy, gameDir);
         if (plugy) plugyStatsHint(context, new File(new File(shadowDir, "PlugY"), D2PlugYTexts.STRINGS_FILE));
 
 
