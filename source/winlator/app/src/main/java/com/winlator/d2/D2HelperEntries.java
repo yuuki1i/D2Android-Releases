@@ -392,7 +392,7 @@ public final class D2HelperEntries {
         section(SET_DISPLAY, "hervorgehoben", "hiClock", "hiFps", "hiBattery", "hiPlayers", "hiLevel", "hiDps", "hiGold");
         section(SET_DISPLAY, "karte", "mapHack", "mapFightHide", "mapFightDelay");
         section(SET_DISPLAY, "schaden", "damageStyle");
-        section(SET_DISPLAY, "app", "appLanguage", "shortcut");
+        section(SET_DISPLAY, "app", "appLanguage", "shortcut", "glassKeys");
         section(SET_LOOT, "namen", "itemLabels", "dropLabels", "labelsNearOnly");
         section(SET_LOOT, "lootfilter", "lootFilter", "lootHide");
         section(SET_LOOT, "aufheben", "autoGold", "pickPotions", "pickScrolls", "pickRunes", "pickGems", "pickJewelry");
@@ -436,7 +436,7 @@ public final class D2HelperEntries {
 
         for (String k : new String[]{"swPreset", "swQuality", "swNoDrop", "swRunes", "swBoss", "swUniques", "swGamble", "swExp", "swDensity", "swLadder", "swCow", "swUber", "swWorld", "swShared", "swSort"}) SCOPE.put(k, NEXT_START);
 
-        for (String k : new String[]{"argDirect", "argTxt", "argNs", "argsFree"}) SCOPE.put(k, NEXT_START);
+        for (String k : new String[]{"argDirect", "argTxt", "argNs", "argsFree", "glassKeys"}) SCOPE.put(k, NEXT_START);
 
         for (String k : new String[]{"modsList", "modsImport"}) SCOPE.put(k, BEFORE_START);
         keywords("aimBlind", "toter winkel blind spot hinter ruecken behind auto aim");
@@ -520,6 +520,7 @@ public final class D2HelperEntries {
         keywords("argDirect", "mod mods startparameter parameter befehlszeile command line direct data ordner folder");
         keywords("argTxt", "mod mods startparameter parameter befehlszeile command line txt tabellen tables excel");
         keywords("argNs", "mod mods startparameter parameter ns ton sound stumm mute");
+        keywords("glassKeys", "tastenleiste eigene tasten custom keys bar knopf button");
         keywords("argsFree", "mod mods startparameter parameter befehlszeile command line frei free eigene custom");
         keywords("modsList", "mod mods original spielen play aktiv active wechseln switch enjoy median");
         keywords("modsImport", "mod mods installieren install hinzufuegen add zip 7z datei file import");
@@ -614,7 +615,7 @@ public final class D2HelperEntries {
             {"swShared", "settings_sw_shared"}, {"swSort", "settings_sw_sort"},
 
             {"argDirect", "settings_arg_direct"}, {"argTxt", "settings_arg_txt"}, {"argNs", "settings_arg_ns"},
-            {"argsFree", "settings_args_free"}, {"modsList", "settings_mods_list"}, {"modsImport", "settings_mods_import"}};
+            {"argsFree", "settings_args_free"}, {"glassKeys", "settings_glass_keys"}, {"modsList", "settings_mods_list"}, {"modsImport", "settings_mods_import"}};
         for (String[] item : items) l.add(new Entry(Kind.HOST, item[0], item[1], null, null, false, null, null));
         return l;
     }

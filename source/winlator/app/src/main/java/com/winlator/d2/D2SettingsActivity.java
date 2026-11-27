@@ -469,6 +469,8 @@ public class D2SettingsActivity extends D2Activity {
                 return box;
             case "argsFree":
                 return argsFree(box, e.label);
+            case "glassKeys":
+                return glassKeys(box, e.label);
             case "modsList":
                 return modsList(box);
             case "modsImport":
@@ -723,6 +725,33 @@ public class D2SettingsActivity extends D2Activity {
 
 
     private TextView argsLine, argsWarnings;
+
+
+    /** The keys of the glass bar, one "name:keycode" per entry, separated by semicolons. */
+    private View glassKeys(LinearLayout box, String label) {
+        box.addView(label(label));
+        box.addView(hint(getString(R.string.settings_glass_keys_hint)));
+        android.widget.EditText field = new android.widget.EditText(this);
+        field.setSingleLine(true);
+        field.setText(D2Settings.glassKeys(this));
+        field.setTextColor(0xFFC8B074);
+        field.setHintTextColor(D2Style.HINT);
+        field.setTextSize(14);
+        field.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        field.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE | android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        field.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence t, int a, int b, int c) {}
+            @Override public void onTextChanged(CharSequence t, int a, int b, int c) {}
+            @Override public void afterTextChanged(android.text.Editable text) {
+                D2Settings.setGlassKeys(D2SettingsActivity.this, text.toString());
+            }
+        });
+        LinearLayout.LayoutParams fp = matchWidth();
+        fp.leftMargin = dp(8);
+        box.addView(field, fp);
+        return box;
+    }
+
 
 
     private View argsFree(LinearLayout box, String label) {

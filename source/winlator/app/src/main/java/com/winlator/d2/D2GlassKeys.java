@@ -52,9 +52,9 @@ public final class D2GlassKeys {
     /** Accent colour of the theme, used for the active state and the thin edge. */
     public static int accent(int theme, boolean on) {
         switch (theme) {
-            case SWITCH: return on ? Color.rgb(255, 84, 62) : Color.rgb(120, 214, 255);
-            case PLAYSTATION: return on ? Color.rgb(120, 176, 255) : Color.rgb(210, 220, 235);
-            default: return on ? Color.rgb(126, 214, 92) : Color.rgb(232, 240, 236);
+            case SWITCH: return on ? Color.rgb(232, 96, 78) : Color.rgb(150, 158, 168);
+            case PLAYSTATION: return on ? Color.rgb(126, 168, 226) : Color.rgb(150, 158, 168);
+            default: return on ? Color.rgb(140, 196, 122) : Color.rgb(150, 158, 168);
         }
     }
 
@@ -64,23 +64,23 @@ public final class D2GlassKeys {
      */
     public static void draw(Canvas canvas, RectF r, int theme, boolean on, boolean pressed) {
         float radius = radius(r, theme);
-        int topAlpha = pressed ? 74 : on ? 58 : 34;
-        int bottomAlpha = pressed ? 40 : on ? 26 : 14;
+        int topAlpha = pressed ? 214 : on ? 190 : 150;
+        int bottomAlpha = pressed ? 170 : on ? 146 : 108;
 
         glow.setShader(new RadialGradient(r.centerX(), r.top + r.height() * 0.28f, r.width() * 1.15f,
-            new int[]{Color.argb(on ? 60 : 34, 255, 255, 255), Color.argb(0, 255, 255, 255)},
+            new int[]{Color.argb(on ? 46 : 26, 255, 255, 255), Color.argb(0, 255, 255, 255)},
             new float[]{0f, 1f}, Shader.TileMode.CLAMP));
         canvas.drawRoundRect(r, radius, radius, glow);
         glow.setShader(null);
 
         body.setShader(new LinearGradient(0, r.top, 0, r.bottom,
-            Color.argb(topAlpha, 246, 249, 252), Color.argb(bottomAlpha, 214, 222, 232), Shader.TileMode.CLAMP));
+            Color.argb(topAlpha, 74, 77, 82), Color.argb(bottomAlpha, 26, 27, 30), Shader.TileMode.CLAMP));
         canvas.drawRoundRect(r, radius, radius, body);
         body.setShader(null);
 
         line.setStyle(Paint.Style.STROKE);
         line.setStrokeWidth(Math.max(1f, r.height() * 0.035f));
-        line.setColor(Color.argb(on ? 200 : 150, 255, 255, 255));
+        line.setColor(Color.argb(on ? 150 : 96, 226, 232, 238));
         tmp.set(r);
         tmp.inset(line.getStrokeWidth() * 0.5f, line.getStrokeWidth() * 0.5f);
         canvas.drawRoundRect(tmp, radius, radius, line);

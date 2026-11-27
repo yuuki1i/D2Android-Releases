@@ -5724,8 +5724,10 @@ static void installPlugYHook(void) {
     // loads and initialises it on its own. Hooking the renderer call again would load and init
     // PlugY twice, which ends in a crash inside its font setup.
     if (moduleHasText(gfx, "PlugY.dll")) {
-        plugyLoaded = 2;
-        logLine("PlugY: D2gfx already loads it, nothing to hook");
+        // PlugY runs on its own from here on, but our integration (save hook, page clicks, the
+        // packet commands) still needs the 1.13c sites, so it stays off until they are mapped.
+        plugyLoaded = 0;
+        logLine("PlugY: D2gfx loads it itself, our PlugY patches stay off in this build");
         return;
     }
     BYTE* at = (BYTE*) (gfx + RVA_GfxLoadRenderer);
