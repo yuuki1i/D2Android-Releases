@@ -5693,6 +5693,22 @@ static HMODULE WINAPI loadRendererThenPlugY(LPCSTR name) {
 
 
 
+static int moduleHasText(DWORD module, const char* text) {
+    if (!module) return 0;
+    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*) module;
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) return 0;
+    IMAGE_NT_HEADERS32* nt = (IMAGE_NT_HEADERS32*) (module + dos->e_lfanew);
+    if (nt->Signature != IMAGE_NT_SIGNATURE) return 0;
+    const BYTE* image = (const BYTE*) module;
+    DWORD size = nt->OptionalHeader.SizeOfImage, len = (DWORD) lstrlenA(text);
+    if (size <= len) return 0;
+    for (DWORD i = 0; i + len < size; i++) {
+        if (image[i] == (BYTE) text[0] && memcmp(image + i, text, len) == 0) return 1;
+    }
+    return 0;
+}
+
+
 static void installPlugYHook(void) {
     char path[MAX_PATH];
     lstrcpynA(path, logPath, sizeof(path));
@@ -5702,6 +5718,14 @@ static void installPlugYHook(void) {
     DWORD gfx = (DWORD) GetModuleHandleA("D2gfx.dll");
     if (!gfx || GetModuleHandleA("D2Glide.dll") || GetModuleHandleA("glide3x.dll")) {
         logLine("PlugY: too late or no D2gfx (loaded after the game started)");
+        return;
+    }
+    // A PlugY install patches D2gfx.dll itself: the module then carries the name "PlugY.dll" and
+    // loads and initialises it on its own. Hooking the renderer call again would load and init
+    // PlugY twice, which ends in a crash inside its font setup.
+    if (moduleHasText(gfx, "PlugY.dll")) {
+        plugyLoaded = 2;
+        logLine("PlugY: D2gfx already loads it, nothing to hook");
         return;
     }
     BYTE* at = (BYTE*) (gfx + RVA_GfxLoadRenderer);
