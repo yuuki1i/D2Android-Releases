@@ -570,7 +570,9 @@ static volatile LONG logInFilter;
 
 static DWORD gameThreadId, exeBase;
 static const char* volatile crashStep;
-#define STEP(call) do { crashStep = #call; call; } while (0)
+static const char* stepRing[8];
+static volatile LONG stepRingNext;
+#define STEP(call) do { crashStep = #call; stepRing[stepRingNext & 7] = #call; InterlockedIncrement(&stepRingNext); call; } while (0)
 static BYTE lastCommands[8];
 static volatile LONG lastCommandNext, crashCount;
 static DWORD periodicSince[2];
@@ -658,9 +660,9 @@ static void logCrashLines(EXCEPTION_POINTERS* info, int first) {
     logLine("crash: registers eax %08lX ebx %08lX ecx %08lX edx %08lX esi %08lX edi %08lX ebp %08lX esp %08lX eip %08lX "
             "flags %08lX", ctx->Eax, ctx->Ebx, ctx->Ecx, ctx->Edx, ctx->Esi, ctx->Edi, ctx->Ebp, ctx->Esp, ctx->Eip,
             ctx->EFlags);
-    char stack[16 * 64];
+    char stack[48 * 64];
     int len = 0, words = 0;
-    for (; words < 16; words++) {
+    for (; words < 48; words++) {
         DWORD* p = (DWORD*) ctx->Esp + words;
         if (!crashReadable(p, 4)) break;
         DWORD v = *p;
@@ -672,6 +674,12 @@ static void logCrashLines(EXCEPTION_POINTERS* info, int first) {
         if (len >= (int) sizeof(stack)) break;
     }
     logLine("crash: stack at %08lX (%d words):%s", ctx->Esp, words, words ? stack : " not readable");
+    char trail[400];
+    int t = 0;
+    LONG sn = stepRingNext;
+    for (LONG i = sn > 8 ? sn - 8 : 0; i < sn; i++)
+        t += snprintf(trail + t, sizeof(trail) - t, "%s%s", t ? " -> " : "", stepRing[i & 7] ? stepRing[i & 7] : "?");
+    logLine("crash: steps %s", t ? trail : "none");
 }
 
 
@@ -3081,8 +3089,17 @@ static void openPortal(void* player) {
         *(WORD*) (packet + 5) = path ? (WORD) (RD32(path, PATH_X) >> 16) : 0;
         *(WORD*) (packet + 9) = path ? (WORD) (RD32(path, PATH_Y) >> 16) : 0;
     }
+    crashStep = "openPortal:send";
     fSendPacket(13, 1, packet);
+#ifdef D2VER_113C
+    /* The use sound goes through two hand written client calls whose addresses are still the
+       1.13d ones; the number that comes back does not belong to a scroll. Skip it there. */
+    int sound = -1;
+#else
+    crashStep = "openPortal:sound";
     int sound = playUseSound(item);
+#endif
+    crashStep = "openPortal";
     logLine("portal from the %s, sound %d", belt ? "belt" : "inventory", sound);
 }
 
