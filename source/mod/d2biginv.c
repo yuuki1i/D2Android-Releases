@@ -35,6 +35,13 @@ DWORD biPanelOriginal;
 static int biRead;
 int biOwnGridW, biOwnGridH;
 
+static int biModInstall(void) {
+    static int cached = -1;
+    if (cached < 0)
+        cached = (GetModuleHandleA("patchload.dll") != NULL || GetModuleHandleA("D2Ext.dll") != NULL) ? 1 : 0;
+    return cached;
+}
+
 static void biReadFile(void) {
     if (biRead) return;
     biRead = 1;
@@ -192,7 +199,11 @@ void __cdecl biTableLoaded(BYTE* table) {
     *(BYTE**) (biCommon + RVA_InvTable) = table;
     int count = (int) RD32(biCommon, RVA_InvCount);
     int result = -2;
-    if (biPanelSite && biPanelReady()) result = biTableApply(table, count);
+    /* An integration (patchload / D2Ext) brings its own interface art and its own character pages.
+       Writing our 10 x 8 grid into that table makes the items sit off the panel, so the mod's table
+       and panel stay untouched and the overlay simply follows the grid the game reports. */
+    if (!biModInstall() && biPanelSite && biPanelReady()) result = biTableApply(table, count);
+    if (biModInstall()) result = -1;
     InterlockedExchange(&biBig, result >= 0);
     invGridH = result >= 0 ? BI_ROWS : INV_H;
     /* A mod may bring its own grid. Rather than assuming 10 x 4, the overlay takes whatever size the
