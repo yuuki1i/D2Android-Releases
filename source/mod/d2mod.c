@@ -3075,6 +3075,14 @@ static void* findPortal(void* player, int* where, int* charges) {
 
 
 static void openPortal(void* player) {
+#ifdef D2VER_113C
+    /* Packet 0x20 in this build is not the 1.13d one: sending it ends in a jump into the heap
+       (eip 36280F10) and the game freezes, so the button stays silent until the layout is known. */
+    (void) player;
+    static int once;
+    if (!once++) logLine("portal: not mapped in this build, the button does nothing for now");
+    return;
+#endif
     int belt = 0;
     void* item = findPortal(player, &belt, NULL);
     if (!item) {
