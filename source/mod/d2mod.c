@@ -157,7 +157,15 @@
 #else
 #define ORD_MapToAbsScreen       10115
 #endif
+#ifdef D2VER_113C
+/* 10015 here is a one argument getter (ret 4); calling it with three arguments left eight bytes on
+   the stack and the return jumped into the heap - that was the freeze behind the portal button.
+   The three argument sender sits at 10024: it checks the connection, refuses anything over 0x204
+   bytes and hands size and data to the net layer. */
+#define ORD_SendPacket          10024
+#else
 #define ORD_SendPacket          10015
+#endif
 
 static const BYTE GAMELOOP_ORIGINAL[7] = {0x83, 0xEC, 0x20, 0x89, 0x4C, 0x24, 0x0C};
 
@@ -3074,15 +3082,16 @@ static void* findPortal(void* player, int* where, int* charges) {
 }
 
 
-static void openPortal(void* player) {
+static int sendPacketUsable(void) {
 #ifdef D2VER_113C
-    /* Packet 0x20 in this build is not the 1.13d one: sending it ends in a jump into the heap
-       (eip 36280F10) and the game freezes, so the button stays silent until the layout is known. */
-    (void) player;
-    static int once;
-    if (!once++) logLine("portal: not mapped in this build, the button does nothing for now");
-    return;
+    BYTE* f = (BYTE*) fSendPacket;
+    return readable(f, 8) && f[0] == 0xA1 && f[5] == 0x85 && f[6] == 0xC0 && f[7] == 0x75;
+#else
+    return fSendPacket != NULL;
 #endif
+}
+
+static void openPortal(void* player) {
     int belt = 0;
     void* item = findPortal(player, &belt, NULL);
     if (!item) {
@@ -3098,6 +3107,12 @@ static void openPortal(void* player) {
         *(WORD*) (packet + 9) = path ? (WORD) (RD32(path, PATH_Y) >> 16) : 0;
     }
     crashStep = "openPortal:send";
+    if (!sendPacketUsable()) {
+        static int once;
+        if (!once++) logLine("portal: the packet sender is not the one expected here, not sending");
+        crashStep = "";
+        return;
+    }
     fSendPacket(13, 1, packet);
 #ifdef D2VER_113C
     /* The use sound goes through two hand written client calls whose addresses are still the
