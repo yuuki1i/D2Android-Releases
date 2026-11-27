@@ -52,6 +52,27 @@ public final class D2Settings {
     }
 
 
+    static final String KEY_GLASS_THEME = "glassTheme", KEY_GLASS_KEYS = "glassKeys";
+
+    /** 0 classic stone bar, 1 Xbox glass, 2 Switch glass, 3 PlayStation glass. */
+    public static int glassTheme(Context context) {
+        return prefs(context).getInt(KEY_GLASS_THEME, D2GlassKeys.XBOX);
+    }
+
+    public static void setGlassTheme(Context context, int theme) {
+        prefs(context).edit().putInt(KEY_GLASS_THEME, theme).apply();
+    }
+
+    /** Extra keys of the bar, written as "label:virtualKey;label:virtualKey". */
+    public static String glassKeys(Context context) {
+        String stored = prefs(context).getString(KEY_GLASS_KEYS, null);
+        return stored != null ? stored : "转换:86;快施:76";
+    }
+
+    public static void setGlassKeys(Context context, String keys) {
+        prefs(context).edit().putString(KEY_GLASS_KEYS, keys).apply();
+    }
+
     public static int gameLines(Context context) {
 
         return prefs(context).getInt(KEY_GAME_LINES, LINES_540);

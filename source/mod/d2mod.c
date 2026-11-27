@@ -5893,6 +5893,47 @@ static void logStormStreamSkips(void) {
     logLine("Storm stream fill skipped, buffer already released (%ld so far)", (long) n);
 }
 
+/* Some of the add-on DLLs beside the game pop a modal box when they cannot find an export they
+   were built against, and a modal box stops the game from receiving input until someone taps it.
+   Those features are optional, so close the box instead of losing the whole session. */
+static char closedBox[256];
+
+static BOOL CALLBACK closeAddonBox(HWND window, LPARAM hit) {
+    char cls[64] = {0};
+    if (!GetClassNameA(window, cls, sizeof(cls)) || lstrcmpiA(cls, "#32770") != 0) return TRUE;
+    if (!IsWindowVisible(window)) return TRUE;
+    char body[512] = {0};
+    for (HWND child = FindWindowExA(window, NULL, NULL, NULL); child; child = FindWindowExA(window, child, NULL, NULL)) {
+        char text[512] = {0};
+        if (!GetWindowTextA(child, text, sizeof(text))) continue;
+        if (strstr(text, "GetProcAddress failed") || strstr(text, "Could not locate")
+            || strstr(text, "WriteProcessMemory failed") || strstr(text, "SlashGaming")) {
+            lstrcpynA(body, text, sizeof(body));
+            break;
+        }
+    }
+    if (!body[0]) return TRUE;
+    if (lstrcmpA(body, closedBox) != 0) {
+        lstrcpynA(closedBox, body, sizeof(closedBox));
+        logLine("dialog: closed a box the add-on could not use: %.110s", body);
+    }
+    PostMessageA(window, WM_COMMAND, IDOK, 0);
+    PostMessageA(window, WM_CLOSE, 0, 0);
+    *(int*) hit = 1;
+    return TRUE;
+}
+
+static DWORD WINAPI dialogThread(LPVOID unused) {
+    (void) unused;
+    for (;;) {
+        int hit = 0;
+        Sleep(400);
+        EnumWindows(closeAddonBox, (LPARAM) &hit);
+    }
+    return 0;
+}
+
+
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
     (void) reserved;
     if (reason == DLL_PROCESS_ATTACH) {
@@ -5911,6 +5952,8 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
         biInstall();
         probeGameSites("at DllMain");
         HANDLE thread = CreateThread(NULL, 0, setupThread, NULL, 0, NULL);
+        if (thread) CloseHandle(thread);
+        thread = CreateThread(NULL, 0, dialogThread, NULL, 0, NULL);
         if (thread) CloseHandle(thread);
     }
     else if (reason == DLL_PROCESS_DETACH && logReady) {

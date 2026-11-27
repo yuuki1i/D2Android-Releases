@@ -33,7 +33,11 @@
 
 
 
+#ifdef D2VER_113C
+#define ORD_GfxDrawRect     10014
+#else
 #define ORD_GfxDrawRect     10028
+#endif
 #define XPB_HALF 283
 #define XPB_HALF_COMPACT 235
 #define XPB_TOP 53
