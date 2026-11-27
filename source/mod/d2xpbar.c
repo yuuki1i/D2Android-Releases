@@ -72,6 +72,14 @@ static int xpRedirect(DWORD rva, DWORD target) {
 }
 
 static void checkXpBarSites(void) {
+#ifdef D2VER_113C
+    /* The bar's frame decode ends in a D2gfx call whose 1.13c ordinal we have not pinned
+       down yet, and it takes the game down on the first draw after entering a game. Off
+       until that number is known. */
+    xpBarSites = 0;
+    logLine("xp bar: off in this build, the 1.13c draw call is not mapped yet");
+    return;
+#endif
     static const BYTE callee[] = {0xA1};
     static const BYTE calleeRest[] = {0x81, 0xEC, 0x28, 0x01, 0x00, 0x00};
     static const BYTE load[] = {0xA1};

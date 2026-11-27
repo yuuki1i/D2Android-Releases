@@ -4014,7 +4014,7 @@ static DWORD seenId[32], seenMode[32], seenNext;
 #ifdef D2VER_113C
 /* 1.13c: the room/unit/path offsets are probed in memory once per game, because a wrong
    one is silent - the unit walk simply comes out empty and the app stays blind. */
-static DWORD calActOff, calUnitsOff, calNextOff;
+static DWORD calActOff, calUnitsOff, calNextOff, calRoomNextOff;
 
 static int unitLooksLike(void* p, void* skipA, void* skipB) {
     DWORD at = (DWORD) p;
@@ -4024,6 +4024,16 @@ static int unitLooksLike(void* p, void* skipA, void* skipB) {
     if (RD32(p, U_TYPE) > 6) return 0;
     if (RD32(p, U_ID) == 0) return 0;
     return RD32(p, U_MODE) != 0xFF;
+}
+
+static int roomLevelNumber(void* room) {
+    if (!readable(room, 0x20)) return 0;
+    void* r2 = RDP(room, ROOM1_ROOM2);
+    if (!readable(r2, 0x60)) return 0;
+    void* lv = RDP(r2, ROOM2_LEVEL);
+    if (!readable(lv, LEVEL_NO + 4)) return 0;
+    DWORD no = RD32(lv, LEVEL_NO);
+    return no >= 1 && no <= 200 ? (int) no : 0;
 }
 
 static int levelNoOf(void* path) {
@@ -4067,49 +4077,63 @@ static void probeLayout(void* player, void* act) {
     logLine("layout: room2 %p level %p no %lu", room2, lv,
             (unsigned long) (readable(lv, LEVEL_NO + 4) ? RD32(lv, LEVEL_NO) : 0xFFFFFFFF));
 
-    int lines = 0;
-    for (DWORD o = 0; o <= 0xF8 && lines < 30; o += 4) {
-        void* u = RDP(room, o);
-        if (!unitLooksLike(u, act, room)) continue;
-        int next = -1;
-        for (DWORD o2 = 0x04; o2 <= 0x1F8; o2 += 4) {
-            if (unitLooksLike(RDP(u, o2), act, room)) { next = (int) o2; break; }
+    /* Rooms are chained and each room has its own unit list; 1.13c moved both. Rather than
+       guess one offset at a time, walk every candidate and keep the one that reaches the most
+       units over the most rooms, which is what the send path then uses. */
+    if (!calRoomNextOff) {
+        for (DWORD o = 0x40; o <= 0x100; o += 4) {
+            void* a = RDP(room, o);
+            if (!a || a == room || !roomLevelNumber(a)) continue;
+            void* b = RDP(a, o);
+            if (b && b != a && roomLevelNumber(b)) {
+                calRoomNextOff = o;
+                logLine("layout: rooms chained at room+%02lX (%d then %d)", (unsigned long) o, roomLevelNumber(a),
+                        roomLevelNumber(b));
+                break;
+            }
         }
-        lines++;
-        if (next < 0) {
-            logLine("layout: room+%02lX unit %p type %lu id %lu mode %lu: no next pointer found",
-                    (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE), (unsigned long) RD32(u, U_ID),
-                    (unsigned long) RD32(u, U_MODE));
-            continue;
+        if (!calRoomNextOff) {
+            calRoomNextOff = ROOM1_NEXT;
+            logLine("layout: no room chain found, keeping room+%02lX", (unsigned long) ROOM1_NEXT);
         }
-        logLine("layout: room+%02lX unit %p type %lu id %lu mode %lu next+%02X",
-                (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE), (unsigned long) RD32(u, U_ID),
-                (unsigned long) RD32(u, U_MODE), next);
-        void* v = u;
-        for (int i = 0; v && i < 8 && lines < 40; i++, lines++) {
-            logLine("layout: unit[%d] %p type %lu id %lu mode %lu", i, v, (unsigned long) RD32(v, U_TYPE),
-                    (unsigned long) RD32(v, U_ID), (unsigned long) RD32(v, U_MODE));
-            v = RDP(v, (DWORD) next);
-            if (!unitLooksLike(v, act, room)) break;
+    }
+    if (!calUnitsOff) {
+        int bestTotal = -1;
+        DWORD bestOff = 0, bestNext = 0;
+        for (DWORD o = 0x00; o <= 0x80; o += 4) {
+            for (DWORD n = 0x04; n <= 0x1F8; n += 4) {
+                int total = 0, rooms = 0, chainOk = 1;
+                for (void* r = room; r && rooms < 8 && chainOk == 1; r = RDP(r, calRoomNextOff), rooms++) {
+                    if (!readable(r, 0x100)) break;
+                    int k = 0;
+                    void* u = RDP(r, o);
+                    while (u && k < 64) {
+                        if (!unitLooksLike(u, act, room) || RD32(u, U_MODE) > 40) {
+                            chainOk = k > 0 ? 2 : 0;
+                            break;
+                        }
+                        k++;
+                        u = RDP(u, n);
+                    }
+                    total += k;
+                }
+                if (chainOk == 1 && total > bestTotal) {
+                    bestTotal = total;
+                    bestOff = o;
+                    bestNext = n;
+                }
+            }
         }
-        if (!calUnitsOff) {
+        if (bestOff && bestTotal > 0) {
             calActOff = ACT_ROOM1;
-            calUnitsOff = o;
-            calNextOff = (DWORD) next;
-            logLine("layout: using act+%02lX units+%02lX next+%02lX",
-                    (unsigned long) calActOff, (unsigned long) calUnitsOff, (unsigned long) calNextOff);
+            calUnitsOff = bestOff;
+            calNextOff = bestNext;
+            logLine("layout: units at room+%02lX next+%02lX, %d over the rooms", (unsigned long) bestOff,
+                    (unsigned long) bestNext, bestTotal);
         }
+        else logLine("layout: no unit list found in any room");
     }
-    if (!calUnitsOff) logLine("layout: no unit list found in the room");
 
-    for (DWORD o = 0; o <= 0xFC; o += 4) {
-        void* cand = RDP(player, o);
-        int no = levelNoOf(cand);
-        if (no) {
-            logLine("layout: player+%02lX looks like the path (%p), level %d", (unsigned long) o, cand, no);
-            if (!calPathOff) calPathOff = o;
-        }
-    }
     if (!calPathOff) logLine("layout: no path pointer found in the player unit");
 }
 #endif
@@ -4225,11 +4249,13 @@ static void collectAndSend(void* player) {
     int units = 0;
     int gates[MAX_GATES][2], nGates = 0;
     DWORD actOff = ACT_ROOM1, unitsOff = ROOM1_UNITS, nextOff = ROOM1_NEXT;
+    DWORD roomNext = ROOM1_NEXT;
 #ifdef D2VER_113C
     if (calUnitsOff) actOff = calActOff, unitsOff = calUnitsOff, nextOff = calNextOff;
+    if (calRoomNextOff) roomNext = calRoomNextOff;
 #endif
     int rooms = 0, hist[8] = {0};
-    for (void* room = RDP(act, actOff); room && units < 4096 && readable(room, 0x80); room = RDP(room, nextOff), rooms++) {
+    for (void* room = RDP(act, actOff); room && units < 4096 && readable(room, 0x80); room = RDP(room, roomNext), rooms++) {
         for (void* unit = RDP(room, unitsOff); unit && units < 4096 && readable(unit, 0x20); unit = RDP(unit, U_LISTNEXT), units++) {
             DWORD type = RD32(unit, U_TYPE);
             if (type < 8) hist[type]++;
