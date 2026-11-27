@@ -259,6 +259,7 @@ static ClickMap_t fClickMap;
 static DWORD fSetSelectedUnit;
 
 static volatile int forcing, unitActions;
+static DWORD calPathOff;   /* 1.13c: found unit->path offset, 0 = the 1.13d one */
 static void* forcedUnit;
 
 static BYTE* selectedTrampoline;
@@ -765,7 +766,7 @@ static int isTown(DWORD levelNo) {
 }
 
 static DWORD unitLevel(void* unit) {
-    void* path = RDP(unit, U_PATH);
+    void* path = RDP(unit, calPathOff ? calPathOff : U_PATH);
     if (!path) return 0;
     void* room1 = RDP(path, PATH_ROOM1);
     if (!room1) return 0;
@@ -3954,72 +3955,105 @@ static void sendGoals(void* player, DWORD levelNo) {
 static DWORD seenId[32], seenMode[32], seenNext;
 
 #ifdef D2VER_113C
-/* The room/unit walk below hangs off struct offsets taken from 1.13d. If 1.13c moved
-   them the whole list comes out empty (no monsters, no items, no NPC) without any crash,
-   so the offsets are looked for in memory once per game and the ones found are used. */
+/* 1.13c: the room/unit/path offsets are probed in memory once per game, because a wrong
+   one is silent - the unit walk simply comes out empty and the app stays blind. */
 static DWORD calActOff, calUnitsOff, calNextOff;
 
-static int unitLooksLike(void* p) {
-    if (!p || !readable(p, 0x20)) return 0;
-    DWORD type = RD32(p, U_TYPE);
-    if (type > 6) return 0;
+static int unitLooksLike(void* p, void* skipA, void* skipB) {
+    DWORD at = (DWORD) p;
+    if (!p || at < 0x01000000 || at >= 0x70000000) return 0;
+    if (p == skipA || p == skipB) return 0;
+    if (!readable(p, 0xEC)) return 0;
+    if (RD32(p, U_TYPE) > 6) return 0;
     if (RD32(p, U_ID) == 0) return 0;
     return RD32(p, U_MODE) != 0xFF;
 }
 
-static int unitChain(void* u) {
-    int n = 0;
-    for (; u && n < 4; n++) {
-        if (!unitLooksLike(u)) break;
-        u = RDP(u, U_LISTNEXT);
-    }
-    return n;
+static int levelNoOf(void* path) {
+    if (!path || !readable(path, 0x40)) return 0;
+    void* r1 = RDP(path, PATH_ROOM1);
+    if (!readable(r1, 0x20)) return 0;
+    void* r2 = RDP(r1, ROOM1_ROOM2);
+    if (!readable(r2, 0x60)) return 0;
+    void* lv = RDP(r2, ROOM2_LEVEL);
+    if (!readable(lv, LEVEL_NO + 4)) return 0;
+    DWORD no = RD32(lv, LEVEL_NO);
+    return no >= 1 && no <= 200 ? (int) no : 0;
 }
 
-static void calibrateRooms(void* act, void* player) {
+static void dumpDwords113c(const char* what, void* p, int from, int to) {
+    char line[600];
+    int at = 0;
+    at += snprintf(line + at, sizeof(line) - at, "%s %p:", what, p);
+    for (int o = from; o < to && at < (int) sizeof(line) - 12; o += 4)
+        at += snprintf(line + at, sizeof(line) - at, " %08lX", (unsigned long) RD32(p, o));
+    logLine("%s", line);
+}
+
+static void probeLayout(void* player, void* act) {
     static int tried;
-    if (tried || !act) return;
+    if (tried || !player || !act) return;
     tried = 1;
 
-    char dump[512];
-    int at = 0;
-    at += snprintf(dump + at, sizeof(dump) - at, "rooms: act %p:", act);
-    for (DWORD a = 0; a < 0x40 && at < (int) sizeof(dump) - 12; a += 4)
-        at += snprintf(dump + at, sizeof(dump) - at, " %08lX", (unsigned long) RD32(act, a));
-    logLine("%s", dump);
+    dumpDwords113c("layout: act", act, 0, 0x40);
+    dumpDwords113c("layout: player", player, 0, 0x40);
 
-    DWORD pId = RD32(player, U_ID);
+    void* room = RDP(act, ACT_ROOM1);
+    if (!readable(room, 0x100)) {
+        logLine("layout: no room at act+10 (%p), nothing to look at", room);
+        return;
+    }
+    dumpDwords113c("layout: room", room, 0, 0x80);
+
+    void* room2 = RDP(room, ROOM1_ROOM2);
+    void* lv = readable(room2, 0x60) ? RDP(room2, ROOM2_LEVEL) : NULL;
+    logLine("layout: room2 %p level %p no %lu", room2, lv,
+            (unsigned long) (readable(lv, LEVEL_NO + 4) ? RD32(lv, LEVEL_NO) : 0xFFFFFFFF));
+
     int lines = 0;
-    for (DWORD a = 0; a <= 0x40; a += 4) {
-        void* room = RDP(act, a);
-        if (!readable(room, 0x100)) continue;
-        for (DWORD o = 0; o <= 0xF8; o += 4) {
-            void* u = RDP(room, o);
-            if (!unitLooksLike(u)) continue;
-            if (lines < 12) {
-                lines++;
-                logLine("rooms: candidate act+%02lX room %p units+%02lX: unit %p type %lu id %lu mode %lu chain %d",
-                        (unsigned long) a, room, (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE),
-                        (unsigned long) RD32(u, U_ID), (unsigned long) RD32(u, U_MODE), unitChain(u));
-            }
-            if (!calUnitsOff && unitChain(u) >= 2 && RD32(u, U_TYPE) == UNIT_PLAYER && RD32(u, U_ID) == pId) {
-                calActOff = a;
-                calUnitsOff = o;
-                for (DWORD o2 = 0; o2 <= 0xF8; o2 += 4) {
-                    if (o2 == o) continue;
-                    void* next = RDP(room, o2);
-                    if (!readable(next, 0x100) || next == room) continue;
-                    if (unitChain(RDP(next, o)) < 1) continue;
-                    calNextOff = o2;
-                    break;
-                }
-                logLine("rooms: using act+%02lX units+%02lX next+%02lX", (unsigned long) calActOff,
-                        (unsigned long) calUnitsOff, (unsigned long) calNextOff);
-            }
+    for (DWORD o = 0; o <= 0xF8 && lines < 30; o += 4) {
+        void* u = RDP(room, o);
+        if (!unitLooksLike(u, act, room)) continue;
+        int next = -1;
+        for (DWORD o2 = 0x04; o2 <= 0xF8; o2 += 4) {
+            if (unitLooksLike(RDP(u, o2), act, room)) { next = (int) o2; break; }
+        }
+        lines++;
+        if (next < 0) {
+            logLine("layout: room+%02lX unit %p type %lu id %lu mode %lu: no next pointer found",
+                    (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE), (unsigned long) RD32(u, U_ID),
+                    (unsigned long) RD32(u, U_MODE));
+            continue;
+        }
+        logLine("layout: room+%02lX unit %p type %lu id %lu mode %lu next+%02X",
+                (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE), (unsigned long) RD32(u, U_ID),
+                (unsigned long) RD32(u, U_MODE), next);
+        void* v = u;
+        for (int i = 0; v && i < 8 && lines < 40; i++, lines++) {
+            logLine("layout: unit[%d] %p type %lu id %lu mode %lu", i, v, (unsigned long) RD32(v, U_TYPE),
+                    (unsigned long) RD32(v, U_ID), (unsigned long) RD32(v, U_MODE));
+            v = RDP(v, (DWORD) next);
+            if (!unitLooksLike(v, act, room)) break;
+        }
+        if (!calUnitsOff) {
+            calActOff = ACT_ROOM1;
+            calUnitsOff = o;
+            calNextOff = (DWORD) next;
+            logLine("layout: using act+%02lX units+%02lX next+%02lX",
+                    (unsigned long) calActOff, (unsigned long) calUnitsOff, (unsigned long) calNextOff);
         }
     }
-    if (!calUnitsOff) logLine("rooms: nothing found, the 1.13d offsets stay (act+%02X units+%02X next+%02X)",
-                              ACT_ROOM1, ROOM1_UNITS, ROOM1_NEXT);
+    if (!calUnitsOff) logLine("layout: no unit list found in the room");
+
+    for (DWORD o = 0; o <= 0xFC; o += 4) {
+        void* cand = RDP(player, o);
+        int no = levelNoOf(cand);
+        if (no) {
+            logLine("layout: player+%02lX looks like the path (%p), level %d", (unsigned long) o, cand, no);
+            if (!calPathOff) calPathOff = o;
+        }
+    }
+    if (!calPathOff) logLine("layout: no path pointer found in the player unit");
 }
 #endif
 
@@ -4027,8 +4061,18 @@ static void calibrateRooms(void* act, void* player) {
 static void collectAndSend(void* player) {
     if (!plausibleUnit(player)) return;
     void* act = RDP(player, U_ACT);
-    void* path = RDP(player, U_PATH);
-    if (!act || !path || !readable(path, 0x40)) return;
+    void* path = RDP(player, calPathOff ? calPathOff : U_PATH);
+    if (!act || !path || !readable(path, 0x40)) {
+        static DWORD lastWhy;
+        DWORD at = GetTickCount();
+        if (!lastWhy || at - lastWhy >= 3000) {
+            lastWhy = at;
+            logLine("send: act %p path %p (readable %d) for player %p: sending without the path",
+                    act, path, path ? readable(path, 0x40) : 0, player);
+        }
+        path = NULL;
+        if (!act) return;
+    }
 
     View view;
     view.offX = (long) fGetMouseXOffset();
@@ -4445,7 +4489,7 @@ static void collectAndSend(void* player) {
 
 
     if ((int) (GetTickCount() - playtestUntil) < 0) {
-        DWORD x = RD32(path, PATH_X), y = RD32(path, PATH_Y);
+        DWORD x = path ? RD32(path, PATH_X) : 0, y = path ? RD32(path, PATH_Y) : 0;
         putU16(&p, x >> 16);
         putU16(&p, y >> 16);
         putU8(&p, (x >> 8) & 0xFF);
@@ -4779,7 +4823,7 @@ static void gameTick(void) {
         }
     }
 #ifdef D2VER_113C
-    if (player && !calUnitsOff) STEP(calibrateRooms(RDP(player, U_ACT), player));
+    if (player) STEP(probeLayout(player, RDP(player, U_ACT)));
 #endif
     STEP(noteGame(player, now));
     STEP(noteWorldFrames(now));
