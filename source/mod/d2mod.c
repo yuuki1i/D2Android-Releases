@@ -370,6 +370,7 @@ static volatile LONG outOfGameSeen;
 
 volatile LONG worldFrames;
 volatile LONG ticksDone;
+volatile LONG statesSent;
 static int worldHooked;
 static volatile LONG heroVarOk;
 
@@ -3952,6 +3953,77 @@ static void sendGoals(void* player, DWORD levelNo) {
 
 static DWORD seenId[32], seenMode[32], seenNext;
 
+#ifdef D2VER_113C
+/* The room/unit walk below hangs off struct offsets taken from 1.13d. If 1.13c moved
+   them the whole list comes out empty (no monsters, no items, no NPC) without any crash,
+   so the offsets are looked for in memory once per game and the ones found are used. */
+static DWORD calActOff, calUnitsOff, calNextOff;
+
+static int unitLooksLike(void* p) {
+    if (!p || !readable(p, 0x20)) return 0;
+    DWORD type = RD32(p, U_TYPE);
+    if (type > 6) return 0;
+    if (RD32(p, U_ID) == 0) return 0;
+    return RD32(p, U_MODE) != 0xFF;
+}
+
+static int unitChain(void* u) {
+    int n = 0;
+    for (; u && n < 4; n++) {
+        if (!unitLooksLike(u)) break;
+        u = RDP(u, U_LISTNEXT);
+    }
+    return n;
+}
+
+static void calibrateRooms(void* act, void* player) {
+    static int tried;
+    if (tried || !act) return;
+    tried = 1;
+
+    char dump[512];
+    int at = 0;
+    at += snprintf(dump + at, sizeof(dump) - at, "rooms: act %p:", act);
+    for (DWORD a = 0; a < 0x40 && at < (int) sizeof(dump) - 12; a += 4)
+        at += snprintf(dump + at, sizeof(dump) - at, " %08lX", (unsigned long) RD32(act, a));
+    logLine("%s", dump);
+
+    DWORD pId = RD32(player, U_ID);
+    int lines = 0;
+    for (DWORD a = 0; a <= 0x40; a += 4) {
+        void* room = RDP(act, a);
+        if (!readable(room, 0x100)) continue;
+        for (DWORD o = 0; o <= 0xF8; o += 4) {
+            void* u = RDP(room, o);
+            if (!unitLooksLike(u)) continue;
+            if (lines < 12) {
+                lines++;
+                logLine("rooms: candidate act+%02lX room %p units+%02lX: unit %p type %lu id %lu mode %lu chain %d",
+                        (unsigned long) a, room, (unsigned long) o, u, (unsigned long) RD32(u, U_TYPE),
+                        (unsigned long) RD32(u, U_ID), (unsigned long) RD32(u, U_MODE), unitChain(u));
+            }
+            if (!calUnitsOff && unitChain(u) >= 2 && RD32(u, U_TYPE) == UNIT_PLAYER && RD32(u, U_ID) == pId) {
+                calActOff = a;
+                calUnitsOff = o;
+                for (DWORD o2 = 0; o2 <= 0xF8; o2 += 4) {
+                    if (o2 == o) continue;
+                    void* next = RDP(room, o2);
+                    if (!readable(next, 0x100) || next == room) continue;
+                    if (unitChain(RDP(next, o)) < 1) continue;
+                    calNextOff = o2;
+                    break;
+                }
+                logLine("rooms: using act+%02lX units+%02lX next+%02lX", (unsigned long) calActOff,
+                        (unsigned long) calUnitsOff, (unsigned long) calNextOff);
+            }
+        }
+    }
+    if (!calUnitsOff) logLine("rooms: nothing found, the 1.13d offsets stay (act+%02X units+%02X next+%02X)",
+                              ACT_ROOM1, ROOM1_UNITS, ROOM1_NEXT);
+}
+#endif
+
+
 static void collectAndSend(void* player) {
     if (!plausibleUnit(player)) return;
     void* act = RDP(player, U_ACT);
@@ -4026,9 +4098,15 @@ static void collectAndSend(void* player) {
     Candidate corpse = {0};
     int units = 0;
     int gates[MAX_GATES][2], nGates = 0;
-    for (void* room = RDP(act, ACT_ROOM1); room && units < 4096; room = RDP(room, ROOM1_NEXT)) {
-        for (void* unit = RDP(room, ROOM1_UNITS); unit && units < 4096; unit = RDP(unit, U_LISTNEXT), units++) {
+    DWORD actOff = ACT_ROOM1, unitsOff = ROOM1_UNITS, nextOff = ROOM1_NEXT;
+#ifdef D2VER_113C
+    if (calUnitsOff) actOff = calActOff, unitsOff = calUnitsOff, nextOff = calNextOff;
+#endif
+    int rooms = 0, hist[8] = {0};
+    for (void* room = RDP(act, actOff); room && units < 4096; room = RDP(room, nextOff), rooms++) {
+        for (void* unit = RDP(room, unitsOff); unit && units < 4096; unit = RDP(unit, U_LISTNEXT), units++) {
             DWORD type = RD32(unit, U_TYPE);
+            if (type < 8) hist[type]++;
             if (type == UNIT_PLAYER && !corpse.unit && isOwnCorpse(unit, player)) {
 
                 double cx, cy;
@@ -4095,6 +4173,17 @@ static void collectAndSend(void* player) {
 
                 addCandidate(objectList, &nObjects, unit, ux, uy, psx, psy);
             }
+        }
+    }
+
+    {
+        static DWORD lastUnitLog;
+        DWORD nowU = GetTickCount();
+        if (!lastUnitLog || nowU - lastUnitLog >= 3000) {
+            lastUnitLog = nowU;
+            logLine("units: rooms %d units %d players %d monsters %d(raw %d) items %d objects %d tiles %d -> kept %d/%d/%d/%d",
+                    rooms, units, hist[0], hist[1], rawMonsters, hist[4], hist[2], hist[5],
+                    nMonsters, nItems, nObjects, nCorpses);
         }
     }
 
@@ -4381,6 +4470,7 @@ static void collectAndSend(void* player) {
 
     putU8(&p, path && readable((BYTE*) path + PATH_DIR, 1) && RD8(path, PATH_DIR) < 64 ? RD8(path, PATH_DIR) : 0xFF);
     sendPacket(&p);
+    InterlockedIncrement(&statesSent);
 
     void* itemUnits[MAX_ITEMS];
     for (int i = 0; i < nItems; i++) itemUnits[i] = itemList[i].unit;
@@ -4683,11 +4773,14 @@ static void gameTick(void) {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
             lastNote = now;
-            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
-                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) heroVarOk,
-                    hudAvailable, cursorAvailable, edgeAvailable);
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) statesSent,
+                    (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
         }
     }
+#ifdef D2VER_113C
+    if (player && !calUnitsOff) STEP(calibrateRooms(RDP(player, U_ACT), player));
+#endif
     STEP(noteGame(player, now));
     STEP(noteWorldFrames(now));
     if (!player) STEP(forgetStackRows());
