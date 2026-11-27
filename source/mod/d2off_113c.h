@@ -26,8 +26,8 @@
 #define RVA_PanelInvBlock 0x27DD7  /* the BE / 75 05 / BE .. E8 .. BE .. A3 block around Panel\InvChar6 */
 
 /* d2compare.c */
-#define RVA_DrawHoverCall 0x1D791  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
-#define RVA_DrawHoverThunk 0xD366  /* low confidence */
+#define RVA_DrawHoverCall 0xC3D91
+#define RVA_DrawHoverThunk 0xD366
 #define RVA_ItemHover 0x93450
 #define RVA_HoverGrid 0x11BC28
 #define RVA_HoverBody 0x11BC2C
