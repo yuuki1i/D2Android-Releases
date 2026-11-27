@@ -4836,9 +4836,9 @@ static void gameTick(void) {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
             lastNote = now;
-            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld g0 %ld g1 %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld now %lu send %lu g0 %ld g1 %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
                     (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) statesSent,
-                    (long) cntTail, (long) cntG0, (long) cntG1, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
+                    (long) cntTail, (unsigned long) now, (unsigned long) lastSend, (long) cntG0, (long) cntG1, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
                     (int) ntohs(appAddr.sin_port), (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
         }
     }
@@ -4931,7 +4931,13 @@ static void gameTick(void) {
         if (!player) walk.stopping = 0;
     }
     InterlockedIncrement(&cntTail);
-    if (now - lastSend < 40) return;
+    /* Pacing by frames instead of a timestamp: GetTickCount() inside the game gives
+       values that do not move the way the rest of the build expects, and the whole
+       state stream stopped at this line because of it. */
+    {
+        static LONG pace;
+        if (InterlockedIncrement(&pace) % 3) return;
+    }
     lastSend = now;
     InterlockedIncrement(&cntG0);
     if (player) {
