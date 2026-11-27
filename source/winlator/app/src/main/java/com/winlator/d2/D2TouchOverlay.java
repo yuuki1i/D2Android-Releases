@@ -6772,6 +6772,12 @@ public class D2TouchOverlay extends View {
 
 
 
+    /** Main menu and character select are not a place for movement, potions or skill keys. */
+    private boolean inGameNow() {
+        D2ModState st = mod;
+        return st != null && st.canOwnHud();
+    }
+
     boolean uiReady() {
         return uiReady;
     }
@@ -8513,7 +8519,7 @@ public class D2TouchOverlay extends View {
         }
         startDone = true;
         D2Trace.log("start: game buttons shown without the mod");
-        if (!controlsVisible && hiddenByPanel && !editMode) setControlsVisible(true, false);
+        if (!controlsVisible && hiddenByPanel && !editMode && inGameNow()) setControlsVisible(true, false);
 
         appliedUiKey = UI_UNKNOWN;
         invalidate();
