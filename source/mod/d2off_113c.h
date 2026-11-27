@@ -112,7 +112,7 @@
 #define RVA_UiVars 0xFAD80
 #define RVA_EscCloseList 0xD09D8
 #define RVA_EscCloseListRead 0xBE36D
-#define RVA_LabelsTipClearCall 0x4EA3B  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_LabelsTipClearCall 0x594AB
 #define RVA_SetHoverTextThunk 0xD384
 #define RVA_GetItemUseSound 0x81D70
 #define RVA_PlaySound 0x88A70
@@ -176,8 +176,8 @@
 #define RVA_StatSite 0xBDF31
 #define RVA_SkillSite 0x79671
 #define RVA_Send3 0x14A10
-#define RVA_HotkeySite 0xA5EE7  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
-#define RVA_SetHotkey 0xA5A20  /* UNMAPPED: 1.13d value kept, runtime byte check should reject */
+#define RVA_HotkeySite 0x3D0F7
+#define RVA_SetHotkey 0x3CE40
 #define RVA_HotkeyItem 0x119DD0
 #define RVA_CharScreenCall 0xC3B48
 #define RVA_CharScreenPage 0x6CEA0  /* target of the char screen call at 0xC3B48 */
