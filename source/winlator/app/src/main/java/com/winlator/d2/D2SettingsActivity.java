@@ -488,6 +488,10 @@ public class D2SettingsActivity extends D2Activity {
                 box.addView(hint(getString(R.string.settings_plugy_moved)));
                 box.addView(hint(getString(R.string.settings_big_stash_moved)));
                 return box;
+            case "modCompat":
+                box.addView(check(e.label, D2Settings.modCompat(this), D2Settings.KEY_MOD_COMPAT));
+                box.addView(hint(getString(R.string.settings_mod_compat_hint)));
+                return box;
             case "bigInventory":
                 return GameShadow.isModBundled(this) ? guardedRow(GUARD_BIG_INV, e.label) : null;
             case "bigStash":

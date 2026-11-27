@@ -3304,6 +3304,49 @@ static void stashTest(BYTE op, BYTE value);
 #include "d2weaponset.c"
 #include "d2skilllist.c"
 #include "d2points.c"
+
+/* v41: the app's 16 skill slots were only kept on the phone side. Push them into the
+   game once per session, so F1..F8 actually carry the skills the user assigned. */
+static volatile LONG appSlotsApplied;
+static void applyAppSlots(void* player) {
+    if (!appSlotsSet || appSlotsApplied || !player || !singlePlayerGame() || !fSendPacket) return;
+    if (!(pointOps & PTS_KEY)) return;
+    DWORD* skills = (DWORD*) (client + RVA_HotkeySkill);
+    DWORD* lefts = (DWORD*) (client + RVA_HotkeyLeft);
+    DWORD* items = (DWORD*) (client + RVA_HotkeyItem);
+    int empty = 1;
+    for (int i = 0; i < 16; i++) if (appSlots[i] != 0xFFFF) empty = 0;
+    if (empty) {
+        void* info = RDP(player, U_INFO);
+        int guard = 0, at = 0;
+        for (void* k = readable(info, 0x10) ? RDP(info, INFO_FIRST) : NULL; readable(k, SKILL_ITEM + 4) && guard < 400 && at < 8;
+             k = RDP(k, SKILL_NEXT), guard++) {
+            WORD id = skillId(k);
+            if (id == 0xFFFF || id == 0) continue;
+            if (RD32(k, SKILL_ITEM) != 0xFFFFFFFF) continue;
+            if (passiveSkill(player, id)) continue;
+            appSlots[at++] = id;
+        }
+        if (at) logLine("slots: %d learnt skills filled into the empty bar", at);
+    }
+    int bound = 0;
+    for (int i = 0; i < 16; i++) {
+        WORD what = appSlots[i];
+        if (what == 0xFFFF || what == 0) continue;
+        if (!ownSkill(player, what)) continue;
+        if (skills[i] == what) continue;
+        BYTE packet[9] = {0x51};
+        *(DWORD*) (packet + 1) = what | (DWORD) i << 16;
+        *(DWORD*) (packet + 5) = 0xFFFFFFFF;
+        skills[i] = what;
+        lefts[i] = 0;
+        items[i] = 0xFFFFFFFF;
+        fSendPacket(9, 1, packet);
+        bound++;
+    }
+    InterlockedExchange(&appSlotsApplied, 1);
+    if (bound) logLine("slots: %d skills written into the game's hotkey bar", bound);
+}
 #include "d2playtest.c"
 #include "d2map.c"
 #include "d2quest.c"
@@ -3366,6 +3409,7 @@ static void handleCommands(void* player, int stale) {
         if (cmd == CMD_PLAYERS && n >= 9 && player && buf[8] >= 1 && buf[8] <= 8) setPlayers(buf[8]);
         if (cmd == CMD_PLUGY && n >= 9 && player) plugyCommand(buf[8]);
         if (cmd == CMD_SELECT_SKILL && n >= 11 && player && !pauseApplied) selectSkill(player, buf[8] == 0, *(WORD*) (buf + 9), n >= 12 && buf[11] == 1, n >= 13 && buf[12] == 1);
+        applyAppSlots(player);
         if (cmd == CMD_SLOTS && n >= 8 + 32) {
             int changed = !appSlotsSet;
             for (int i = 0; i < 16; i++) {
@@ -3374,6 +3418,8 @@ static void handleCommands(void* player, int stale) {
                 appSlots[i] = v;
             }
             InterlockedExchange(&appSlotsSet, 1);
+            InterlockedExchange(&appSlotsApplied, 0);
+            if (player) applyAppSlots(player);
             if (changed)
                 logLine("slots: %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u", appSlots[0], appSlots[1], appSlots[2],
                     appSlots[3], appSlots[4], appSlots[5], appSlots[6], appSlots[7], appSlots[8], appSlots[9], appSlots[10],

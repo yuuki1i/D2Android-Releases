@@ -1185,6 +1185,7 @@
     <string name="settings_big_stash_info">下次启动生效。关闭前需确保所有储物箱页面没有物品超出 6×8；应用会先备份。</string>
     <string name="settings_big_stash_moved">大型储物箱设置已移至“玩法预设”。</string>
     <string name="settings_mod_compat">整合包兼容模式（不动整合自己的背包、面板和防作弊）</string>
+    <string name="settings_mod_compat_hint">开启：完全使用整合包的背包、大箱子和防作弊，不再套用大背包补丁。关闭：恢复 D2Android 自己的大背包。</string>
     <string name="settings_big_inventory">大型背包（10×8 格，原版 10×4）</string>
     <string name="settings_big_inventory_info">下次启动生效。关闭前需确保所有角色第 5–8 行为空；应用会先备份。若在电脑或不使用应用时，游戏会删除第 5–8 行物品。</string>
     <string name="settings_big_inventory_needs_mod">需要应用内游戏辅助功能（Game）。</string>
