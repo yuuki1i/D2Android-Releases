@@ -24,9 +24,6 @@
 
 
 #define CMD_SELL         30
-#define RVA_SellPrice    0x9B29F
-#define RVA_SellMode     0x9B291
-#define RVA_SellSite     0x9B2AF
 #define SELL_WAIT_MS     1000
 #define SELL_INV_CURSOR  0x20
 

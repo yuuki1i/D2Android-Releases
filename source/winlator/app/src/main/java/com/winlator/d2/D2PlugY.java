@@ -18,6 +18,13 @@ import java.io.InputStream;
 public final class D2PlugY {
     private static final String ASSET_DIR = "d2/plugy";
 
+    /** 1.13c: something else already rewrites PlugY's cow-portal site, so letting PlugY patch it aborts its install. */
+    private static boolean cowPortalSupported = true;
+
+    static void setCowPortalSupported(boolean supported) {
+        cowPortalSupported = supported;
+    }
+
     private D2PlugY() {}
 
     public static boolean isBundled(Context context) {
@@ -34,6 +41,13 @@ public final class D2PlugY {
 
 
     public static void install(Context context, File shadowDir, File saveDir, boolean enabled) throws IOException {
+        install(context, shadowDir, saveDir, enabled, null);
+    }
+
+
+    /** A whole pack (patchload.dll + its own PlugY.ini) keeps its ini: the plugin list in it is
+        what brings the pack's damage numbers, item filter and shared stash to life. */
+    public static void install(Context context, File shadowDir, File saveDir, boolean enabled, File gameDir) throws IOException {
         File dll = new File(shadowDir, "PlugY.dll");
         D2Settings.setRespecStarted(context, false);
 
@@ -50,8 +64,19 @@ public final class D2PlugY {
         if (files != null) for (String name : files) FileUtils.copy(context, ASSET_DIR + "/PlugY/" + name, new File(folder, name));
         boolean respec = D2Settings.respec(context);
         boolean[] extras = extras(context);
-        String ini = withSharedStash(ini(D2Settings.bigStash(context), respec, D2Settings.statsPages(context), extras),
-            D2Settings.sharedStash(context));
+        File packIni = gameDir != null ? new File(gameDir, "PlugY.ini") : null;
+        boolean pack = packIni != null && packIni.isFile() && new File(gameDir, "patchload.dll").isFile();
+        String ini;
+        if (pack) {
+            ini = FileUtils.readString(packIni);
+            ini = put(ini, "ActiveCheckMemory", "0");
+            ini = put(ini, "ActiveSavePathChange", "0");
+            D2Trace.log("PlugY: pack ini kept, its plugin list stays (patchload + hackmap)");
+        }
+        else {
+            ini = withSharedStash(ini(D2Settings.bigStash(context), respec, D2Settings.statsPages(context), extras),
+                D2Settings.sharedStash(context));
+        }
         FileUtils.writeString(new File(shadowDir, "PlugY.ini"), withSharedPages(ini, sharedPages(saveDir)));
         D2Settings.setRespecStarted(context, respec);
         D2Settings.setLadderStarted(context, extras[java.util.Arrays.asList(EXTRA_KEYS).indexOf("ActiveLadderRunewords")]);
@@ -245,8 +270,23 @@ public final class D2PlugY {
 
 
     static String withSharedPages(String ini, int pages) {
-        return set(ini, "MaxSharedPages", String.valueOf(pages));
+        return put(ini, "MaxSharedPages", String.valueOf(pages));
     }
+
+    /** Replaces a key, or adds it to [GENERAL] when the pack's ini does not carry it. */
+    static String put(String ini, String key, String value) {
+        String k = "\r\n" + key + "=";
+        int at = ini.indexOf(k);
+        if (at >= 0) {
+            int end = ini.indexOf("\r\n", at + k.length());
+            return ini.substring(0, at + k.length()) + value + ini.substring(end < 0 ? ini.length() : end);
+        }
+        int gen = ini.indexOf("[GENERAL]\r\n");
+        if (gen < 0) return ini;
+        int insert = gen + "[GENERAL]\r\n".length();
+        return ini.substring(0, insert) + key + "=" + value + "\r\n" + ini.substring(insert);
+    }
+
 
     private static String set(String ini, String key, String value) {
         String k = "\r\n" + key + "=";
@@ -268,6 +308,10 @@ public final class D2PlugY {
             if (at < 0) throw new IllegalStateException("PlugY.ini without " + EXTRA_KEYS[i]);
             int end = ini.indexOf("\r\n", at + key.length());
             ini = ini.substring(0, at + key.length()) + (on[i] ? "1" : "0") + ini.substring(end);
+        }
+        if (!cowPortalSupported) {
+            ini = set(ini, "ActiveCowPortalWhenCowKingWasKilled", "0");
+            D2Trace.log("PlugY: cow portal option forced off for the 1.13c mod (its patch site is taken already)");
         }
         return ini;
     }

@@ -25,7 +25,10 @@ public final class GameLocator {
 
     private static final String KEY_IMPORT = "gameDirImport";
     private static final String CHECKSUMS_ASSET = "checksums-113d.txt";
+    /** Optional: absent asset means 1.13c folders are verified structurally only. */
+    private static final String CHECKSUMS_113C_ASSET = "checksums-113c.txt";
     private static Map<String, String> reference;
+    private static Map<String, String> reference113c;
 
     private GameLocator() {}
 
@@ -114,7 +117,7 @@ public final class GameLocator {
 
     public static GameVersion.Result check(Context context, File dir) {
         try {
-            return new GameVersion(reference(context)).check(dir);
+            return new GameVersion(reference(context), reference113c(context)).check(dir);
         }
         catch (IOException e) {
             return new GameVersion.Result(GameVersion.Status.NOT_A_GAME_DIR, dir, e.getMessage());
@@ -179,6 +182,18 @@ public final class GameLocator {
             }
         }
         return reference;
+    }
+
+    static synchronized Map<String, String> reference113c(Context context) {
+        if (reference113c == null) {
+            try (InputStream in = context.getAssets().open(CHECKSUMS_113C_ASSET)) {
+                reference113c = GameVersion.parseList(in);
+            }
+            catch (IOException e) {
+                reference113c = java.util.Collections.emptyMap();
+            }
+        }
+        return reference113c;
     }
 
 

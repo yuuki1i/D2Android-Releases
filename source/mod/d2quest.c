@@ -14,12 +14,11 @@
 
 
 #define PKT_QUESTS            9
-#define RVA_QuestFlagsLoad    0x7D2A4
-#define RVA_QuestFlags        0x1018B3
-#define RVA_QuestDifficulty   0x11D1D8
-#define RVA_QuestPriceCall    0x7D2BC
-#define RVA_QuestPriceThunk   0xC6AA
-#define ORD_QuestItemPrice    10186
+#ifdef D2VER_113C
+#define ORD_QuestItemPrice       10107
+#else
+#define ORD_QuestItemPrice       10186
+#endif
 #define QUEST_BITS            0x300
 #define QUEST_WORDS           (QUEST_BITS / 16)
 #define QUEST_REPEAT_MS       5000

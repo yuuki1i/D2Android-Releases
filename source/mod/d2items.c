@@ -9,10 +9,6 @@
 
 
 
-#define RVA_GetItemName        0x958C0
-#define RVA_GetItemNameEnd     0x96775
-#define RVA_ItemToBeltSite     0x9B317
-#define RVA_SendPacket5        0xB6A30
 
 #define ITXT_MAXAC    0xD0
 #define ITXT_MINDAM   0xFE

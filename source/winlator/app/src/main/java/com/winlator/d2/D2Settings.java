@@ -35,13 +35,43 @@ public final class D2Settings {
 
 
     public static String renderer(Context context) {
-        return GameShadow.RENDERER_D2DX;
+        String stored = prefs(context).getString(KEY_RENDERER, GameShadow.RENDERER_D2DX);
+        return stored == null || stored.isEmpty() ? GameShadow.RENDERER_D2DX : stored;
     }
 
     public static void setRenderer(Context context, String renderer) {
         prefs(context).edit().putString(KEY_RENDERER, renderer).apply();
     }
 
+    public static boolean useD2DX(Context context) {
+        return GameShadow.RENDERER_D2DX.equals(renderer(context));
+    }
+
+    public static void setUseD2DX(Context context, boolean enabled) {
+        setRenderer(context, enabled ? GameShadow.RENDERER_D2DX : GameShadow.RENDERER_D2GL);
+    }
+
+
+    static final String KEY_GLASS_THEME = "glassTheme", KEY_GLASS_KEYS = "glassKeys";
+
+    /** 0 classic stone bar, 1 Xbox glass, 2 Switch glass, 3 PlayStation glass. */
+    public static int glassTheme(Context context) {
+        return prefs(context).getInt(KEY_GLASS_THEME, D2GlassKeys.XBOX);
+    }
+
+    public static void setGlassTheme(Context context, int theme) {
+        prefs(context).edit().putInt(KEY_GLASS_THEME, theme).apply();
+    }
+
+    /** Extra keys of the bar, written as "label:virtualKey;label:virtualKey". */
+    public static String glassKeys(Context context) {
+        String stored = prefs(context).getString(KEY_GLASS_KEYS, null);
+        return stored != null ? stored : "转换:86;快施:76";
+    }
+
+    public static void setGlassKeys(Context context, String keys) {
+        prefs(context).edit().putString(KEY_GLASS_KEYS, keys).apply();
+    }
 
     public static int gameLines(Context context) {
 
@@ -233,6 +263,16 @@ public final class D2Settings {
 
 
 
+
+
+    static final String KEY_MOD_COMPAT = "modCompat";
+
+
+    /** One switch for a ready-made integration: it brings its own界面, its own grids and its own
+        protection, so nothing of ours may rewrite its tables or its code. */
+    public static boolean modCompat(Context context) {
+        return prefs(context).getBoolean(KEY_MOD_COMPAT, true);
+    }
 
 
     public static boolean bigStash(Context context) {

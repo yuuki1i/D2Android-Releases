@@ -1,3 +1,5 @@
+/* D2Android: version-specific D2Client offsets (see d2off.h) */
+#include "d2off.h"
 
 
 
@@ -21,6 +23,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
 #include <windows.h>
+#include <tlhelp32.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,109 +32,41 @@
 
 
 
-#define GAMELOOP_PATCH_RVA      0x45280
-#define RVA_GetPlayerUnit       0x613C0
-#define RVA_GetUiVar_I          0x17C50
-#define RVA_GetSelectedUnit     0x17280
-#define RVA_SetSelectedUnit_I   0x17060
-#define RVA_ClickMap            0x2B420
-#define SELECTED_CALL_RVA       0x2B494
+#define GAMELOOP_PATCH_RVA      RVA_GameLoop
+#define SELECTED_CALL_RVA       RVA_SelectedCall
 
 
 
 
-#define RVA_ClickTakenThisFrame 0x11D2CC
-#define RVA_ClickTakenCheck     0x2B42F
-#define RVA_FindServerSideUnit  0x620D0
-#define RVA_FindClientSideUnit  0x620B0
-#define RVA_ViewportX           0x106844
-#define RVA_ViewportY           0x106840
-#define RVA_AlwaysRun           0x11D234
-#define RVA_GetMouseXOffset     0x5BC20
-#define RVA_GetUnitX            0x1210
-#define RVA_GetUnitY            0x1240
-#define RVA_GetUnitName_I       0x622E0
-#define RVA_GetMouseYOffset     0x5BC30
-#define RVA_ScreenSizeX         0xF7034
-#define RVA_ScreenSizeY         0xF7038
-#define RVA_MouseX              0x11C950
-#define RVA_MouseY              0x11C94C
-
-#define RVA_DrawStatueLeft      0x6D549
-#define RVA_DrawStatueRight     0x6D626
-#define RVA_GfxDrawThunk        0xCFCE
-#define RVA_DrawCursorCall      0x14EF9
-#define RVA_DrawCursorCall2     0x14D77
 
 
 
 
-#define RVA_DrawHelpButtonCall  0x1D5C7
-#define RVA_DrawHelpButton      0xAB830
-#define RVA_DrawQuestButtonCall 0x1D5FC
-#define RVA_DrawQuestButton     0x8CEF0
-#define RVA_UiVarHelpButton     0x11C918
 
 
 
-#define RVA_HelpButtonDown      0xAA640
-#define RVA_HelpButtonUp        0xAB621
-#define RVA_HelpButtonLock      0x11CAE8
 
-#define RVA_QuestButtonDownHit  0x8C62F
-#define RVA_QuestButtonUpHit    0x8E210
-#define RVA_QuestButtonHit      0x8B3D0
-#define RVA_DrawManaOrbCall     0x6F349
-#define RVA_DrawLifeOrbCall     0x6F34E
-#define RVA_DrawManaOrb         0x6DDE0
-#define RVA_DrawLifeOrb         0x6DCA0
-#define RVA_DrawDurabilityCall  0x1D481
-#define RVA_DrawDurability      0x6E950
+
 #ifndef DURA_WARN_PERCENT
 #define DURA_WARN_PERCENT 20
 #endif
 
 
-#define RVA_UiVarGameMenu       0x11C8B4
 
 
-#define RVA_UiVars              0x11C890
 #define UI_SHOWITEMS            0x0D
 
 
 
-#define RVA_EscCloseList        0xD4078
-#define RVA_EscCloseListRead    0x1851D
 
 
 
-#define RVA_LabelsTipClearCall  0x4EA3B
-#define RVA_SetHoverTextThunk   0xD28C
-#define RVA_GetItemUseSound     0xB9A30
-#define RVA_PlaySound           0x26270
-#define RVA_SoundCheckVar       0x11D2F0
 
 
-#define RVA_NpcMenuTable        0xF1A90
-#define RVA_NpcMenuCount        0xF21E0
-#define RVA_NpcMenuSearch       0x7B580
-#define RVA_GetCurrentNpc       0x790D0
-#define RVA_GetLocaleText       0xD10C
-#define RVA_SetPlayersThunk     0xCF5C
-#define RVA_SetPlayersImport    0xCFA6C
-#define RVA_GamePlayers         0x111C44
-#define RVA_GameType            0x11D1DC
-#define RVA_NpcDialog           0x101A58
 #define NPCMENU_SIZE            0x27
-#define RVA_DrawGameMenuCall    0x1D43F
-#define RVA_DrawGameMenu        0xC34D0
-
-#define RVA_HotkeySkill         0x101410
-#define RVA_HotkeyLeft          0x101500
 
 
-#define RVA_GameRunDrainCall    0x931D4
-#define RVA_GameRunDrain        0x91B30
+
 #define STAT_STAMINA            10
 #define STAT_STATPOINTS         4
 #define STAT_SKILLPOINTS        5
@@ -143,55 +78,95 @@
 #define STATE_MANAPOT           106
 #define STATE_STAMINAPOT        180
 
-#define RVA_GfxLoadRenderer     0xAA03
-#define RVA_GfxLoadLibraryIat   0xD11C
 
 
 
 
 
-#define RVA_StormStreamFill     0x2B620
-#define RVA_StormStreamFillRead 0x2B632
-#define RVA_StormStreamFillExit 0x2B76B
-#define RVA_StormStreamLock     0x55934
 
 
-#define RVA_GameSaveFlag        0xBE6D4
-
-#define RVA_GamePlugYPacket     0x676C3
 
 
-#define RVA_RevealAutomapRoom   0x73160
-#define RVA_InitAutomapLayer    0x733D0
-#define RVA_NewAutomapCell      0x703C0
-#define RVA_AddAutomapCell      0x71EA0
-#define RVA_AutomapCellPool     0x11CF20
-#define RVA_AutomapLayerList    0x11CF24
-#define RVA_AutomapLayer        0x11CF28
-#define RVA_AutomapDivisor      0xF34F8
-#define RVA_AutomapOffsetX      0x11CF5C
-#define RVA_AutomapOffsetY      0x11CF60
-#define RVA_AutomapMode         0x11CF14
-#define RVA_AutomapCorner       0x11CFA4
-#define RVA_AutomapCornerTop    0x11CE34
-#define RVA_DrawAutomapCall     0x1D49C
-#define RVA_DrawAutomap         0x73420
-#define ORD_GetLevel            10122
-#define ORD_InitLevel           10736
-#define ORD_AddRoomData         10890
-#define ORD_RemoveRoomData      10208
-#define ORD_GetLevelText        10142
 
-#define ORD_GetLevelDef         10087
-#define ORD_GetObjectTxt        10319
-#define ORD_DrawText            10076
-#define ORD_GetTextWidth        10150
-#define ORD_SetTextSize         10047
-#define ORD_GetUnitStat         10550
-#define ORD_GetUnitState        10706
-#define ORD_GetItemText         10994
-#define ORD_MapToAbsScreen      10115
+#ifdef D2VER_113C
+#define ORD_GetLevel             10419
+#else
+#define ORD_GetLevel             10122
+#endif
+#ifdef D2VER_113C
+#define ORD_InitLevel            10322
+#else
+#define ORD_InitLevel            10736
+#endif
+#ifdef D2VER_113C
+#define ORD_AddRoomData          10401
+#else
+#define ORD_AddRoomData          10890
+#endif
+#ifdef D2VER_113C
+#define ORD_RemoveRoomData       11099
+#else
+#define ORD_RemoveRoomData       10208
+#endif
+#ifdef D2VER_113C
+#define ORD_GetLevelText         10014
+#else
+#define ORD_GetLevelText         10142
+#endif
+#ifdef D2VER_113C
+#define ORD_GetLevelDef          10749
+#else
+#define ORD_GetLevelDef          10087
+#endif
+#ifdef D2VER_113C
+#define ORD_GetObjectTxt         10688
+#else
+#define ORD_GetObjectTxt         10319
+#endif
+#ifdef D2VER_113C
+#define ORD_DrawText             10150
+#else
+#define ORD_DrawText             10076
+#endif
+#ifdef D2VER_113C
+#define ORD_GetTextWidth         10028
+#else
+#define ORD_GetTextWidth         10150
+#endif
+#ifdef D2VER_113C
+#define ORD_SetTextSize          10184
+#else
+#define ORD_SetTextSize          10047
+#endif
+#ifdef D2VER_113C
+#define ORD_GetUnitStat          10973
+#else
+#define ORD_GetUnitStat          10550
+#endif
+#ifdef D2VER_113C
+#define ORD_GetUnitState         10494
+#else
+#define ORD_GetUnitState         10706
+#endif
+#ifdef D2VER_113C
+#define ORD_GetItemText          10695
+#else
+#define ORD_GetItemText          10994
+#endif
+#ifdef D2VER_113C
+#define ORD_MapToAbsScreen       11087
+#else
+#define ORD_MapToAbsScreen       10115
+#endif
+#ifdef D2VER_113C
+/* 10015 here is a one argument getter (ret 4); calling it with three arguments left eight bytes on
+   the stack and the return jumped into the heap - that was the freeze behind the portal button.
+   The three argument sender sits at 10024: it checks the connection, refuses anything over 0x204
+   bytes and hands size and data to the net layer. */
+#define ORD_SendPacket          10024
+#else
 #define ORD_SendPacket          10015
+#endif
 
 static const BYTE GAMELOOP_ORIGINAL[7] = {0x83, 0xEC, 0x20, 0x89, 0x4C, 0x24, 0x0C};
 
@@ -348,6 +323,7 @@ static ClickMap_t fClickMap;
 static DWORD fSetSelectedUnit;
 
 static volatile int forcing, unitActions;
+static DWORD calPathOff;   /* 1.13c: found unit->path offset, 0 = the 1.13d one */
 static void* forcedUnit;
 
 static BYTE* selectedTrampoline;
@@ -458,6 +434,9 @@ static volatile LONG outOfGameSeen;
 
 
 volatile LONG worldFrames;
+volatile LONG ticksDone;
+volatile LONG statesSent;
+static volatile LONG cntTail, cntG0, cntG1, cntGate, cntG2, cntG3, cntG4, cntG5, cntPre, cntErr;
 static int worldHooked;
 static volatile LONG heroVarOk;
 
@@ -600,7 +579,9 @@ static volatile LONG logInFilter;
 
 static DWORD gameThreadId, exeBase;
 static const char* volatile crashStep;
-#define STEP(call) do { crashStep = #call; call; } while (0)
+static const char* stepRing[8];
+static volatile LONG stepRingNext;
+#define STEP(call) do { crashStep = #call; stepRing[stepRingNext & 7] = #call; InterlockedIncrement(&stepRingNext); call; } while (0)
 static BYTE lastCommands[8];
 static volatile LONG lastCommandNext, crashCount;
 static DWORD periodicSince[2];
@@ -688,9 +669,9 @@ static void logCrashLines(EXCEPTION_POINTERS* info, int first) {
     logLine("crash: registers eax %08lX ebx %08lX ecx %08lX edx %08lX esi %08lX edi %08lX ebp %08lX esp %08lX eip %08lX "
             "flags %08lX", ctx->Eax, ctx->Ebx, ctx->Ecx, ctx->Edx, ctx->Esi, ctx->Edi, ctx->Ebp, ctx->Esp, ctx->Eip,
             ctx->EFlags);
-    char stack[16 * 64];
+    char stack[48 * 64];
     int len = 0, words = 0;
-    for (; words < 16; words++) {
+    for (; words < 48; words++) {
         DWORD* p = (DWORD*) ctx->Esp + words;
         if (!crashReadable(p, 4)) break;
         DWORD v = *p;
@@ -702,6 +683,12 @@ static void logCrashLines(EXCEPTION_POINTERS* info, int first) {
         if (len >= (int) sizeof(stack)) break;
     }
     logLine("crash: stack at %08lX (%d words):%s", ctx->Esp, words, words ? stack : " not readable");
+    char trail[400];
+    int t = 0;
+    LONG sn = stepRingNext;
+    for (LONG i = sn > 8 ? sn - 8 : 0; i < sn; i++)
+        t += snprintf(trail + t, sizeof(trail) - t, "%s%s", t ? " -> " : "", stepRing[i & 7] ? stepRing[i & 7] : "?");
+    logLine("crash: steps %s", t ? trail : "none");
 }
 
 
@@ -790,6 +777,7 @@ static void sendPacket(Packet* p) {
     if (sock == INVALID_SOCKET) return;
     if (sendto(sock, (const char*) p->data, p->len, 0, (struct sockaddr*) &appAddr, sizeof(appAddr)) == SOCKET_ERROR) {
         int error = WSAGetLastError();
+        InterlockedIncrement(&cntErr);
 
         if ((error == WSANOTINITIALISED || error == WSAENOTSOCK) && InterlockedExchange(&socketsBroken, 1) == 0) {
             logLine("sockets lost (error %d)", error);
@@ -852,7 +840,7 @@ static int isTown(DWORD levelNo) {
 }
 
 static DWORD unitLevel(void* unit) {
-    void* path = RDP(unit, U_PATH);
+    void* path = RDP(unit, calPathOff ? calPathOff : U_PATH);
     if (!path) return 0;
     void* room1 = RDP(path, PATH_ROOM1);
     if (!room1) return 0;
@@ -1427,7 +1415,6 @@ static void updateHeld(DWORD now) {
 
 
 
-#define RVA_ClickBlocked 0x11C8B4
 static volatile int replaying;
 static int realHeld;
 static struct {
@@ -1768,7 +1755,12 @@ static void checkHudSites(void) {
         DWORD target = (DWORD) at + 5 + *(DWORD*) (at + 1);
         hudSites[i].verified = at[0] == 0xE8 && target == client + hudSites[i].target;
         if (hudSites[i].verified) memcpy(hudSites[i].original, at, 5);
-        else if (i < 4) ok = 0;
+        else {
+            if (i < 4) ok = 0;
+            logLine("hud site %d at D2Client+0x%05lX not as expected (%02X, target %08lX, want %08lX)",
+                    i, (unsigned long) hudSites[i].rva, readable(at, 1) ? at[0] : 0, (unsigned long) target,
+                    (unsigned long) (client + hudSites[i].target));
+        }
     }
     hudAvailable = ok;
     duraAvailable = hudSites[4].verified;
@@ -2092,7 +2084,6 @@ static void updatePlugYSave(void) {
 
 
 
-#define RVA_PlugYWindowStartX 0x31B48
 #define PLUGY_STATS_PAGE_WIDTH 320
 static const DWORD plugyPageChecks[] = {0x197A8, 0x19910};
 static int plugyPagesState;
@@ -3092,6 +3083,15 @@ static void* findPortal(void* player, int* where, int* charges) {
 }
 
 
+static int sendPacketUsable(void) {
+#ifdef D2VER_113C
+    BYTE* f = (BYTE*) fSendPacket;
+    return readable(f, 8) && f[0] == 0xA1 && f[5] == 0x85 && f[6] == 0xC0 && f[7] == 0x75;
+#else
+    return fSendPacket != NULL;
+#endif
+}
+
 static void openPortal(void* player) {
     int belt = 0;
     void* item = findPortal(player, &belt, NULL);
@@ -3107,8 +3107,23 @@ static void openPortal(void* player) {
         *(WORD*) (packet + 5) = path ? (WORD) (RD32(path, PATH_X) >> 16) : 0;
         *(WORD*) (packet + 9) = path ? (WORD) (RD32(path, PATH_Y) >> 16) : 0;
     }
+    crashStep = "openPortal:send";
+    if (!sendPacketUsable()) {
+        static int once;
+        if (!once++) logLine("portal: the packet sender is not the one expected here, not sending");
+        crashStep = "";
+        return;
+    }
     fSendPacket(13, 1, packet);
+#ifdef D2VER_113C
+    /* The use sound goes through two hand written client calls whose addresses are still the
+       1.13d ones; the number that comes back does not belong to a scroll. Skip it there. */
+    int sound = -1;
+#else
+    crashStep = "openPortal:sound";
     int sound = playUseSound(item);
+#endif
+    crashStep = "openPortal";
     logLine("portal from the %s, sound %d", belt ? "belt" : "inventory", sound);
 }
 
@@ -3184,6 +3199,7 @@ static int classSkill(DWORD cls, WORD skill) {
 
 
 static void* usableSkillEntry(void* player, WORD skill);
+static int ownSkill(void* player, WORD skill);
 #define SKILL_CHARGES 0x38
 #define SKILL_CHARGED 0x3C
 static int srvSelectAsk(WORD skill, int left, int force);
@@ -3192,7 +3208,10 @@ static void selectSkill(void* player, int left, WORD skill, int anySource, int f
 
 
 
-    if (!classSkill(RD32(player, U_TXTNO), skill) && !(anySource && (skill < 217 || skill > 220))) {
+    /* v42: the pack ships its own skill tree, so the vanilla class-skill ranges are not
+       authoritative any more. A skill the hero really owns is always legitimate. */
+    if (!classSkill(RD32(player, U_TXTNO), skill) && !ownSkill(player, skill)
+        && !(anySource && (skill < 217 || skill > 220))) {
         logLine("select: skill %u not in the class's tree, nothing sent", skill);
         return;
     }
@@ -3206,7 +3225,7 @@ static void selectSkill(void* player, int left, WORD skill, int anySource, int f
     }
     void* entry = usableSkillEntry(player, skill);
     DWORD source = entry ? RD32(entry, SKILL_ITEM) : 0xFFFFFFFF;
-    if (!entry || (!anySource && source != 0xFFFFFFFF)) {
+    if (!entry) {
         logLine("select: skill %u: no usable source, nothing sent", skill);
         return;
     }
@@ -3289,6 +3308,51 @@ static void stashTest(BYTE op, BYTE value);
 #include "d2weaponset.c"
 #include "d2skilllist.c"
 #include "d2points.c"
+
+static void logChain(void);
+
+/* v41: the app's 16 skill slots were only kept on the phone side. Push them into the
+   game once per session, so F1..F8 actually carry the skills the user assigned. */
+static volatile LONG appSlotsApplied;
+static void applyAppSlots(void* player) {
+    if (!appSlotsSet || appSlotsApplied || !player || !singlePlayerGame() || !fSendPacket) return;
+    if (!(pointOps & PTS_KEY)) return;
+    DWORD* skills = (DWORD*) (client + RVA_HotkeySkill);
+    DWORD* lefts = (DWORD*) (client + RVA_HotkeyLeft);
+    DWORD* items = (DWORD*) (client + RVA_HotkeyItem);
+    int empty = 1;
+    for (int i = 0; i < 16; i++) if (appSlots[i] != 0xFFFF) empty = 0;
+    if (empty) {
+        void* info = RDP(player, U_INFO);
+        int guard = 0, at = 0;
+        for (void* k = readable(info, 0x10) ? RDP(info, INFO_FIRST) : NULL; readable(k, SKILL_ITEM + 4) && guard < 400 && at < 8;
+             k = RDP(k, SKILL_NEXT), guard++) {
+            WORD id = skillId(k);
+            if (id == 0xFFFF || id == 0) continue;
+            if (RD32(k, SKILL_ITEM) != 0xFFFFFFFF) continue;
+            if (passiveSkill(player, id)) continue;
+            appSlots[at++] = id;
+        }
+        if (at) logLine("slots: %d learnt skills filled into the empty bar", at);
+    }
+    int bound = 0;
+    for (int i = 0; i < 16; i++) {
+        WORD what = appSlots[i];
+        if (what == 0xFFFF || what == 0) continue;
+        if (!ownSkill(player, what)) continue;
+        if (skills[i] == what) continue;
+        BYTE packet[9] = {0x51};
+        *(DWORD*) (packet + 1) = what | (DWORD) i << 16;
+        *(DWORD*) (packet + 5) = 0xFFFFFFFF;
+        skills[i] = what;
+        lefts[i] = 0;
+        items[i] = 0xFFFFFFFF;
+        fSendPacket(9, 1, packet);
+        bound++;
+    }
+    InterlockedExchange(&appSlotsApplied, 1);
+    if (bound) logLine("slots: %d skills written into the game's hotkey bar", bound);
+}
 #include "d2playtest.c"
 #include "d2map.c"
 #include "d2quest.c"
@@ -3351,6 +3415,8 @@ static void handleCommands(void* player, int stale) {
         if (cmd == CMD_PLAYERS && n >= 9 && player && buf[8] >= 1 && buf[8] <= 8) setPlayers(buf[8]);
         if (cmd == CMD_PLUGY && n >= 9 && player) plugyCommand(buf[8]);
         if (cmd == CMD_SELECT_SKILL && n >= 11 && player && !pauseApplied) selectSkill(player, buf[8] == 0, *(WORD*) (buf + 9), n >= 12 && buf[11] == 1, n >= 13 && buf[12] == 1);
+        applyAppSlots(player);
+        logChain();
         if (cmd == CMD_SLOTS && n >= 8 + 32) {
             int changed = !appSlotsSet;
             for (int i = 0; i < 16; i++) {
@@ -3359,6 +3425,8 @@ static void handleCommands(void* player, int stale) {
                 appSlots[i] = v;
             }
             InterlockedExchange(&appSlotsSet, 1);
+            InterlockedExchange(&appSlotsApplied, 0);
+            if (player) applyAppSlots(player);
             if (changed)
                 logLine("slots: %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u", appSlots[0], appSlots[1], appSlots[2],
                     appSlots[3], appSlots[4], appSlots[5], appSlots[6], appSlots[7], appSlots[8], appSlots[9], appSlots[10],
@@ -3609,6 +3677,14 @@ static int keepNearest(Candidate* list, int count, int keep) {
         list[best] = t;
     }
     return keep;
+}
+
+
+/** A unit pointer has to look like heap memory: the stack and the modules do not. */
+static int plausibleUnit(void* p) {
+    DWORD at = (DWORD) p;
+    if (at < 0x01000000 || at >= 0x70000000 || !readable(p, 0x60)) return 0;
+    return RD32(p, U_TYPE) == UNIT_PLAYER && RD32(p, U_MODE) != 0xFF;
 }
 
 
@@ -4029,10 +4105,171 @@ static void sendGoals(void* player, DWORD levelNo) {
 
 static DWORD seenId[32], seenMode[32], seenNext;
 
+#ifdef D2VER_113C
+/* 1.13c: the room/unit/path offsets are probed in memory once per game, because a wrong
+   one is silent - the unit walk simply comes out empty and the app stays blind. */
+static DWORD calActOff, calUnitsOff, calNextOff, calRoomNextOff;
+
+static int unitLooksLike(void* p, void* skipA, void* skipB) {
+    DWORD at = (DWORD) p;
+    if (!p || at < 0x01000000 || at >= 0x70000000) return 0;
+    if (p == skipA || p == skipB) return 0;
+    if (!readable(p, 0xEC)) return 0;
+    if (RD32(p, U_TYPE) > 6) return 0;
+    if (RD32(p, U_ID) == 0) return 0;
+    return RD32(p, U_MODE) != 0xFF;
+}
+
+static int roomLevelNumber(void* room) {
+    if (!readable(room, 0x20)) return 0;
+    void* r2 = RDP(room, ROOM1_ROOM2);
+    if (!readable(r2, 0x60)) return 0;
+    void* lv = RDP(r2, ROOM2_LEVEL);
+    if (!readable(lv, LEVEL_NO + 4)) return 0;
+    DWORD no = RD32(lv, LEVEL_NO);
+    return no >= 1 && no <= 200 ? (int) no : 0;
+}
+
+static int levelNoOf(void* path) {
+    if (!path || !readable(path, 0x40)) return 0;
+    void* r1 = RDP(path, PATH_ROOM1);
+    if (!readable(r1, 0x20)) return 0;
+    void* r2 = RDP(r1, ROOM1_ROOM2);
+    if (!readable(r2, 0x60)) return 0;
+    void* lv = RDP(r2, ROOM2_LEVEL);
+    if (!readable(lv, LEVEL_NO + 4)) return 0;
+    DWORD no = RD32(lv, LEVEL_NO);
+    return no >= 1 && no <= 200 ? (int) no : 0;
+}
+
+static void dumpDwords113c(const char* what, void* p, int from, int to) {
+    char line[600];
+    int at = 0;
+    at += snprintf(line + at, sizeof(line) - at, "%s %p:", what, p);
+    for (int o = from; o < to && at < (int) sizeof(line) - 12; o += 4)
+        at += snprintf(line + at, sizeof(line) - at, " %08lX", (unsigned long) RD32(p, o));
+    logLine("%s", line);
+}
+
+static void probeLayout(void* player, void* act) {
+    static int tried;
+    if (tried || !player || !act) return;
+    tried = 1;
+
+    dumpDwords113c("layout: act", act, 0, 0x40);
+    dumpDwords113c("layout: player", player, 0, 0x40);
+
+    void* room = RDP(act, ACT_ROOM1);
+    if (!readable(room, 0x100)) {
+        logLine("layout: no room at act+10 (%p), nothing to look at", room);
+        return;
+    }
+    dumpDwords113c("layout: room", room, 0, 0x80);
+
+    void* room2 = RDP(room, ROOM1_ROOM2);
+    void* lv = readable(room2, 0x60) ? RDP(room2, ROOM2_LEVEL) : NULL;
+    logLine("layout: room2 %p level %p no %lu", room2, lv,
+            (unsigned long) (readable(lv, LEVEL_NO + 4) ? RD32(lv, LEVEL_NO) : 0xFFFFFFFF));
+
+    /* Rooms are chained and each room has its own unit list; 1.13c moved both. Rather than
+       guess one offset at a time, walk every candidate and keep the one that reaches the most
+       units over the most rooms, which is what the send path then uses. */
+    if (!calRoomNextOff) {
+        for (DWORD o = 0x40; o <= 0x100; o += 4) {
+            void* a = RDP(room, o);
+            if (!a || a == room || !roomLevelNumber(a)) continue;
+            void* b = RDP(a, o);
+            if (b && b != a && roomLevelNumber(b)) {
+                calRoomNextOff = o;
+                logLine("layout: rooms chained at room+%02lX (%d then %d)", (unsigned long) o, roomLevelNumber(a),
+                        roomLevelNumber(b));
+                break;
+            }
+        }
+        if (!calRoomNextOff) {
+            calRoomNextOff = ROOM1_NEXT;
+            logLine("layout: no room chain found, keeping room+%02lX", (unsigned long) ROOM1_NEXT);
+        }
+    }
+    if (!calUnitsOff) {
+        int bestTotal = -1;
+        DWORD bestOff = 0, bestNext = 0;
+        for (DWORD o = 0x00; o <= 0x80; o += 4) {
+            for (DWORD n = 0x04; n <= 0x1F8; n += 4) {
+                int total = 0, rooms = 0, chainOk = 1;
+                for (void* r = room; r && rooms < 8 && chainOk == 1; r = RDP(r, calRoomNextOff), rooms++) {
+                    if (!readable(r, 0x100)) break;
+                    int k = 0;
+                    void* u = RDP(r, o);
+                    while (u && k < 64) {
+                        if (!unitLooksLike(u, act, room) || RD32(u, U_MODE) > 40) {
+                            chainOk = k > 0 ? 2 : 0;
+                            break;
+                        }
+                        k++;
+                        u = RDP(u, n);
+                    }
+                    total += k;
+                }
+                if (chainOk == 1 && total > bestTotal) {
+                    bestTotal = total;
+                    bestOff = o;
+                    bestNext = n;
+                }
+            }
+        }
+        if (bestOff && bestTotal > 0) {
+            calActOff = ACT_ROOM1;
+            calUnitsOff = bestOff;
+            calNextOff = bestNext;
+            logLine("layout: units at room+%02lX next+%02lX, %d over the rooms", (unsigned long) bestOff,
+                    (unsigned long) bestNext, bestTotal);
+        }
+        else logLine("layout: no unit list found in any room");
+    }
+
+    if (!calPathOff) logLine("layout: no path pointer found in the player unit");
+}
+#endif
+
+
 static void collectAndSend(void* player) {
+    if (!plausibleUnit(player)) {
+        static DWORD lastNo;
+        DWORD at = GetTickCount();
+        if (!lastNo || at - lastNo >= 3000) {
+            lastNo = at;
+            logLine("send: player %p is not a unit (type %lu mode %lu readable %d)",
+                    player, player ? (unsigned long) RD32(player, U_TYPE) : 0xFFFFFFFF,
+                    player ? (unsigned long) RD32(player, U_MODE) : 0xFFFFFFFF,
+                    player ? readable(player, 0x60) : 0);
+        }
+        return;
+    }
     void* act = RDP(player, U_ACT);
-    void* path = RDP(player, U_PATH);
-    if (!act || !path) return;
+    void* path = RDP(player, calPathOff ? calPathOff : U_PATH);
+    if (!readable(act, 0x40)) {
+        /* Between two levels the hero pointer keeps pointing at a unit the game has already
+           thrown away, and its room pointer is whatever the freed block still holds. Reading
+           through that is what killed v19, so wait for the next tick instead. */
+        static DWORD lastStale;
+        DWORD at = GetTickCount();
+        if (!lastStale || at - lastStale >= 3000) {
+            lastStale = at;
+            logLine("send: hero %p has room data at %p that cannot be read, waiting for the next level", player, act);
+        }
+        return;
+    }
+    if (!readable(path, 0x40)) {
+        static DWORD lastWhy;
+        DWORD at = GetTickCount();
+        if (!lastWhy || at - lastWhy >= 3000) {
+            lastWhy = at;
+            logLine("send: act %p but the path at %p cannot be read, waiting", act, path);
+        }
+        return;
+    }
+    InterlockedIncrement(&cntGate);
 
     View view;
     view.offX = (long) fGetMouseXOffset();
@@ -4057,6 +4294,7 @@ static void collectAndSend(void* player) {
     putU32(&p, uiHigh);
     putU16(&p, levelNo);
     putU8(&p, isTown(levelNo) ? 1 : 0);
+    InterlockedIncrement(&cntG2);
 
 
 
@@ -4079,6 +4317,7 @@ static void collectAndSend(void* player) {
     putU32(&p, hovered ? RD32(hovered, U_ID) : 0xFFFFFFFF);
     putU8(&p, lastDrink);
     putU8(&p, commandsReceived);
+    InterlockedIncrement(&cntG3);
 
 
     BYTE belt[16] = {0};
@@ -4095,6 +4334,7 @@ static void collectAndSend(void* player) {
         item = RDP(data, IDATA_NEXTINV);
     }
     for (int i = 0; i < 16; i++) putU8(&p, belt[i]);
+    InterlockedIncrement(&cntG4);
 
 
     static Candidate monsterList[MAX_CANDIDATES], itemList[MAX_CANDIDATES], objectList[MAX_CANDIDATES], corpseList[MAX_CANDIDATES];
@@ -4102,9 +4342,17 @@ static void collectAndSend(void* player) {
     Candidate corpse = {0};
     int units = 0;
     int gates[MAX_GATES][2], nGates = 0;
-    for (void* room = RDP(act, ACT_ROOM1); room && units < 4096; room = RDP(room, ROOM1_NEXT)) {
-        for (void* unit = RDP(room, ROOM1_UNITS); unit && units < 4096; unit = RDP(unit, U_LISTNEXT), units++) {
+    DWORD actOff = ACT_ROOM1, unitsOff = ROOM1_UNITS, nextOff = ROOM1_NEXT;
+    DWORD roomNext = ROOM1_NEXT;
+#ifdef D2VER_113C
+    if (calUnitsOff) actOff = calActOff, unitsOff = calUnitsOff, nextOff = calNextOff;
+    if (calRoomNextOff) roomNext = calRoomNextOff;
+#endif
+    int rooms = 0, hist[8] = {0};
+    for (void* room = RDP(act, actOff); room && units < 4096 && readable(room, 0x80); room = RDP(room, roomNext), rooms++) {
+        for (void* unit = RDP(room, unitsOff); unit && units < 4096 && readable(unit, 0x20); unit = RDP(unit, U_LISTNEXT), units++) {
             DWORD type = RD32(unit, U_TYPE);
+            if (type < 8) hist[type]++;
             if (type == UNIT_PLAYER && !corpse.unit && isOwnCorpse(unit, player)) {
 
                 double cx, cy;
@@ -4171,6 +4419,18 @@ static void collectAndSend(void* player) {
 
                 addCandidate(objectList, &nObjects, unit, ux, uy, psx, psy);
             }
+        }
+    }
+
+    InterlockedIncrement(&cntG5);
+    {
+        static DWORD lastUnitLog;
+        DWORD nowU = GetTickCount();
+        if (!lastUnitLog || nowU - lastUnitLog >= 3000) {
+            lastUnitLog = nowU;
+            logLine("units: rooms %d units %d players %d monsters %d(raw %d) items %d objects %d tiles %d -> kept %d/%d/%d/%d",
+                    rooms, units, hist[0], hist[1], rawMonsters, hist[4], hist[2], hist[5],
+                    nMonsters, nItems, nObjects, nCorpses);
         }
     }
 
@@ -4343,8 +4603,8 @@ static void collectAndSend(void* player) {
     DWORD purseLevel = fGetUnitStat(player, 12, 0), purseGold = fGetUnitStat(player, 14, 0);
     int purseFull = purseLevel > 0 && purseGold >= 10000 * purseLevel;
     putU8(&p, (RD32(client, RVA_AlwaysRun) ? 1 : 0) | (cursorAvailable ? 2 : 0) | (cursorHidden ? 4 : 0)
-        | (RD32(client, RVA_NpcDialog) ? 8 : 0) | (worldHooked && heroVarOk ? 16 : 0)
-        | (worldHooked && heroVarOk && worldFrames > 0 ? 32 : 0) | (purseFull ? 64 : 0));
+        | (RD32(client, RVA_NpcDialog) ? 8 : 0) | (worldHooked ? 16 : 0)
+        | (worldHooked && worldFrames > 0 ? 32 : 0) | (purseFull ? 64 : 0));
 
     int charges = 0;
     findPortal(player, NULL, &charges);
@@ -4432,7 +4692,7 @@ static void collectAndSend(void* player) {
 
 
     if ((int) (GetTickCount() - playtestUntil) < 0) {
-        DWORD x = RD32(path, PATH_X), y = RD32(path, PATH_Y);
+        DWORD x = path ? RD32(path, PATH_X) : 0, y = path ? RD32(path, PATH_Y) : 0;
         putU16(&p, x >> 16);
         putU16(&p, y >> 16);
         putU8(&p, (x >> 8) & 0xFF);
@@ -4456,7 +4716,9 @@ static void collectAndSend(void* player) {
     putHoverItem(&p, player);
 
     putU8(&p, path && readable((BYTE*) path + PATH_DIR, 1) && RD8(path, PATH_DIR) < 64 ? RD8(path, PATH_DIR) : 0xFF);
+    InterlockedIncrement(&cntPre);
     sendPacket(&p);
+    InterlockedIncrement(&statesSent);
 
     void* itemUnits[MAX_ITEMS];
     for (int i = 0; i < nItems; i++) itemUnits[i] = itemList[i].unit;
@@ -4549,11 +4811,9 @@ static void noteGame(void* player, DWORD now) {
 
 
 
-#define RVA_WorldUiCall  0x453CB
-#define RVA_WorldUi      0x1D3E0
-#define RVA_WorldUiFlag  0x11C8D8
 DWORD worldDrawUi;
 void worldDrawStub(void);
+void worldDrawTick(void);
 __asm__(
     ".text\n"
     ".globl _worldDrawStub\n"
@@ -4585,8 +4845,9 @@ static void installWorldDrawHook(void) {
     int game = target == client + RVA_WorldUi, plugy = !game && target && inModule(GetModuleHandleA("PlugY.dll"), target);
     if (!target || (!game && !plugy) || site[-1] != 0x52 || !readable(fn, 9) || fn[0] != 0x51 || fn[1] != 0xA1
         || *(const DWORD*) (fn + 2) != client + RVA_WorldUiFlag || fn[6] != 0x53 || fn[7] != 0x33 || fn[8] != 0xDB) {
-        logLine("world: the interface call is not as known (%02X, target %08lX), no picture count",
-                readable(site, 1) ? site[0] : 0, (unsigned long) target);
+        logLine("world: the interface call is not as known at D2Client+0x%05lX (%02X, target %08lX, want %08lX), no picture count",
+                (unsigned long) RVA_WorldUiCall, readable(site, 1) ? site[0] : 0, (unsigned long) target,
+                (unsigned long) (client + RVA_WorldUi));
         return;
     }
     worldDrawUi = target;
@@ -4596,8 +4857,8 @@ static void installWorldDrawHook(void) {
     VirtualProtect(site, 5, old, &old);
     FlushInstructionCache(GetCurrentProcess(), site, 5);
     worldHooked = 1;
-    logLine("world: picture count at D2Client+0x453CB installed (on to %s %08lX)", plugy ? "PlugY" : "the game",
-            (unsigned long) target);
+    logLine("world: picture count at D2Client+0x%05lX installed (on to %s %08lX)", (unsigned long) RVA_WorldUiCall,
+            plugy ? "PlugY" : "the game", (unsigned long) target);
 }
 
 
@@ -4609,8 +4870,8 @@ static void noteWorldFrames(DWORD now) {
     DWORD target = site[0] == 0xE8 ? (DWORD) site + 5 + *(const DWORD*) (site + 1) : 0;
     if (target != (DWORD) worldDrawStub) {
         worldHooked = 0;
-        logLine("world: the call at D2Client+0x453CB was bent again (%02X, target %08lX): no picture signal any more",
-                site[0], (unsigned long) target);
+        logLine("world: the call at D2Client+0x%05lX was bent again (%02X, target %08lX): no picture signal any more",
+                (unsigned long) RVA_WorldUiCall, site[0], (unsigned long) target);
         return;
     }
     if (worldFrames == 0) {
@@ -4702,6 +4963,13 @@ static void swingTrace(void* player) {
 }
 #endif
 
+static volatile LONG foreignDrawTicks;
+static void* lastGoodPlayer;
+
+
+
+
+
 static void gameTick(void) {
     static int moreHooks;
     if (!moreHooks) {
@@ -4736,8 +5004,32 @@ static void gameTick(void) {
         checkGoldSites();
         if (!unitActions) setStatus(STATUS_HOOKED, "connected (without direct clicks)");
     }
-    void* player = fGetPlayerUnit();
+    void* raw = fGetPlayerUnit();
+    void* player = raw;
     DWORD now = GetTickCount();
+    if (!plausibleUnit(player)) {
+        static DWORD lastStale;
+        player = plausibleUnit(lastGoodPlayer) ? lastGoodPlayer : NULL;
+        if (!lastStale || now - lastStale >= 5000) {
+            lastStale = now;
+            logLine("tick: the hero pointer is %08lX, not a unit (using %08lX, %ld draw ticks on other threads)",
+                    (unsigned long) (DWORD) raw, (unsigned long) (DWORD) player, (long) foreignDrawTicks);
+        }
+    }
+    else if (player != lastGoodPlayer) lastGoodPlayer = player;
+    {
+        static DWORD lastNote;
+        if (!lastNote || now - lastNote >= 5000) {
+            lastNote = now;
+            logLine("tick: player %08lX, world %d (%ld pictures, %ld ticks, %ld states), tail %ld now %lu send %lu g0 %ld g1 %ld gate %ld g2 %ld g3 %ld g4 %ld g5 %ld pre %ld err %ld sock %d port %d, hero pointer %ld, hud %d, pointer sites %d, buttons %d",
+                    (unsigned long) (DWORD) player, worldHooked, (long) worldFrames, (long) ticksDone, (long) statesSent,
+                    (long) cntTail, (unsigned long) now, (unsigned long) lastSend, (long) cntG0, (long) cntG1, (long) cntGate, (long) cntG2, (long) cntG3, (long) cntG4, (long) cntG5, (long) cntPre, (long) cntErr, (int) sock,
+                    (int) ntohs(appAddr.sin_port), (long) heroVarOk, hudAvailable, cursorAvailable, edgeAvailable);
+        }
+    }
+#ifdef D2VER_113C
+    if (player) STEP(probeLayout(player, RDP(player, U_ACT)));
+#endif
     STEP(noteGame(player, now));
     STEP(noteWorldFrames(now));
     if (!player) STEP(forgetStackRows());
@@ -4795,7 +5087,9 @@ static void gameTick(void) {
     STEP(updateServerEffects(player, now));
     STEP(updateServerSelects(now));
     STEP(updateServerLevels(player, now));
+#ifndef D2VER_113C
     STEP(updateResume(player, now));
+#endif
     STEP(updateDamage(player, now));
 #ifdef D2MOD_TESTCMDS
     STEP(updateServerQueueTest(now));
@@ -4821,16 +5115,89 @@ static void gameTick(void) {
 
         if (!player) walk.stopping = 0;
     }
-    if (now - lastSend < 40) return;
-    lastSend = now;
-    if (player) STEP(collectAndSend(player));
+    InterlockedIncrement(&cntTail);
+    /* Pacing by frames instead of a timestamp: GetTickCount() inside the game gives
+       values that do not move the way the rest of the build expects, and the whole
+       state stream stopped at this line because of it. */
+    {
+        static LONG pace;
+        if (InterlockedIncrement(&pace) % 3) return;
+    }
+    /* The local copy of the hero pointer goes empty somewhere between the layout probe and
+       this line, so take it again from the game here: whatever happens above must not be
+       able to starve the app of state packets. */
+    {
+        static void* steadyHero;
+        static int steady;
+        void* beat = fGetPlayerUnit();
+        if (!plausibleUnit(beat)) {
+            steadyHero = NULL;
+            steady = 0;
+        }
+        else if (beat == steadyHero) {
+            if (steady < 8) steady++;
+        }
+        else {
+            steadyHero = beat;
+            steady = 1;
+        }
+        lastSend = GetTickCount();
+        InterlockedIncrement(&cntG0);
+        /* Only send for a hero the game itself still hands out, and only after the same pointer
+           has come back a few ticks running. Right after a level the game keeps handing out the
+           unit it has already released, and pushing that into D2Common's stat calls took down
+           v19 and v20. */
+        if (steady < 3) {
+            static DWORD lastWait;
+            if (!lastWait || now - lastWait >= 5000) {
+                lastWait = now;
+                logLine("send: holding back, the hero is %08lX and has been for %d ticks", (unsigned long) (DWORD) beat,
+                        steady);
+            }
+            return;
+        }
+        InterlockedIncrement(&cntG1);
+        STEP(collectAndSend(steadyHero));
+    }
 }
 
 
 
+static volatile LONG inTick;
+__attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void);
+
+
+
+
+/**
+ * Called from the world draw call site (every frame, in game only). The game loop entry at
+ * RVA_GameLoop is only reached a few times a second on 1.13c, so the tick hangs off the draw
+ * instead and stays throttled to a sane rate.
+ */
+void worldDrawTick(void) {
+    static DWORD lastAt;
+    DWORD now = GetTickCount();
+    if (now - lastAt < 25) return;
+    lastAt = now;
+    if (gameThreadId && GetCurrentThreadId() != gameThreadId) {
+        if (InterlockedIncrement(&foreignDrawTicks) == 1)
+            logLine("draw tick: on another thread %04lX (game loop %04lX): not used", (unsigned long) GetCurrentThreadId(),
+                    (unsigned long) gameThreadId);
+        return;
+    }
+    if (InterlockedExchange(&inTick, 1)) return;
+    onGameLoop();
+    InterlockedExchange(&inTick, 0);
+}
+
+
 __attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void) {
-    if (!gameThreadId) gameThreadId = GetCurrentThreadId();
+    if (!gameThreadId) {
+        gameThreadId = GetCurrentThreadId();
+        logLine("game loop: first tick, thread %04lX", (unsigned long) gameThreadId);
+    }
     gameTick();
+    InterlockedIncrement(&ticksDone);
     crashStep = NULL;
 }
 
@@ -4874,6 +5241,9 @@ static int resolve(void) {
     fGetItemText = (GetItemText_t) GetProcAddress((HMODULE) common, (LPCSTR) ORD_GetItemText);
     fMapToAbsScreen = (MapToAbsScreen_t) GetProcAddress((HMODULE) common, (LPCSTR) ORD_MapToAbsScreen);
     fSendPacket = (SendPacket_t) GetProcAddress((HMODULE) net, (LPCSTR) ORD_SendPacket);
+    if (!fGetUnitStat || !fGetItemText || !fMapToAbsScreen || !fSendPacket)
+        logLine("functions: stat %p item text %p screen %p packet %p (D2Common %08lX, D2Net %08lX)",
+                fGetUnitStat, fGetItemText, fMapToAbsScreen, fSendPacket, common, net);
     return fGetUnitStat && fGetItemText && fMapToAbsScreen && fSendPacket;
 }
 
@@ -4924,6 +5294,24 @@ static void installHighlightHook(void) {
 }
 
 #include "d2patchguard.c"
+
+/* PlugY's cow-portal patch fails because the byte at D2Game+0x67508 is no longer the original
+   0x85 (see PlugY.log). Log the byte whenever we pass a milestone so the log shows who got
+   there first. */
+static void probeGameSites(const char* stage) {
+    HMODULE gameModule = GetModuleHandleA("D2Game.dll");
+    if (!gameModule) {
+        logLine("probe %s: D2Game not loaded yet", stage);
+        return;
+    }
+    const BYTE* at = (const BYTE*) gameModule + RVA_GameCowPortal;
+    if (!readable((void*) at, 8)) {
+        logLine("probe %s: D2Game+0x%lX unreadable", stage, (unsigned long) RVA_GameCowPortal);
+        return;
+    }
+    logLine("probe %s: D2Game+0x%lX = %02X %02X %02X %02X %02X %02X %02X", stage,
+        (unsigned long) RVA_GameCowPortal, at[0], at[1], at[2], at[3], at[4], at[5], at[6]);
+}
 
 static int installHook(void) {
     BYTE* site = (BYTE*) (client + GAMELOOP_PATCH_RVA);
@@ -5074,7 +5462,6 @@ static void sendStatus(void) {
 
 
 
-#define RVA_WinFocusedControl 0x8DB44
 #define CONTROL_EDITBOX 1
 
 #define CONTROL_TEXT 0x5C
@@ -5137,8 +5524,6 @@ static void checkMenuField(int force) {
 
 
 
-#define RVA_LaunchBattleNet   0x12350
-#define RVA_LaunchMultiplayer 0xF790
 #define MENU_ENTRY_SIZE       0x30
 static const struct { DWORD entry, y, text, press; } MENU_LOCKS[] = {
     {0x21270, 0x16E, 0x13F3, RVA_LaunchBattleNet},
@@ -5190,8 +5575,6 @@ static void lockMultiplayerMenu(void) {
 
 
 
-#define RVA_LaunchExitEntry 0x21210
-#define RVA_LaunchExit      0xA580
 static volatile LONG exitEscChecked;
 
 static void unbindMainMenuEsc(void) {
@@ -5225,7 +5608,6 @@ static void logStormStreamSkips(void);
 
 
 
-#define RVA_PlayerUnitVar 0x11D050
 static void* volatile* heroVar(void) {
     static int checked;
     static void* volatile* var;
@@ -5240,6 +5622,159 @@ static void* volatile* heroVar(void) {
     return var;
 }
 
+
+/* The archives of this repack hold their strings as GBK bytes and the game asks Windows for the
+   ANSI code page to widen them. On a host that reports UTF-8 (or 1252) every Chinese byte becomes
+   '?' - NPC names, speech, the HUD - while ASCII and PlugY's own wide strings stay fine. The game
+   side therefore always gets 936, whatever locale the container pretends to have. */
+static DWORD guestCodepage = 936;
+
+static UINT (WINAPI* realGetACP)(void);
+static int (WINAPI* realWiden)(UINT, DWORD, LPCCH, int, LPWSTR, int);
+
+static UINT WINAPI guestGetACP(void) {
+    return guestCodepage;
+}
+
+static int WINAPI guestWiden(UINT cp, DWORD flags, LPCCH text, int cb, LPWSTR out, int cch) {
+    if (cp == CP_ACP || cp == 0 || cp == 1252) cp = guestCodepage;
+    return realWiden ? realWiden(cp, flags, text, cb, out, cch) : 0;
+}
+
+static int (WINAPI* realLocaleInfoA)(LCID, LCTYPE, LPSTR, int);
+static int (WINAPI* realLocaleInfoW)(LCID, LCTYPE, LPWSTR, int);
+
+static int WINAPI guestLocaleInfoA(LCID lcid, LCTYPE type, LPSTR buf, int cch) {
+    if (type == LOCALE_IDEFAULTANSICODEPAGE) {
+        char text[16];
+        wsprintfA(text, "%lu", (unsigned long) guestCodepage);
+        if (buf && cch >= (int) lstrlenA(text) + 1) lstrcpyA(buf, text);
+        return lstrlenA(text) + 1;
+        return 4;
+    }
+    return realLocaleInfoA ? realLocaleInfoA(lcid, type, buf, cch) : 0;
+}
+
+static int WINAPI guestLocaleInfoW(LCID lcid, LCTYPE type, LPWSTR buf, int cch) {
+    if (type == LOCALE_IDEFAULTANSICODEPAGE) {
+        wchar_t text[16];
+        wsprintfW(text, L"%lu", (unsigned long) guestCodepage);
+        if (buf && cch >= (int) lstrlenW(text) + 1) lstrcpyW(buf, text);
+        return lstrlenW(text) + 1;
+        return 4;
+    }
+    return realLocaleInfoW ? realLocaleInfoW(lcid, type, buf, cch) : 0;
+}
+
+static int patchTextIat(HMODULE mod) {
+    BYTE* base = (BYTE*) mod;
+    if (!base || !readable(base, 0x40)) return 0;
+    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*) base;
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) return 0;
+    IMAGE_NT_HEADERS* nt = (IMAGE_NT_HEADERS*) (base + dos->e_lfanew);
+    if (nt->Signature != IMAGE_NT_SIGNATURE) return 0;
+    DWORD rva = nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+    if (!rva) return 0;
+    int patched = 0;
+    for (IMAGE_IMPORT_DESCRIPTOR* d = (IMAGE_IMPORT_DESCRIPTOR*) (base + rva); d->Name; d++) {
+        const char* dll = (const char*) (base + d->Name);
+        if (lstrcmpiA(dll, "KERNEL32.dll") && lstrcmpiA(dll, "KERNELBASE.dll")) continue;
+        IMAGE_THUNK_DATA* orig = (IMAGE_THUNK_DATA*) (base + (d->OriginalFirstThunk ? d->OriginalFirstThunk : d->FirstThunk));
+        IMAGE_THUNK_DATA* iat = (IMAGE_THUNK_DATA*) (base + d->FirstThunk);
+        if (!readable(orig, 4) || !readable(iat, 4)) continue;
+        for (; orig->u1.AddressOfData; orig++, iat++) {
+            if (orig->u1.Ordinal & IMAGE_ORDINAL_FLAG) continue;
+            IMAGE_IMPORT_BY_NAME* name = (IMAGE_IMPORT_BY_NAME*) (base + orig->u1.AddressOfData);
+            if (!readable(name, 2)) break;
+            void* replacement = NULL;
+            if (!lstrcmpA((const char*) name->Name, "GetACP")) replacement = (void*) guestGetACP;
+            else if (!lstrcmpA((const char*) name->Name, "MultiByteToWideChar")) replacement = (void*) guestWiden;
+            else if (!lstrcmpA((const char*) name->Name, "GetLocaleInfoA")) replacement = (void*) guestLocaleInfoA;
+            else if (!lstrcmpA((const char*) name->Name, "GetLocaleInfoW")) replacement = (void*) guestLocaleInfoW;
+            if (!replacement || iat->u1.Function == (DWORD) (UINT_PTR) replacement) continue;
+            DWORD old;
+            if (!VirtualProtect(&iat->u1.Function, 4, PAGE_READWRITE, &old)) continue;
+            iat->u1.Function = (DWORD) (UINT_PTR) replacement;
+            VirtualProtect(&iat->u1.Function, 4, old, &old);
+            patched++;
+        }
+    }
+    return patched;
+}
+
+/* Every module that is already in the process, patched at once: the string tables are widened
+   while the game starts, so the code page has to be in place before D2Lang reads them. */
+static int patchTextAll(void) {
+    /* Only the game's own modules. A ready-made integration carries protection code that watches its
+       own import table; touching that made it drop out with its "fault" box right after the start. */
+    static const char* names[] = {"D2Lang.dll", "D2Win.dll", "D2Client.dll", "D2Common.dll", "D2Game.dll",
+        "D2Launch.dll", "D2Multi.dll", "D2MCPClient.dll", "Game.exe", "PlugY.dll", NULL};
+    int patched = 0, modules = 0;
+    for (int i = 0; names[i]; i++) {
+        HMODULE mod = GetModuleHandleA(names[i]);
+        if (!mod) continue;
+        modules++;
+        patched += patchTextIat(mod);
+    }
+    if (patched) logLine("codepage: %d text calls in %d modules read the archives as %lu from the start", patched, modules,
+        (unsigned long) guestCodepage);
+    return patched;
+}
+
+static void readGuestCodepage(void) {
+    static int read;
+    if (read) return;
+    read = 1;
+    char path[MAX_PATH];
+    lstrcpynA(path, logPath, sizeof(path));
+    char* slash = strrchr(path, '\\');
+    if (!slash) return;
+    lstrcpyA(slash + 1, "d2android-mod.ini");
+    guestCodepage = (DWORD) GetPrivateProfileIntA("TEXT", "Codepage", 936, path);
+    if (!guestCodepage) logLine("codepage: left to the host (TEXT Codepage=0)");
+}
+
+/* v45: one line per run that tells exactly which parts of the pack are inside the process,
+   so "same as Winlator" can be checked instead of guessed. */
+static void logChain(void) {
+    static int done;
+    if (done) return;
+    static const char* names[] = {"PlugY.dll", "patchload.dll", "D2Ext.dll", "d2hackmap.dll", "_d2hackmap.dll", "d2dx.dll", "d2dx_sgd2freeres.dll", NULL};
+    char line[256];
+    line[0] = 0;
+    for (int i = 0; names[i]; i++) {
+        if (!GetModuleHandleA(names[i])) continue;
+        if (line[0]) lstrcatA(line, " ");
+        lstrcatA(line, names[i]);
+    }
+    done = 1;
+    logLine("chain: %s", line[0] ? line : "none of the pack's plugins are loaded");
+}
+
+static void ensureCodepage(void) {
+    static const char* names[] = {"D2Lang.dll", "D2Win.dll", "D2Client.dll", "D2Common.dll", "D2Game.dll",
+        "D2Launch.dll", "D2Multi.dll", "D2MCPClient.dll", "Game.exe", "PlugY.dll", NULL};
+    static char done[16];
+    readGuestCodepage();
+    if (!guestCodepage) return;
+    if (!realWiden) {
+        HMODULE kernel = GetModuleHandleA("kernel32.dll");
+        realGetACP = kernel ? (UINT (WINAPI*)(void)) GetProcAddress(kernel, "GetACP") : NULL;
+        realWiden = kernel ? (int (WINAPI*)(UINT, DWORD, LPCCH, int, LPWSTR, int)) GetProcAddress(kernel, "MultiByteToWideChar") : NULL;
+        realLocaleInfoA = kernel ? (int (WINAPI*)(LCID, LCTYPE, LPSTR, int)) GetProcAddress(kernel, "GetLocaleInfoA") : NULL;
+        realLocaleInfoW = kernel ? (int (WINAPI*)(LCID, LCTYPE, LPWSTR, int)) GetProcAddress(kernel, "GetLocaleInfoW") : NULL;
+        if (!realWiden) return;
+    }
+    for (int i = 0; names[i]; i++) {
+        if (done[i]) continue;
+        HMODULE mod = GetModuleHandleA(names[i]);
+        if (!mod) continue;
+        int n = patchTextIat(mod);
+        done[i] = 1;
+        logLine("codepage: %s widens its text as %lu (%d calls)", names[i], (unsigned long) guestCodepage, n);
+    }
+}
+
 static DWORD WINAPI setupThread(LPVOID arg) {
     (void) arg;
     fixStormStreamRace();
@@ -5247,7 +5782,9 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     setStatus(STATUS_WAITING, "waiting for D2Client.dll");
     directBegin();
     int plugyWaitLogged = 0;
+    probeGameSites("at setup start");
     for (int i = 0; !client; i++) {
+        biInstall();
         if (!plugyInitPending) {
             lockMultiplayerMenu();
             unbindMainMenuEsc();
@@ -5270,6 +5807,8 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     lockMultiplayerMenu();
     unbindMainMenuEsc();
     biInstallPanel(client);
+    biInstall();
+    probeGameSites("after D2Client is up");
 
     if (!menuLockChecked || !exitEscChecked)
         logLine(gameLoadLibraryA ? "setup: D2Launch not loaded yet, the menu patches follow when Game.exe loads it"
@@ -5277,8 +5816,10 @@ static DWORD WINAPI setupThread(LPVOID arg) {
     Sleep(500);
     patchRaceStart();
     patchWaitForD2DX();
+    probeGameSites("before the game loop hook");
     if (!resolve()) setStatus(STATUS_FAILED, "functions not found");
     else if (installHook()) setStatus(STATUS_HOOKED, "connected");
+    probeGameSites("after the game loop hook");
 
 
     void* volatile* hero = heroVar();
@@ -5310,6 +5851,10 @@ static DWORD WINAPI setupThread(LPVOID arg) {
         else heroWithoutTick = 0;
         lastBeat = beat;
         checkMenuField(1);
+#ifdef D2VER_113C
+        /* The 1.13c archive of this build is GBK; the 1.13d tree keeps the host's code page. */
+        ensureCodepage();
+#endif
         for (int i = 0; i < 4; i++) {
             Sleep(200);
             checkMenuField(0);
@@ -5382,6 +5927,22 @@ static HMODULE WINAPI loadRendererThenPlugY(LPCSTR name) {
 
 
 
+static int moduleHasText(DWORD module, const char* text) {
+    if (!module) return 0;
+    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*) module;
+    if (dos->e_magic != IMAGE_DOS_SIGNATURE) return 0;
+    IMAGE_NT_HEADERS32* nt = (IMAGE_NT_HEADERS32*) (module + dos->e_lfanew);
+    if (nt->Signature != IMAGE_NT_SIGNATURE) return 0;
+    const BYTE* image = (const BYTE*) module;
+    DWORD size = nt->OptionalHeader.SizeOfImage, len = (DWORD) lstrlenA(text);
+    if (size <= len) return 0;
+    for (DWORD i = 0; i + len < size; i++) {
+        if (image[i] == (BYTE) text[0] && memcmp(image + i, text, len) == 0) return 1;
+    }
+    return 0;
+}
+
+
 static void installPlugYHook(void) {
     char path[MAX_PATH];
     lstrcpynA(path, logPath, sizeof(path));
@@ -5391,6 +5952,16 @@ static void installPlugYHook(void) {
     DWORD gfx = (DWORD) GetModuleHandleA("D2gfx.dll");
     if (!gfx || GetModuleHandleA("D2Glide.dll") || GetModuleHandleA("glide3x.dll")) {
         logLine("PlugY: too late or no D2gfx (loaded after the game started)");
+        return;
+    }
+    // A PlugY install patches D2gfx.dll itself: the module then carries the name "PlugY.dll" and
+    // loads and initialises it on its own. Hooking the renderer call again would load and init
+    // PlugY twice, which ends in a crash inside its font setup.
+    if (moduleHasText(gfx, "PlugY.dll")) {
+        // PlugY runs on its own from here on, but our integration (save hook, page clicks, the
+        // packet commands) still needs the 1.13c sites, so it stays off until they are mapped.
+        plugyLoaded = 0;
+        logLine("PlugY: D2gfx loads it itself, our PlugY patches stay off in this build");
         return;
     }
     BYTE* at = (BYTE*) (gfx + RVA_GfxLoadRenderer);
@@ -5420,7 +5991,6 @@ static void installPlugYHook(void) {
 
 
 
-#define RVA_LaunchMovieCheck 0x12114
 static const BYTE launchMovieCheck[] = {0x85, 0xC0, 0x74, 0x6C, 0xE8};
 typedef HMODULE (WINAPI* LoadLibraryA_t)(LPCSTR);
 static LoadLibraryA_t gameLoadLibraryA;
@@ -5583,6 +6153,47 @@ static void logStormStreamSkips(void) {
     logLine("Storm stream fill skipped, buffer already released (%ld so far)", (long) n);
 }
 
+/* Some of the add-on DLLs beside the game pop a modal box when they cannot find an export they
+   were built against, and a modal box stops the game from receiving input until someone taps it.
+   Those features are optional, so close the box instead of losing the whole session. */
+static char closedBox[256];
+
+static BOOL CALLBACK closeAddonBox(HWND window, LPARAM hit) {
+    char cls[64] = {0};
+    if (!GetClassNameA(window, cls, sizeof(cls)) || lstrcmpiA(cls, "#32770") != 0) return TRUE;
+    if (!IsWindowVisible(window)) return TRUE;
+    char body[512] = {0};
+    for (HWND child = FindWindowExA(window, NULL, NULL, NULL); child; child = FindWindowExA(window, child, NULL, NULL)) {
+        char text[512] = {0};
+        if (!GetWindowTextA(child, text, sizeof(text))) continue;
+        if (strstr(text, "GetProcAddress failed") || strstr(text, "Could not locate")
+            || strstr(text, "WriteProcessMemory failed") || strstr(text, "SlashGaming")) {
+            lstrcpynA(body, text, sizeof(body));
+            break;
+        }
+    }
+    if (!body[0]) return TRUE;
+    if (lstrcmpA(body, closedBox) != 0) {
+        lstrcpynA(closedBox, body, sizeof(closedBox));
+        logLine("dialog: closed a box the add-on could not use: %.110s", body);
+    }
+    PostMessageA(window, WM_COMMAND, IDOK, 0);
+    PostMessageA(window, WM_CLOSE, 0, 0);
+    *(int*) hit = 1;
+    return TRUE;
+}
+
+static DWORD WINAPI dialogThread(LPVOID unused) {
+    (void) unused;
+    for (;;) {
+        int hit = 0;
+        Sleep(400);
+        EnumWindows(closeAddonBox, (LPARAM) &hit);
+    }
+    return 0;
+}
+
+
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
     (void) reserved;
     if (reason == DLL_PROCESS_ATTACH) {
@@ -5596,10 +6207,15 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved) {
         openLog();
         keepCrashFilter();
         logLine("D2Android mod loaded");
+        readGuestCodepage();
+        patchTextAll();
         installPlugYHook();
         installIntroSkip();
         biInstall();
+        probeGameSites("at DllMain");
         HANDLE thread = CreateThread(NULL, 0, setupThread, NULL, 0, NULL);
+        if (thread) CloseHandle(thread);
+        thread = CreateThread(NULL, 0, dialogThread, NULL, 0, NULL);
         if (thread) CloseHandle(thread);
     }
     else if (reason == DLL_PROCESS_DETACH && logReady) {

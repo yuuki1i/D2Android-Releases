@@ -13,24 +13,31 @@
 
 
 
-#define RVA_DrawHoverCall   0x1D791
-#define RVA_DrawHoverThunk  0xD35E
-#define RVA_ItemHover       0x97820
-#define RVA_HoverGrid       0x11CB18
-#define RVA_HoverBody       0x11CB1C
-#define RVA_HoverItem       0x11CB28
-#define RVA_HoverItem2      0x11CB2C
-#define RVA_HoverSlot       0x11CB58
-#define RVA_TradeMode       0x11CB24
-#define RVA_HoverAnchor     0xEE49C
-#define RVA_BodySlots       0x11CB90
-#define ORD_DrawHover       10124
-#define ORD_SetHover        10137
-#define ORD_TextSize        10179
-#define ORD_BodyLocItem     10292
-#define ORD_ItemIsType      10601
-
-
+#ifdef D2VER_113C
+#define ORD_DrawHover            10110
+#else
+#define ORD_DrawHover            10124
+#endif
+#ifdef D2VER_113C
+#define ORD_SetHover             10085
+#else
+#define ORD_SetHover             10137
+#endif
+#ifdef D2VER_113C
+#define ORD_TextSize             10177
+#else
+#define ORD_TextSize             10179
+#endif
+#ifdef D2VER_113C
+#define ORD_BodyLocItem          11139
+#else
+#define ORD_BodyLocItem          10292
+#endif
+#ifdef D2VER_113C
+#define ORD_ItemIsType           10744
+#else
+#define ORD_ItemIsType           10601
+#endif
 #define ITYPE_SHIELD 2
 #define ITYPE_ARMOR 3
 #define ITYPE_BOWQUIVER 5

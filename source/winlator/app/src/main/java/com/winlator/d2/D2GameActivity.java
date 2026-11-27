@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 public class D2GameActivity extends D2Activity {
 
     private static final int MENU_HELPERS = 0, MENU_KEYBOARD = 1, MENU_IDLE = 2, MENU_QUIT = 3, MENU_BUILD = 4, MENU_INTRO = 5,
-        MENU_SWITCH = 6, MENU_RECIPES = 7;
+        MENU_SWITCH = 6, MENU_RECIPES = 7, MENU_TEXT = 8;
 
     public static final String EXTRA_DIR = "d2_dir";
     public static final String EXTRA_PROGRAM = "d2_program";
@@ -68,6 +68,8 @@ public class D2GameActivity extends D2Activity {
     private long stallResumedAt, dxvkLimitAt;
 
     private long presentsAtStart;
+    private boolean guestLogsDumped;
+    private long modLogAt = -1;
 
 
 
@@ -127,6 +129,15 @@ public class D2GameActivity extends D2Activity {
         for (String line : D2StallSnapshot.packed(D2StallSnapshot.threads(proc, game))) D2Trace.log("stall: Game.exe threads " + line);
     }
     private final Runnable suspendGuest = () -> screen.pauseGuest();
+
+    private static final long MOD_LOG_STEP_MS = 3000;
+    private final Runnable modLogTail = new Runnable() {
+        @Override
+        public void run() {
+            tailModLog();
+            if (!isFinishing() && !isDestroyed()) handler.postDelayed(this, MOD_LOG_STEP_MS);
+        }
+    };
 
     private static D2GameActivity savingAfterRelaunch;
 
@@ -198,6 +209,31 @@ public class D2GameActivity extends D2Activity {
         }
 
 
+        imeSink = new android.widget.EditText(this);
+        imeSink.setSingleLine(true);
+        imeSink.setAlpha(0f);
+        imeSink.setImeOptions(android.view.inputmethod.EditorInfo.IME_FLAG_NO_FULLSCREEN
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI
+            | android.view.inputmethod.EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        imeSink.addTextChangedListener(new android.text.TextWatcher() {
+            private boolean busy;
+
+            @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) { }
+            @Override public void onTextChanged(CharSequence s, int a, int b, int c) { }
+
+            @Override public void afterTextChanged(android.text.Editable e) {
+                if (busy) return;
+                String text = e.toString();
+                if (text.isEmpty()) return;
+                busy = true;
+                e.clear();
+                busy = false;
+                if (textKeyboard == null) textKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+                textKeyboard.typeText(text);
+            }
+        });
+        root.addView(imeSink, new FrameLayout.LayoutParams(2, 2));
+
         screen = new D2GuestScreen(this, root, true, true);
         screen.setVortek(getIntent().getBooleanExtra(EXTRA_VORTEK, false));
         xServer = screen.getXServer();
@@ -212,6 +248,7 @@ public class D2GameActivity extends D2Activity {
 
         overlay.setModExpected(GameShadow.LOADER_EXE.equals(getIntent().getStringExtra(EXTRA_PROGRAM)));
         screen.addOverlay(overlay);
+        handler.postDelayed(modLogTail, MOD_LOG_STEP_MS);
 
 
         root.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -342,6 +379,7 @@ public class D2GameActivity extends D2Activity {
 
 
             D2Trace.log("game ended with status " + status + " (Wine desktop)");
+            dumpGuestLogs();
             if (early) {
                 D2Trace.log("game ended " + ranMs + " ms after its start: early end dialog"
                     + (refusedChip != null ? " (gpu refused by the driver, chip " + (refusedChip.isEmpty() ? "?" : refusedChip) + ")" : ""));
@@ -585,6 +623,8 @@ public class D2GameActivity extends D2Activity {
         items.add(D2Text.get(this, R.string.menu_intro));
         ids.add(MENU_KEYBOARD);
         items.add(D2Text.get(this, R.string.menu_keyboard));
+        ids.add(MENU_TEXT);
+        items.add(D2Text.get(this, R.string.menu_text));
         if (withIdle) {
             ids.add(MENU_IDLE);
             items.add(idleBlocked == null ? D2Text.get(this, R.string.menu_idle) : D2Text.get(this, R.string.menu_idle_blocked, idleBlocked));
@@ -617,6 +657,7 @@ public class D2GameActivity extends D2Activity {
                 else if (which == MENU_RECIPES) overlay.openRecipeBook(pausedAtMenu);
                 else if (which == MENU_INTRO) overlay.showHintsAgain();
                 else if (which == MENU_KEYBOARD) AppUtils.showKeyboard(this);
+                else if (which == MENU_TEXT) showTextInput();
 
                 else if (com.winlator.BuildConfig.D2_INTERNAL && which == MENU_IDLE) D2IdleDialog.show(this, overlay.idleQuest(), (minutes, retreat) -> overlay.requestIdle(pausedAtMenu, minutes, retreat));
                 else {
@@ -684,6 +725,36 @@ public class D2GameActivity extends D2Activity {
 
 
 
+    private com.winlator.xserver.Keyboard textKeyboard;
+
+    /** Invisible field that takes the Android keyboard's text and pushes it into the guest. */
+    private android.widget.EditText imeSink;
+
+    /** The Android keyboard cannot type into the game window, so the text is collected here
+        and pushed to the guest as key presses. */
+    private void showTextInput() {
+        android.widget.EditText input = new android.widget.EditText(this);
+        input.setSingleLine(true);
+        input.setHint(D2Text.get(this, R.string.menu_text_hint));
+        int pad = Math.round(16 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout box = new android.widget.FrameLayout(this);
+        box.setPadding(pad, pad / 2, pad, 0);
+        box.addView(input);
+        new AlertDialog.Builder(this)
+            .setTitle(D2Text.get(this, R.string.menu_text))
+            .setView(box)
+            .setPositiveButton(android.R.string.ok, (d, w) -> {
+                String text = input.getText().toString();
+                if (text.isEmpty()) return;
+                if (textKeyboard == null) textKeyboard = com.winlator.xserver.Keyboard.createKeyboard(xServer);
+                textKeyboard.typeText(text);
+            })
+            .setNegativeButton(android.R.string.cancel, null)
+            .show();
+        input.requestFocus();
+    }
+
+
     private void setKeyboardShown(boolean show) {
         View decor = getWindow().getDecorView();
 
@@ -693,10 +764,11 @@ public class D2GameActivity extends D2Activity {
             (android.view.inputmethod.InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm == null) return;
         if (!show) {
-
+            if (imeSink != null) imeSink.clearFocus();
             imm.hideSoftInputFromWindow(decor.getWindowToken(), 0);
             return;
         }
+        if (imeSink != null) imeSink.requestFocus();
 
         D2Keyboard.show(new D2Keyboard.Ime() {
             @Override
@@ -1315,6 +1387,7 @@ public class D2GameActivity extends D2Activity {
     protected void onStop() {
         super.onStop();
         noteWindow("stop", D2ExitText.WINDOW_STOPPED);
+        tailModLog();
     }
 
 
@@ -1367,6 +1440,9 @@ public class D2GameActivity extends D2Activity {
         }
         D2Text.setListener(null);
         handler.removeCallbacks(suspendGuest);
+        handler.removeCallbacks(modLogTail);
+        tailModLog();
+        dumpGuestLogs();
         if (D2Relaunch.onDestroy(isChangingConfigurations(), screen.isStarted(), exiting) == D2Relaunch.SAVE_AND_QUIT) {
 
             savingAfterRelaunch = this;
@@ -1381,8 +1457,52 @@ public class D2GameActivity extends D2Activity {
         D2FolderLock.releaseAll();
         D2KeepAliveService.stop(this);
         closeGuestLog();
+        dumpGuestLogs();
         D2SpieltestPort.stop();
         super.onDestroy();
+    }
+
+    /** The mod and PlugY write their own logs next to the game; fold them in so one file tells everything. */
+    /**
+     * Follow the mod's own log while the game runs. The mod writes next to the game and only the end of
+     * session dump used to pick it up, so a session that was killed from the launcher lost every line of it.
+     */
+    private void tailModLog() {
+        try {
+            java.io.File f = new java.io.File(GameShadow.dir(this), "d2android-mod.log");
+            if (!f.isFile()) return;
+            long len = f.length();
+            if (modLogAt < 0 || len < modLogAt) modLogAt = 0;
+            if (len <= modLogAt) return;
+            int take = (int) Math.min(len - modLogAt, 16384);
+            byte[] buf = new byte[take];
+            try (java.io.RandomAccessFile in = new java.io.RandomAccessFile(f, "r")) {
+                in.seek(modLogAt);
+                in.readFully(buf);
+            }
+            String text = new String(buf, java.nio.charset.StandardCharsets.UTF_8);
+            int cut = text.lastIndexOf('\n');
+            if (cut < 0) return;
+            String whole = text.substring(0, cut + 1);
+            modLogAt += whole.getBytes(java.nio.charset.StandardCharsets.UTF_8).length;
+            for (String line : whole.split("\n")) if (!line.isEmpty()) D2Trace.log("mod| " + line);
+        }
+        catch (Throwable ignored) {
+        }
+    }
+
+    private void dumpGuestLogs() {
+        if (guestLogsDumped) return;
+        guestLogsDumped = true;
+        try {
+            java.io.File dir = GameShadow.dir(this);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "d2android-mod.log"), "mod log", 262144);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "PlugY.log"), "PlugY log", 65536);
+            D2PublicLogs.appendFileTail(new java.io.File(dir, "wineboot.log"), "wineboot log", 65536);
+        }
+        catch (Throwable e) {
+            D2PublicLogs.append("guest logs not readable: " + e);
+        }
     }
 
     @Override

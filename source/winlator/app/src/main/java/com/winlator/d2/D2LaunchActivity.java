@@ -1545,6 +1545,9 @@ public class D2LaunchActivity extends D2Activity {
             return;
         }
         busy = true;
+        // The runtime unpack takes minutes; keep the screen on so the frozen process does
+        // not leave a half written rootfs behind.
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         playButton.setEnabled(false);
         final D2DirectStart.Request direct = pendingDirect;
         final String screenSize = D2Runtime.screenSize(this);
@@ -1558,6 +1561,7 @@ public class D2LaunchActivity extends D2Activity {
                 handler.post(() -> {
                     busy = false;
                     playButton.setEnabled(true);
+                    getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 });
                 return;
             }
@@ -1568,10 +1572,20 @@ public class D2LaunchActivity extends D2Activity {
                 File rootfs = D2Runtime.rootDir(this);
                 java.util.List<String> left = D2GuestProcs.leftovers(new File("/proc"), android.os.Process.myUid(), android.os.Process.myPid());
                 if (!left.isEmpty()) D2Trace.log("launch: still running before the start: " + String.join(", ", left));
-                D2GuestComponent.endGuests(rootfs, "launch: ");
+                boolean runtimeInstalled = D2Runtime.isInstalled(this);
+                // endGuests shells out to rootfs/usr/local/bin/box64; on a fresh install that
+                // file does not exist yet and the IOException aborted the launch before the
+                // runtime was unpacked. Only reap guests once the runtime is actually there.
+                if (runtimeInstalled) D2GuestComponent.endGuests(rootfs, "launch: ");
+                else D2Trace.log("launch: runtime not installed, skipping the guest cleanup");
 
-                if (!D2Runtime.isInstalled(this) || !D2Runtime.isPrefixReady(this)) D2Telemetry.phase(this, D2TelemetryEvents.PHASE_INSTALL);
-                if (!D2Runtime.isInstalled(this)) D2Runtime.install(this, this::status);
+                if (!runtimeInstalled || !D2Runtime.isPrefixReady(this)) D2Telemetry.phase(this, D2TelemetryEvents.PHASE_INSTALL);
+                if (!runtimeInstalled) {
+                    status("正在安装运行环境（约 377 MB，请保持前台）…");
+                    D2Trace.log("runtime: unpacking " + D2Runtime.ASSET);
+                    D2Runtime.install(this, this::status);
+                    D2Trace.log("runtime: unpacked");
+                }
                 if (!D2Runtime.isPrefixReady(this)) D2Runtime.setupPrefix(this, this::status);
                 status(getString(R.string.launch_starting));
 
@@ -1627,7 +1641,7 @@ public class D2LaunchActivity extends D2Activity {
                     D2Trace.log("spielweise file not written");
 
 
-                D2BigInventory.apply(startDir, D2Settings.bigInventory(this));
+                D2BigInventory.apply(startDir, D2Settings.bigInventory(this) && !D2Settings.modCompat(this));
                 try {
 
                     D2IntroMovies.apply(startDir, directStart != null || D2Settings.skipIntro(this));

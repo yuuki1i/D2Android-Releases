@@ -23,15 +23,6 @@
 
 #define BI_MARKER          "d2android-biginv"
 #define CAP3_BIGINV        0x01
-#define RVA_InvTable       0xA4CAC
-#define RVA_InvCount       0xA4CA8
-#define RVA_InvTableStore  0x6CC29
-#define RVA_PanelLoadCall  0x6DFF3
-#define RVA_PanelPath6     0xD5AB0
-#define RVA_PanelPath      0xD5AA0
-#define RVA_PanelCell      0x103B60
-#define RVA_UiPicture      0x191F0
-#define ORD_LangGetLanguage 10001
 
 static int biWanted;
 static int biPanelSite;
@@ -41,7 +32,11 @@ static BYTE* biPending;
 static DWORD biCommon, biClient;
 DWORD biPanelOriginal;
 
+static int biRead;
+
 static void biReadFile(void) {
+    if (biRead) return;
+    biRead = 1;
     char path[MAX_PATH];
     lstrcpynA(path, logPath, sizeof(path));
     char* slash = strrchr(path, '\\');
@@ -169,12 +164,13 @@ static int biPatchCall(DWORD at, void* stub) {
 static void biInstallPanel(DWORD clientBase) {
     if (!biWanted || biPanelSite || !clientBase) return;
     static const BYTE jne[2] = {0x75, 0x05};
+    const DWORD B = RVA_PanelInvBlock;
     BYTE* at = (BYTE*) clientBase;
 
-    int ok = readable(at + 0x6DFE7, 0x1B) && at[0x6DFE7] == 0xBE && RD32(at, 0x6DFE8) == clientBase + RVA_PanelPath6
-        && memcmp(at + 0x6DFEC, jne, 2) == 0 && at[0x6DFEE] == 0xBE && RD32(at, 0x6DFEF) == clientBase + RVA_PanelPath
-        && callAt(clientBase, RVA_PanelLoadCall, RVA_UiPicture) && at[0x6DFF8] == 0xBE && at[0x6DFFD] == 0xA3
-        && RD32(at, 0x6DFFE) == clientBase + RVA_PanelCell
+    int ok = readable(at + B, 0x1B) && at[B] == 0xBE && RD32(at, B + 1) == clientBase + RVA_PanelPath6
+        && memcmp(at + B + 5, jne, 2) == 0 && at[B + 7] == 0xBE && RD32(at, B + 8) == clientBase + RVA_PanelPath
+        && callAt(clientBase, RVA_PanelLoadCall, RVA_UiPicture) && at[B + 0x11] == 0xBE && at[B + 0x16] == 0xA3
+        && RD32(at, B + 0x17) == clientBase + RVA_PanelCell
         && bytesAre(clientBase + RVA_PanelPath6, (const BYTE*) "Panel\\InvChar6", 15);
     if (ok) {
         biClient = clientBase;
@@ -187,26 +183,22 @@ static void biInstallPanel(DWORD clientBase) {
 
 
 
-static LONG biLanguage(void) {
-    HMODULE lang = GetModuleHandleA("D2Lang.dll");
-    FARPROC get = lang ? GetProcAddress(lang, (LPCSTR) ORD_LangGetLanguage) : NULL;
-    return get ? (LONG) ((DWORD (__stdcall*)(void)) get)() : -1;
-}
-
-
+/* No D2Lang call here. Ordinal 10001 is GetLanguage only in the 1.13d D2Lang.dll; the 1.13c one (and every
+   localised rebuild, e.g. the Chinese patch) answers a different export, and calling it without arguments
+   crashed the game with a write to 00000000 right when a character entered the world. The grid is decided from
+   what can be checked without touching D2Lang: the panel site, the rebuilt 10 x 8 panel and the table itself. */
 void __cdecl biTableLoaded(BYTE* table) {
     *(BYTE**) (biCommon + RVA_InvTable) = table;
     int count = (int) RD32(biCommon, RVA_InvCount);
-    LONG language = biLanguage();
     int result = -2;
-    if (biPanelSite && language >= 0 && (language < 6 || language > 9) && biPanelReady())
-        result = biTableApply(table, count);
+    if (biPanelSite && biPanelReady()) result = biTableApply(table, count);
     InterlockedExchange(&biBig, result >= 0);
     invGridH = result >= 0 ? BI_ROWS : INV_H;
     static int logged;
     if (logged++ < 20 || result < 0)
-        logLine("big inventory: table loaded (language %ld): %s", language,
-            result > 0 ? "10 x 8 written" : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, left 10 x 4" : "left 10 x 4");
+        logLine("big inventory: table loaded: %s", result > 0 ? "10 x 8 written"
+            : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, left 10 x 4"
+            : "panel not ready, left 10 x 4");
 }
 
 void biTableStub(void);
@@ -223,13 +215,18 @@ __asm__(
 );
 
 
+static int biDone;
+
 static void biInstall(void) {
+    if (biDone) return;
     biReadFile();
     if (!biWanted) return;
     biCommon = (DWORD) GetModuleHandleA("D2Common.dll");
+    if (!biCommon) return;
+    biDone = 1;
     BYTE* at = (BYTE*) (biCommon + RVA_InvTableStore);
 
-    int ok = biCommon && readable(at, 12) && at[0] == 0xA3 && RD32(at, 1) == biCommon + RVA_InvTable && at[5] == 0x83
+    int ok = readable(at, 12) && at[0] == 0xA3 && RD32(at, 1) == biCommon + RVA_InvTable && at[5] == 0x83
         && at[6] == 0x3D && RD32(at, 7) == biCommon + RVA_InvCount && at[11] == BI_RECORDS
         && readable((void*) (biCommon + RVA_InvCount), 8);
     if (ok && RD32(biCommon, RVA_InvTable)) {

@@ -1,0 +1,924 @@
+{
+ "source": "work/113d/D2Launch.dll",
+ "target": "work/113c_full/D2Launch.dll",
+ "module": "D2Launch.dll",
+ "segments": [
+  {
+   "d": 4084,
+   "len": 127,
+   "delta": 0
+  },
+  {
+   "d": 5244,
+   "len": 28,
+   "delta": 17656
+  },
+  {
+   "d": 5288,
+   "len": 300,
+   "delta": -256
+  },
+  {
+   "d": 5640,
+   "len": 763,
+   "delta": -1376
+  },
+  {
+   "d": 8616,
+   "len": 170,
+   "delta": -36
+  },
+  {
+   "d": 8972,
+   "len": 53,
+   "delta": -48
+  },
+  {
+   "d": 9108,
+   "len": 32,
+   "delta": -48
+  },
+  {
+   "d": 10300,
+   "len": 2054,
+   "delta": 3744
+  },
+  {
+   "d": 12652,
+   "len": 1744,
+   "delta": 3744
+  },
+  {
+   "d": 14712,
+   "len": 47,
+   "delta": -4872
+  },
+  {
+   "d": 14824,
+   "len": 61,
+   "delta": -4872
+  },
+  {
+   "d": 17872,
+   "len": 139,
+   "delta": -4736
+  },
+  {
+   "d": 18012,
+   "len": 795,
+   "delta": 128
+  },
+  {
+   "d": 18976,
+   "len": 1840,
+   "delta": 156
+  },
+  {
+   "d": 20816,
+   "len": 448,
+   "delta": 160
+  },
+  {
+   "d": 21808,
+   "len": 171,
+   "delta": 776
+  },
+  {
+   "d": 22440,
+   "len": 172,
+   "delta": -472
+  },
+  {
+   "d": 23120,
+   "len": 149,
+   "delta": 128
+  },
+  {
+   "d": 23424,
+   "len": 258,
+   "delta": 1040
+  },
+  {
+   "d": 25744,
+   "len": 3930,
+   "delta": 1176
+  },
+  {
+   "d": 29704,
+   "len": 26,
+   "delta": -6156
+  },
+  {
+   "d": 29796,
+   "len": 25,
+   "delta": -6340
+  },
+  {
+   "d": 30196,
+   "len": 335,
+   "delta": -6512
+  },
+  {
+   "d": 30544,
+   "len": 52,
+   "delta": -6288
+  },
+  {
+   "d": 31168,
+   "len": 115,
+   "delta": 264
+  },
+  {
+   "d": 32336,
+   "len": 497,
+   "delta": 272
+  },
+  {
+   "d": 33116,
+   "len": 290,
+   "delta": 144
+  },
+  {
+   "d": 33724,
+   "len": 833,
+   "delta": 272
+  },
+  {
+   "d": 35388,
+   "len": 1563,
+   "delta": 160
+  },
+  {
+   "d": 37448,
+   "len": 233,
+   "delta": 192
+  },
+  {
+   "d": 38200,
+   "len": 1368,
+   "delta": 208
+  },
+  {
+   "d": 39780,
+   "len": 83,
+   "delta": 30256
+  },
+  {
+   "d": 39864,
+   "len": 35,
+   "delta": 39860
+  },
+  {
+   "d": 39904,
+   "len": 188,
+   "delta": 30256
+  },
+  {
+   "d": 40096,
+   "len": 32,
+   "delta": 30364
+  },
+  {
+   "d": 40204,
+   "len": 32,
+   "delta": 30148
+  },
+  {
+   "d": 40240,
+   "len": 37,
+   "delta": 30364
+  },
+  {
+   "d": 40348,
+   "len": 37,
+   "delta": 30148
+  },
+  {
+   "d": 40648,
+   "len": 25,
+   "delta": 30256
+  },
+  {
+   "d": 40960,
+   "len": 32,
+   "delta": 30256
+  },
+  {
+   "d": 41248,
+   "len": 32,
+   "delta": 30256
+  },
+  {
+   "d": 41536,
+   "len": 3361,
+   "delta": 30256
+  },
+  {
+   "d": 44984,
+   "len": 1160,
+   "delta": 30256
+  },
+  {
+   "d": 46144,
+   "len": 1341,
+   "delta": 30416
+  },
+  {
+   "d": 47540,
+   "len": 26,
+   "delta": 30452
+  },
+  {
+   "d": 47728,
+   "len": 87,
+   "delta": 30416
+  },
+  {
+   "d": 47992,
+   "len": 30,
+   "delta": 30416
+  },
+  {
+   "d": 48100,
+   "len": 66,
+   "delta": 30416
+  },
+  {
+   "d": 48380,
+   "len": 33,
+   "delta": 30308
+  },
+  {
+   "d": 48416,
+   "len": 38,
+   "delta": 30416
+  },
+  {
+   "d": 48488,
+   "len": 33,
+   "delta": 29984
+  },
+  {
+   "d": 48740,
+   "len": 33,
+   "delta": 30416
+  },
+  {
+   "d": 48940,
+   "len": 295,
+   "delta": 30416
+  },
+  {
+   "d": 49308,
+   "len": 35,
+   "delta": 20812
+  },
+  {
+   "d": 49412,
+   "len": 172,
+   "delta": 30480
+  },
+  {
+   "d": 49696,
+   "len": 5520,
+   "delta": 30688
+  },
+  {
+   "d": 55416,
+   "len": 51,
+   "delta": 24688
+  },
+  {
+   "d": 55696,
+   "len": 1488,
+   "delta": 32176
+  },
+  {
+   "d": 57208,
+   "len": 1901,
+   "delta": 28720
+  },
+  {
+   "d": 59236,
+   "len": 10012,
+   "delta": 30288
+  },
+  {
+   "d": 69280,
+   "len": 11840,
+   "delta": 30256
+  },
+  {
+   "d": 81144,
+   "len": 73,
+   "delta": -16672
+  },
+  {
+   "d": 81252,
+   "len": 178,
+   "delta": -17888
+  },
+  {
+   "d": 81536,
+   "len": 176,
+   "delta": -17888
+  },
+  {
+   "d": 82264,
+   "len": 73,
+   "delta": -19008
+  },
+  {
+   "d": 82368,
+   "len": 704,
+   "delta": -17344
+  },
+  {
+   "d": 83188,
+   "len": 268,
+   "delta": -18496
+  },
+  {
+   "d": 83488,
+   "len": 96,
+   "delta": -19664
+  },
+  {
+   "d": 83616,
+   "len": 2816,
+   "delta": -17888
+  },
+  {
+   "d": 86512,
+   "len": 1200,
+   "delta": -17888
+  },
+  {
+   "d": 87844,
+   "len": 1228,
+   "delta": -45872
+  },
+  {
+   "d": 89080,
+   "len": 1368,
+   "delta": -49152
+  },
+  {
+   "d": 90488,
+   "len": 344,
+   "delta": -44512
+  },
+  {
+   "d": 90996,
+   "len": 348,
+   "delta": -49536
+  },
+  {
+   "d": 91368,
+   "len": 56,
+   "delta": -44848
+  },
+  {
+   "d": 91512,
+   "len": 40,
+   "delta": -49616
+  },
+  {
+   "d": 91568,
+   "len": 2741,
+   "delta": -48368
+  },
+  {
+   "d": 94328,
+   "len": 488,
+   "delta": -46272
+  },
+  {
+   "d": 94824,
+   "len": 168,
+   "delta": -48496
+  },
+  {
+   "d": 94992,
+   "len": 192,
+   "delta": -46368
+  },
+  {
+   "d": 95184,
+   "len": 1440,
+   "delta": -48592
+  },
+  {
+   "d": 96768,
+   "len": 334,
+   "delta": -47952
+  },
+  {
+   "d": 97120,
+   "len": 480,
+   "delta": -46896
+  },
+  {
+   "d": 97600,
+   "len": 816,
+   "delta": -48432
+  },
+  {
+   "d": 98416,
+   "len": 992,
+   "delta": -47440
+  },
+  {
+   "d": 99464,
+   "len": 99,
+   "delta": -49360
+  },
+  {
+   "d": 99584,
+   "len": 336,
+   "delta": -47616
+  },
+  {
+   "d": 99920,
+   "len": 195,
+   "delta": -49216
+  },
+  {
+   "d": 100192,
+   "len": 5632,
+   "delta": -47888
+  },
+  {
+   "d": 105824,
+   "len": 1749,
+   "delta": -44336
+  },
+  {
+   "d": 107632,
+   "len": 48,
+   "delta": -49040
+  },
+  {
+   "d": 107708,
+   "len": 564,
+   "delta": -49680
+  },
+  {
+   "d": 108272,
+   "len": 2685,
+   "delta": -49632
+  },
+  {
+   "d": 111200,
+   "len": 3280,
+   "delta": 208
+  },
+  {
+   "d": 115844,
+   "len": 4384,
+   "delta": 0
+  },
+  {
+   "d": 120396,
+   "len": 204,
+   "delta": 5116
+  },
+  {
+   "d": 120680,
+   "len": 100,
+   "delta": 5048
+  },
+  {
+   "d": 120796,
+   "len": 36,
+   "delta": 5032
+  },
+  {
+   "d": 120860,
+   "len": 1632,
+   "delta": -556
+  },
+  {
+   "d": 122500,
+   "len": 28,
+   "delta": -544
+  },
+  {
+   "d": 122528,
+   "len": 208,
+   "delta": -528
+  },
+  {
+   "d": 122736,
+   "len": 1164,
+   "delta": -504
+  },
+  {
+   "d": 123900,
+   "len": 1892,
+   "delta": -492
+  },
+  {
+   "d": 125792,
+   "len": 88,
+   "delta": -472
+  },
+  {
+   "d": 127588,
+   "len": 30,
+   "delta": -36
+  },
+  {
+   "d": 127644,
+   "len": 24,
+   "delta": -212
+  },
+  {
+   "d": 127712,
+   "len": 614,
+   "delta": -16
+  },
+  {
+   "d": 128328,
+   "len": 86,
+   "delta": 72
+  },
+  {
+   "d": 128432,
+   "len": 28,
+   "delta": 56
+  },
+  {
+   "d": 128552,
+   "len": 198,
+   "delta": -16
+  },
+  {
+   "d": 128848,
+   "len": 110,
+   "delta": -16
+  },
+  {
+   "d": 128960,
+   "len": 40,
+   "delta": 16
+  },
+  {
+   "d": 129008,
+   "len": 36,
+   "delta": 480
+  },
+  {
+   "d": 129056,
+   "len": 34,
+   "delta": 192
+  },
+  {
+   "d": 129148,
+   "len": 34,
+   "delta": 296
+  },
+  {
+   "d": 129372,
+   "len": 30,
+   "delta": -428
+  },
+  {
+   "d": 129436,
+   "len": 76,
+   "delta": -116
+  },
+  {
+   "d": 129792,
+   "len": 1364,
+   "delta": -16
+  },
+  {
+   "d": 131476,
+   "len": 1356,
+   "delta": 0
+  },
+  {
+   "d": 133260,
+   "len": 820,
+   "delta": 0
+  },
+  {
+   "d": 134120,
+   "len": 3164,
+   "delta": -40
+  },
+  {
+   "d": 137384,
+   "len": 13596,
+   "delta": -40
+  },
+  {
+   "d": 176204,
+   "len": 188,
+   "delta": -6208
+  },
+  {
+   "d": 178500,
+   "len": 74,
+   "delta": 8
+  },
+  {
+   "d": 178596,
+   "len": 210,
+   "delta": 12
+  }
+ ],
+ "mapped": [
+  {
+   "name": "RVA_LaunchSinglePlayer",
+   "rva_113d": 80384,
+   "rva_target": 110640,
+   "file": "d2direct.c",
+   "line": 33,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 40,
+   "offset_in_segment": 11104,
+   "segment_len": 11840,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchCharOk",
+   "rva_113d": 104912,
+   "rva_target": 57024,
+   "file": "d2direct.c",
+   "line": 34,
+   "delta": -47888,
+   "method": "segment",
+   "evidence_bytes": 44,
+   "offset_in_segment": 4720,
+   "segment_len": 5632,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchStartGame",
+   "rva_113d": 104752,
+   "rva_target": 56864,
+   "file": "d2direct.c",
+   "line": 36,
+   "delta": -47888,
+   "method": "segment",
+   "evidence_bytes": 54,
+   "offset_in_segment": 4560,
+   "segment_len": 5632,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchCharList",
+   "rva_113d": 154336,
+   "rva_target": 155336,
+   "file": "d2direct.c",
+   "line": 37,
+   "delta": 1000,
+   "method": "reference",
+   "evidence_bytes": 15,
+   "offset_in_segment": 0,
+   "segment_len": 0,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 15,
+   "conflict": 153475,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchCharSelected",
+   "rva_113d": 134104,
+   "rva_target": 150960,
+   "file": "d2direct.c",
+   "line": 38,
+   "delta": 16856,
+   "method": "reference",
+   "evidence_bytes": 36,
+   "offset_in_segment": 0,
+   "segment_len": 0,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 36,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchModeVar",
+   "rva_113d": 154440,
+   "rva_target": 154324,
+   "file": "d2direct.c",
+   "line": 39,
+   "delta": -116,
+   "method": "reference",
+   "evidence_bytes": 47,
+   "offset_in_segment": 0,
+   "segment_len": 0,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 47,
+   "conflict": 153554,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchBusyVar",
+   "rva_113d": 154308,
+   "rva_target": 155308,
+   "file": "d2direct.c",
+   "line": 40,
+   "delta": 1000,
+   "method": "reference",
+   "evidence_bytes": 6,
+   "offset_in_segment": 0,
+   "segment_len": 0,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 6,
+   "conflict": 153454,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchNewChar",
+   "rva_113d": 70048,
+   "rva_target": 100304,
+   "file": "d2direct.c",
+   "line": 41,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 44,
+   "offset_in_segment": 768,
+   "segment_len": 11840,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchToClasses",
+   "rva_113d": 63536,
+   "rva_target": 93824,
+   "file": "d2direct.c",
+   "line": 42,
+   "delta": 30288,
+   "method": "segment",
+   "evidence_bytes": 29,
+   "offset_in_segment": 4300,
+   "segment_len": 10012,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchTitlePress",
+   "rva_113d": 70032,
+   "rva_target": 100288,
+   "file": "d2direct.c",
+   "line": 43,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 40,
+   "offset_in_segment": 752,
+   "segment_len": 11840,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchToMainMenu",
+   "rva_113d": 67488,
+   "rva_target": 97776,
+   "file": "d2direct.c",
+   "line": 44,
+   "delta": 30288,
+   "method": "segment",
+   "evidence_bytes": 36,
+   "offset_in_segment": 8252,
+   "segment_len": 10012,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchBattleNet",
+   "rva_113d": 74576,
+   "rva_target": 104832,
+   "file": "d2mod.c",
+   "line": 5140,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 48,
+   "offset_in_segment": 5296,
+   "segment_len": 11840,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchMultiplayer",
+   "rva_113d": 63376,
+   "rva_target": 93664,
+   "file": "d2mod.c",
+   "line": 5141,
+   "delta": 30288,
+   "method": "segment",
+   "evidence_bytes": 25,
+   "offset_in_segment": 4140,
+   "segment_len": 10012,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchExitEntry",
+   "rva_113d": 135696,
+   "rva_target": 135656,
+   "file": "d2mod.c",
+   "line": 5193,
+   "delta": -40,
+   "method": "segment",
+   "evidence_bytes": 56,
+   "offset_in_segment": 1576,
+   "segment_len": 3164,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchExit",
+   "rva_113d": 42368,
+   "rva_target": 72624,
+   "file": "d2mod.c",
+   "line": 5194,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 52,
+   "offset_in_segment": 832,
+   "segment_len": 3361,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchMovieCheck",
+   "rva_113d": 74004,
+   "rva_target": 104260,
+   "file": "d2mod.c",
+   "line": 5423,
+   "delta": 30256,
+   "method": "segment",
+   "evidence_bytes": 32,
+   "offset_in_segment": 4724,
+   "segment_len": 11840,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 0,
+   "conflict": null,
+   "who": null
+  },
+  {
+   "name": "RVA_LaunchDiffPress0",
+   "rva_113d": 105808,
+   "rva_target": 57920,
+   "file": "d2direct.c",
+   "line": 35,
+   "delta": -47888,
+   "method": "site",
+   "evidence_bytes": 16,
+   "offset_in_segment": 0,
+   "segment_len": 0,
+   "confidence": "high",
+   "geometry_only": false,
+   "votes": 1,
+   "conflict": null,
+   "who": null
+  }
+ ],
+ "unmapped": []
+}

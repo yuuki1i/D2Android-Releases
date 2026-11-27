@@ -25,11 +25,14 @@
 #define CMD_LAYER            33
 #define CAP2_LAYERS          0x40
 #define CAP2_LAYERS_L        0x80
-#define RVA_LoadCell         0xA9480
-#define RVA_LoadCellCaller   0x19238
-#define RVA_CellDrawImport   0xCFCE
+#ifdef D2VER_113C
+/* 1.13c aliases the pair; these two entries carry the same body as 1.13d's 10042 / 10028. */
+#define ORD_GfxDrawCell      10019
+#define ORD_GfxDrawRect      10014
+#else
 #define ORD_GfxDrawCell      10042
 #define ORD_GfxDrawRect      10028
+#endif
 #define LYR_CELLS            192
 #define LYR_CACHE_SLOTS      64
 #define LYR_DRAWN_MS         500

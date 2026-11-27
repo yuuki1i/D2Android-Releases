@@ -9,7 +9,11 @@
 
 
 
-#define ORD_InitPlayerData   10404
+#ifdef D2VER_113C
+#define ORD_InitPlayerData       10356
+#else
+#define ORD_InitPlayerData       10404
+#endif
 #define SG_SIZE_AT           0x48
 #define SG_CALL_AT           0x4D
 #define SG_PLAYERDATA_SIZE   0x16C

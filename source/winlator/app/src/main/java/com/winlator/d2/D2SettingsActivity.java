@@ -243,7 +243,7 @@ public class D2SettingsActivity extends D2Activity {
             Toast.makeText(this, enabled ? "已启用 D2DX（下次启动生效）" : "已关闭 D2DX，尝试使用 DirectDraw（下次启动生效）", Toast.LENGTH_LONG).show();
         });
         root.addView(d2dxToggle);
-        TextView rendererHint = hint("若应用版本缺少 D2DX，可关闭此项尝试原生 DirectDraw 模式；不保证所有设备都能运行。");
+        View rendererHint = hint("若应用版本缺少 D2DX，可关闭此项尝试原生 DirectDraw 模式；不保证所有设备都能运行。");
         root.addView(rendererHint);
 
         savesStatus = null;
@@ -469,6 +469,10 @@ public class D2SettingsActivity extends D2Activity {
                 return box;
             case "argsFree":
                 return argsFree(box, e.label);
+            case "glassKeys":
+                return glassKeys(box, e.label);
+            case "glassTheme":
+                return glassTheme(box, e.label);
             case "modsList":
                 return modsList(box);
             case "modsImport":
@@ -483,6 +487,10 @@ public class D2SettingsActivity extends D2Activity {
                 box.addView(hint(getString(R.string.settings_plugy_hint)));
                 box.addView(hint(getString(R.string.settings_plugy_moved)));
                 box.addView(hint(getString(R.string.settings_big_stash_moved)));
+                return box;
+            case "modCompat":
+                box.addView(check(e.label, D2Settings.modCompat(this), D2Settings.KEY_MOD_COMPAT));
+                box.addView(hint(getString(R.string.settings_mod_compat_hint)));
                 return box;
             case "bigInventory":
                 return GameShadow.isModBundled(this) ? guardedRow(GUARD_BIG_INV, e.label) : null;
@@ -723,6 +731,65 @@ public class D2SettingsActivity extends D2Activity {
 
 
     private TextView argsLine, argsWarnings;
+
+
+    /** The look of the key bar: Xbox, Switch or PlayStation, all in the same graphite glass. */
+    private View glassTheme(LinearLayout box, String label) {
+        box.addView(label(label));
+        TextView value = new TextView(this);
+        value.setTextSize(15);
+        value.setPadding(dp(8), dp(6), dp(8), dp(6));
+        D2Style.text(value);
+        Runnable show = () -> value.setText(D2GlassKeys.name(D2Settings.glassTheme(this)));
+        show.run();
+        value.setOnClickListener((v) -> {
+            final int[] themes = {D2GlassKeys.XBOX, D2GlassKeys.SWITCH, D2GlassKeys.PLAYSTATION};
+            String[] names = new String[themes.length];
+            for (int i = 0; i < themes.length; i++) names[i] = D2GlassKeys.name(themes[i]);
+            int current = 0;
+            for (int i = 0; i < themes.length; i++) if (themes[i] == D2Settings.glassTheme(this)) current = i;
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                .setSingleChoiceItems(names, current, (d, which) -> {
+                    D2Settings.setGlassTheme(this, themes[which]);
+                    show.run();
+                    d.dismiss();
+                })
+                .create();
+            dialog.show();
+            D2Sound.attach(dialog);
+        });
+        LinearLayout.LayoutParams lp = matchWidth();
+        lp.leftMargin = dp(8);
+        box.addView(value, lp);
+        box.addView(hint(getString(R.string.settings_glass_theme_hint)));
+        return box;
+    }
+
+    /** The keys of the glass bar, one "name:keycode" per entry, separated by semicolons. */
+    private View glassKeys(LinearLayout box, String label) {
+        box.addView(label(label));
+        box.addView(hint(getString(R.string.settings_glass_keys_hint)));
+        android.widget.EditText field = new android.widget.EditText(this);
+        field.setSingleLine(true);
+        field.setText(D2Settings.glassKeys(this));
+        field.setTextColor(0xFFC8B074);
+        field.setHintTextColor(D2Style.HINT);
+        field.setTextSize(14);
+        field.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        field.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE | android.view.inputmethod.EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        field.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence t, int a, int b, int c) {}
+            @Override public void onTextChanged(CharSequence t, int a, int b, int c) {}
+            @Override public void afterTextChanged(android.text.Editable text) {
+                D2Settings.setGlassKeys(D2SettingsActivity.this, text.toString());
+            }
+        });
+        LinearLayout.LayoutParams fp = matchWidth();
+        fp.leftMargin = dp(8);
+        box.addView(field, fp);
+        return box;
+    }
+
 
 
     private View argsFree(LinearLayout box, String label) {

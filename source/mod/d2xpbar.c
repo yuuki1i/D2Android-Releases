@@ -29,21 +29,15 @@
 
 
 
-#define RVA_XpBarCall       0x1D4A1
-#define RVA_XpBarCallee     0x18E20
-#define RVA_XpPanelCall     0x1D596
-#define RVA_XpPanelCallee   0x6F300
 #define XPB_MIDDLE_HALF 64
 
 
 
-#define RVA_BeltUnfolded    0x11CFC4
-#define RVA_BeltDrawCall    0x6F367
-#define RVA_BeltDraw        0x6EE70
-#define RVA_BeltUnfoldedUse 0x6EF0A
-#define RVA_CtrlPanelCells  0x103B70
-#define RVA_CtrlPanelLoad   0x6D512
+#ifdef D2VER_113C
+#define ORD_GfxDrawRect     10014
+#else
 #define ORD_GfxDrawRect     10028
+#endif
 #define XPB_HALF 283
 #define XPB_HALF_COMPACT 235
 #define XPB_TOP 53
@@ -82,6 +76,14 @@ static int xpRedirect(DWORD rva, DWORD target) {
 }
 
 static void checkXpBarSites(void) {
+#ifdef D2VER_113C
+    /* The bar's frame decode ends in a D2gfx call whose 1.13c ordinal we have not pinned
+       down yet, and it takes the game down on the first draw after entering a game. Off
+       until that number is known. */
+    xpBarSites = 0;
+    logLine("xp bar: off in this build, the 1.13c draw call is not mapped yet");
+    return;
+#endif
     static const BYTE callee[] = {0xA1};
     static const BYTE calleeRest[] = {0x81, 0xEC, 0x28, 0x01, 0x00, 0x00};
     static const BYTE load[] = {0xA1};

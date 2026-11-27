@@ -392,7 +392,7 @@ public final class D2HelperEntries {
         section(SET_DISPLAY, "hervorgehoben", "hiClock", "hiFps", "hiBattery", "hiPlayers", "hiLevel", "hiDps", "hiGold");
         section(SET_DISPLAY, "karte", "mapHack", "mapFightHide", "mapFightDelay");
         section(SET_DISPLAY, "schaden", "damageStyle");
-        section(SET_DISPLAY, "app", "appLanguage", "shortcut");
+        section(SET_DISPLAY, "app", "appLanguage", "shortcut", "glassTheme", "glassKeys");
         section(SET_LOOT, "namen", "itemLabels", "dropLabels", "labelsNearOnly");
         section(SET_LOOT, "lootfilter", "lootFilter", "lootHide");
         section(SET_LOOT, "aufheben", "autoGold", "pickPotions", "pickScrolls", "pickRunes", "pickGems", "pickJewelry");
@@ -418,7 +418,7 @@ public final class D2HelperEntries {
 
 
 
-        section(SET_SPIELWEISE, "spielweise_truhe", "bigStash", "bigInventory", "swShared", "swSort", "respec");
+        section(SET_SPIELWEISE, "spielweise_truhe", "bigStash", "bigInventory", "modCompat", "swShared", "swSort", "respec");
 
 
         section(SET_MODS, "mods_play", "modsList");
@@ -430,13 +430,13 @@ public final class D2HelperEntries {
         section(SET_HELP, "fehlersuche", "diagnose", "report");
         section(SET_HELP, "ueber", "news", "updateCheck", "telemetry", "licenses", "about");
         for (String k : new String[]{"gameFolder", "install", "savesShare", "savesSaveAs", "savesLoad", "savesFromDownload", "savesBackups"}) SCOPE.put(k, BEFORE_START);
-        for (String k : new String[]{"gameLines", "frameRate", "skipIntro", "mod", "appLanguage", "plugy", "bigStash", "bigInventory", "autosave",
+        for (String k : new String[]{"gameLines", "frameRate", "skipIntro", "mod", "appLanguage", "plugy", "bigStash", "bigInventory", "modCompat", "autosave",
             "respec", "statsPages"}) SCOPE.put(k, NEXT_START);
         for (String k : new String[]{"plugyActiveSharedGold", "plugyActiveDisplayItemLevel", "plugyActiveDisplayBaseStatsValue", "plugyActiveDoNotCloseNihlathakPortal", "plugyMoveCainNearHarrogathWaypoint", "plugyAlwaysRegenMapInSP"}) SCOPE.put(k, NEXT_START);
 
         for (String k : new String[]{"swPreset", "swQuality", "swNoDrop", "swRunes", "swBoss", "swUniques", "swGamble", "swExp", "swDensity", "swLadder", "swCow", "swUber", "swWorld", "swShared", "swSort"}) SCOPE.put(k, NEXT_START);
 
-        for (String k : new String[]{"argDirect", "argTxt", "argNs", "argsFree"}) SCOPE.put(k, NEXT_START);
+        for (String k : new String[]{"argDirect", "argTxt", "argNs", "argsFree", "glassKeys"}) SCOPE.put(k, NEXT_START);
 
         for (String k : new String[]{"modsList", "modsImport"}) SCOPE.put(k, BEFORE_START);
         keywords("aimBlind", "toter winkel blind spot hinter ruecken behind auto aim");
@@ -520,6 +520,8 @@ public final class D2HelperEntries {
         keywords("argDirect", "mod mods startparameter parameter befehlszeile command line direct data ordner folder");
         keywords("argTxt", "mod mods startparameter parameter befehlszeile command line txt tabellen tables excel");
         keywords("argNs", "mod mods startparameter parameter ns ton sound stumm mute");
+        keywords("glassTheme", "tasten thema theme xbox switch playstation aussehen look");
+        keywords("glassKeys", "tastenleiste eigene tasten custom keys bar knopf button");
         keywords("argsFree", "mod mods startparameter parameter befehlszeile command line frei free eigene custom");
         keywords("modsList", "mod mods original spielen play aktiv active wechseln switch enjoy median");
         keywords("modsImport", "mod mods installieren install hinzufuegen add zip 7z datei file import");
@@ -600,7 +602,7 @@ public final class D2HelperEntries {
         String[][] items = {
             {"sound", "settings_sound"}, {"appLanguage", "settings_language"}, {"gameLines", "settings_size"}, {"frameRate", "settings_frame_rate"},
             {"skipIntro", "settings_skip_intro"}, {"mod", "settings_mod"}, {"plugy", "settings_plugy_use"},
-            {"bigStash", "settings_plugy_big_stash"}, {"bigInventory", "settings_big_inventory"}, {"autosave", "settings_plugy_autosave"}, {"respec", "settings_plugy_respec"},
+            {"bigStash", "settings_plugy_big_stash"}, {"bigInventory", "settings_big_inventory"}, {"modCompat", "settings_mod_compat"}, {"autosave", "settings_plugy_autosave"}, {"respec", "settings_plugy_respec"},
             {"statsPages", "settings_plugy_stats"}, {"plugyActiveSharedGold", "settings_plugy_ActiveSharedGold"}, {"plugyActiveDisplayItemLevel", "settings_plugy_ActiveDisplayItemLevel"}, {"plugyActiveDisplayBaseStatsValue", "settings_plugy_ActiveDisplayBaseStatsValue"}, {"plugyActiveDoNotCloseNihlathakPortal", "settings_plugy_ActiveDoNotCloseNihlathakPortal"}, {"plugyMoveCainNearHarrogathWaypoint", "settings_plugy_MoveCainNearHarrogathWaypoint"}, {"plugyAlwaysRegenMapInSP", "settings_plugy_AlwaysRegenMapInSP"}, {"background", "settings_background"}, {"gameFolder", "settings_game_folder"},
             {"install", "settings_install"}, {"shortcut", "settings_shortcut"}, {"savesShare", "settings_saves_share"},
             {"savesLoad", "settings_saves_load"}, {"savesBackups", "settings_saves_backups"}, {"savesSaveAs", "settings_saves_save_as"}, {"savesFromDownload", "settings_saves_from_download"},
@@ -614,7 +616,7 @@ public final class D2HelperEntries {
             {"swShared", "settings_sw_shared"}, {"swSort", "settings_sw_sort"},
 
             {"argDirect", "settings_arg_direct"}, {"argTxt", "settings_arg_txt"}, {"argNs", "settings_arg_ns"},
-            {"argsFree", "settings_args_free"}, {"modsList", "settings_mods_list"}, {"modsImport", "settings_mods_import"}};
+            {"argsFree", "settings_args_free"}, {"glassTheme", "settings_glass_theme"}, {"glassKeys", "settings_glass_keys"}, {"modsList", "settings_mods_list"}, {"modsImport", "settings_mods_import"}};
         for (String[] item : items) l.add(new Entry(Kind.HOST, item[0], item[1], null, null, false, null, null));
         return l;
     }

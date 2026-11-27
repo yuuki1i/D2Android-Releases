@@ -40,20 +40,16 @@
 
 
 
-#define RVA_DrawUnitInfoCall 0x1D457
-#define RVA_DrawUnitInfo     0x1A730
-#define RVA_GameDamage       0x8BCB0
-#define RVA_GameDamageLife   0x8BE32
-#define RVA_GameDamageSet    0x8BE54
-#define RVA_GameSetStatThunk 0xA3C4
-#define RVA_GameRegen        0x86390
-#define RVA_GameRegenSet     0x8649A
-#define RVA_GamePlayerRegen  0x91C60
-#define RVA_GamePlayerRegenSet 0x91CC2
-#define RVA_GameStateListThunk 0xA49C
+#ifdef D2VER_113C
+#define ORD_GetStatListWithState 10871
+#else
 #define ORD_GetStatListWithState 10429
-#define RVA_GameListStatThunk 0xA97C
-#define ORD_GetStatListStat  10190
+#endif
+#ifdef D2VER_113C
+#define ORD_GetStatListStat      10680
+#else
+#define ORD_GetStatListStat      10190
+#endif
 #define STATE_POISON 2
 #define STATE_BURNING 115
 #define STATE_OPENWOUNDS 62
@@ -311,7 +307,11 @@ static void checkDamageSites(void) {
     dmgGame = (DWORD) GetModuleHandleA("D2Game.dll");
     DWORD game = dmgGame;
     BYTE* thunk = (BYTE*) (game + RVA_GameSetStatThunk);
+#ifdef D2VER_113C
+    dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10887);
+#else
     dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10590);
+#endif
     int server = game && bytesAre(game + RVA_GameDamage, prologue, sizeof(prologue))
         && bytesAre(game + RVA_GameDamageLife, life, sizeof(life)) && bytesAre(game + RVA_GameDamageSet - sizeof(set), set, sizeof(set))
         && (callAt(game, RVA_GameDamageSet, RVA_GameSetStatThunk) || dmgCallTarget(game + RVA_GameDamageSet) == (DWORD) damageStub)

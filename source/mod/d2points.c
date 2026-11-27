@@ -32,29 +32,11 @@
 
 
 
-#define ORD_GetBaseStat     10216
-#define RVA_SkillTab        0xF6EE0
-#define RVA_SkillTabCheck   0x30A07
-#define RVA_SkillColumnX    0x2F100
-#define RVA_SkillRowY       0x2F150
-#define RVA_ScreenW         0xF7034
-#define RVA_ScreenH         0xF7038
-
-
-
-
-
-
-#define RVA_PanelOffX       0x11D354
-#define RVA_PanelOffY       0x11D358
-
-
-
-
-
-
-
-
+#ifdef D2VER_113C
+#define ORD_GetBaseStat          10587
+#else
+#define ORD_GetBaseStat          10216
+#endif
 #define CAP_POINTS          0x01
 #define CAP_COMPARE         0x02
 #define CAP_DAMAGE          0x08
@@ -169,18 +151,6 @@ static int valueCapable(void);
 
 #define CMD_POINTS          19
 
-#define RVA_StatSite        0xC06D1
-#define RVA_SkillSite       0x30B21
-#define RVA_Send3           0xB6B00
-#define RVA_HotkeySite      0xA5EE7
-#define RVA_SetHotkey       0xA5A20
-#define RVA_HotkeyItem      0x1014B0
-#define RVA_CharScreenCall  0x1D548
-#define RVA_CharScreenPage  0xBF640
-#define RVA_PlugYPrintPage  0x19AE0
-#define RVA_PlugYRealm      0x31FCA
-#define RVA_PlugYPage       0x32014
-#define RVA_PlugYLastPage   0x32018
 #define STATSPAGE_UNKNOWN   0xFF
 
 static int singlePlayerGame(void);

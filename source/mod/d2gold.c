@@ -13,9 +13,6 @@
 
 
 
-#define RVA_GoldDialogAction    0x11C86C
-#define RVA_GoldDialogControls  0x11C874
-#define RVA_GoldDialogAmount    0x11D568
 #define GOLD_ACTION_WITHDRAW    4
 #define D2GFX_ORD_GET_HWND      10007
 

@@ -26,7 +26,9 @@ public final class GameShadow {
 
     private static final String MOD_ASSET_DIR = "d2/mod/";
     public static final String LOADER_EXE = "D2Android.exe";
-    private static final String[] MOD_FILES = {LOADER_EXE, "d2android-mod.dll"};
+    private static final String MOD_DLL = "d2android-mod.dll";
+    /** 1.13c build of the same touch layer; installed under MOD_DLL so the loader stays version agnostic. */
+    private static final String MOD_DLL_113C = "d2android-mod-113c.dll";
 
     private GameShadow() {}
 
@@ -133,12 +135,16 @@ public final class GameShadow {
         }
 
 
-        if (isModBundled(context)) {
-            for (String name : MOD_FILES) FileUtils.copy(context, MOD_ASSET_DIR + name, new File(shadowDir, name));
+        boolean modBundled = isModBundled(context);
+        String dll = modBundled ? modDll(context, gameDir) : MOD_DLL;
+        if (modBundled) {
+            FileUtils.copy(context, MOD_ASSET_DIR + LOADER_EXE, new File(shadowDir, LOADER_EXE));
+            FileUtils.copy(context, MOD_ASSET_DIR + dll, new File(shadowDir, MOD_DLL));
         }
 
-        boolean plugy = isModBundled(context) && D2Settings.modEnabled(context) && D2Settings.plugy(context);
-        D2PlugY.install(context, shadowDir, saveDir, plugy);
+        D2PlugY.setCowPortalSupported(modBundled && !MOD_DLL_113C.equals(dll));
+        boolean plugy = modBundled && D2Settings.modEnabled(context) && D2Settings.plugy(context);
+        D2PlugY.install(context, shadowDir, saveDir, plugy, gameDir);
         if (plugy) plugyStatsHint(context, new File(new File(shadowDir, "PlugY"), D2PlugYTexts.STRINGS_FILE));
 
 
@@ -158,12 +164,45 @@ public final class GameShadow {
             if (link.exists() || FileUtils.isSymlink(link)) continue;
             FileUtils.symlink(entry, link);
         }
+        D2Trace.log("shadow: " + D2GameFiles.summary(context, shadowDir));
         return shadowDir;
     }
 
 
 
 
+
+    /** 1.13c carries its own offset table, so its mod build is installed under the 1.13d file name. */
+    static String modDll(Context context, File gameDir) {
+        if (!bundled(context, MOD_ASSET_DIR + MOD_DLL_113C)) return MOD_DLL;
+        if (!"1.13c".equals(versionOf(gameDir))) return MOD_DLL;
+        D2Trace.log("1.13c game folder detected; installing the 1.13c mod build");
+        D2Trace.log("game files: " + D2GameFiles.summary(context, gameDir));
+        return MOD_DLL_113C;
+    }
+
+    private static boolean bundled(Context context, String asset) {
+        try (java.io.InputStream ignored = context.getAssets().open(asset)) {
+            return true;
+        }
+        catch (IOException e) {
+            return false;
+        }
+    }
+
+    private static String versionOf(File gameDir) {
+        for (String name : new String[] {"Game.exe", "game.exe"}) {
+            File exe = new File(gameDir, name);
+            if (!exe.isFile()) continue;
+            try {
+                return GameVersion.versionName(GameVersion.readVersion(exe));
+            }
+            catch (IOException e) {
+                D2Trace.log("could not read the game version: " + e);
+            }
+        }
+        return null;
+    }
 
     private static boolean isProvided(String name) {
         String lower = name.toLowerCase(Locale.ROOT);

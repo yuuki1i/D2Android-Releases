@@ -97,6 +97,13 @@ public final class D2SkillSlots {
     }
 
 
+    /** True while the game has not handed out any hotkey yet, so the snapshot is worth re-reading. */
+    public boolean allEmpty() {
+        for (int skill : skills) if (skill >= 0) return false;
+        return true;
+    }
+
+
     public int[] skills() {
         return skills;
     }

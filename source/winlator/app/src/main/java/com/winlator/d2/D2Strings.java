@@ -138,9 +138,35 @@ public final class D2Strings {
                 .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(d, at, end - at)).toString();
         }
         catch (CharacterCodingException e) {
-            text = new String(d, at, end - at, Charset.forName("windows-1252"));
+            // A translated install keeps its tables in the local code page, not in UTF-8. GBK
+            // first, because the usual Chinese build is GBK; Big5 covers the Taiwanese one.
+            text = null;
+            for (String name : new String[]{"GBK", "Big5"}) {
+                try {
+                    String guess = Charset.forName(name).newDecoder()
+                        .onMalformedInput(CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(CodingErrorAction.REPORT)
+                        .decode(ByteBuffer.wrap(d, at, end - at)).toString();
+                    if (plausible(guess)) { text = guess; break; }
+                }
+                catch (CharacterCodingException ignored) {
+                }
+            }
+            if (text == null) text = new String(d, at, end - at, Charset.forName("windows-1252"));
         }
         return text.replaceAll("ÿc.", "");
+    }
+
+    /** True when the decoded text is mostly real characters, not a wall of replacement marks. */
+    private static boolean plausible(String text) {
+        if (text.isEmpty()) return false;
+        int bad = 0, exotic = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (c == '\uFFFD') bad++;
+            else if (c >= 0x80 && c < 0x100) exotic++;
+        }
+        return bad == 0 && exotic * 3 < text.length();
     }
 
     private static int u16(byte[] b, int at) {
