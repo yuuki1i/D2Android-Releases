@@ -33,6 +33,7 @@ static DWORD biCommon, biClient;
 DWORD biPanelOriginal;
 
 static int biRead;
+int biOwnGridW, biOwnGridH;
 
 static void biReadFile(void) {
     if (biRead) return;
@@ -194,11 +195,28 @@ void __cdecl biTableLoaded(BYTE* table) {
     if (biPanelSite && biPanelReady()) result = biTableApply(table, count);
     InterlockedExchange(&biBig, result >= 0);
     invGridH = result >= 0 ? BI_ROWS : INV_H;
+    /* A mod may bring its own grid. Rather than assuming 10 x 4, the overlay takes whatever size the
+       character pages really have, otherwise every slot of the bar sits a row or two off. */
+    if (result < 0) {
+        int w = 0, h = 0;
+        for (int i = 0; i < 14; i++) {
+            unsigned char rw = 0, rh = 0;
+            biGridOf(table, count, biHeroRows[i], &rw, &rh);
+            if (rw > w) w = rw;
+            if (rh > h) h = rh;
+        }
+        if (w > 0 && h > 0) {
+            biOwnGridW = w;
+            biOwnGridH = h;
+            invGridW = w;
+            invGridH = h;
+        }
+    }
     static int logged;
     if (logged++ < 20 || result < 0)
-        logLine("big inventory: table loaded: %s", result > 0 ? "10 x 8 written"
-            : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, left 10 x 4"
-            : "panel not ready, left 10 x 4");
+        logLine("big inventory: table loaded: %s (grid %d x %d)", result > 0 ? "10 x 8 written"
+            : result == 0 ? "already 10 x 8" : result == -1 ? "NOT as in 1.13d, the mod keeps its own"
+            : "panel not ready, the mod keeps its own", invGridW, invGridH);
 }
 
 void biTableStub(void);
