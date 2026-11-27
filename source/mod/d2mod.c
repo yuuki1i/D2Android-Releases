@@ -4619,6 +4619,18 @@ static void swingTrace(void* player) {
 }
 #endif
 
+static volatile LONG foreignDrawTicks;
+static void* lastGoodPlayer;
+
+
+/** A unit pointer has to look like heap memory: the stack and the modules do not. */
+static int plausibleUnit(void* p) {
+    DWORD at = (DWORD) p;
+    if (at < 0x01000000 || at >= 0x70000000 || !readable(p, 0x60)) return 0;
+    return RD32(p, U_TYPE) == UNIT_PLAYER && RD32(p, U_MODE) != 0xFF;
+}
+
+
 static void gameTick(void) {
     static int moreHooks;
     if (!moreHooks) {
@@ -4653,8 +4665,19 @@ static void gameTick(void) {
         checkGoldSites();
         if (!unitActions) setStatus(STATUS_HOOKED, "connected (without direct clicks)");
     }
-    void* player = fGetPlayerUnit();
+    void* raw = fGetPlayerUnit();
+    void* player = raw;
     DWORD now = GetTickCount();
+    if (!plausibleUnit(player)) {
+        static DWORD lastStale;
+        player = plausibleUnit(lastGoodPlayer) ? lastGoodPlayer : NULL;
+        if (!lastStale || now - lastStale >= 5000) {
+            lastStale = now;
+            logLine("tick: the hero pointer is %08lX, not a unit (using %08lX, %ld draw ticks on other threads)",
+                    (unsigned long) (DWORD) raw, (unsigned long) (DWORD) player, (long) foreignDrawTicks);
+        }
+    }
+    else if (player != lastGoodPlayer) lastGoodPlayer = player;
     {
         static DWORD lastNote;
         if (!lastNote || now - lastNote >= 5000) {
@@ -4757,6 +4780,9 @@ static void gameTick(void) {
 static volatile LONG inTick;
 __attribute__((force_align_arg_pointer)) void __cdecl onGameLoop(void);
 
+
+
+
 /**
  * Called from the world draw call site (every frame, in game only). The game loop entry at
  * RVA_GameLoop is only reached a few times a second on 1.13c, so the tick hangs off the draw
@@ -4767,6 +4793,12 @@ void worldDrawTick(void) {
     DWORD now = GetTickCount();
     if (now - lastAt < 25) return;
     lastAt = now;
+    if (gameThreadId && GetCurrentThreadId() != gameThreadId) {
+        if (InterlockedIncrement(&foreignDrawTicks) == 1)
+            logLine("draw tick: on another thread %04lX (game loop %04lX): not used", (unsigned long) GetCurrentThreadId(),
+                    (unsigned long) gameThreadId);
+        return;
+    }
     if (InterlockedExchange(&inTick, 1)) return;
     onGameLoop();
     InterlockedExchange(&inTick, 0);
