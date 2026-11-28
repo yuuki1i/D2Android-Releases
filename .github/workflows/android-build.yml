@@ -2,7 +2,7 @@ name: Android debug APK
 on:
   workflow_dispatch:
   push:
-    branches: [d2-android-cn-touch-glass]
+    branches: [d2-android-cn-touch-glass, 'fix/**']
     paths:
       - 'source/winlator/**'
       - '.github/workflows/android-build.yml'
@@ -50,6 +50,12 @@ jobs:
       - name: Build and bundle Wine / Box64 runtime
         working-directory: source
         run: bash tools/build-runtime.sh
+      - name: Fetch D2DX / PlugY assets and build the native mod
+        working-directory: source
+        run: |
+          sudo apt-get install -y -q gcc-mingw-w64-i686 binutils-mingw-w64-i686
+          bash tools/fetch-winlator101.sh
+          bash tools/build-mod.sh
       - uses: actions/cache@v4
         with:
           path: |
