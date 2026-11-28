@@ -9,7 +9,7 @@ on:
       - 'source/tools/**'
       - '.github/workflows/android-build.yml'
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: d2android-touch-glass-build
@@ -87,3 +87,12 @@ jobs:
           path: source/winlator/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14
+      - name: Publish APK as a release
+        if: github.ref == 'refs/heads/fix/gameloop-chain' || startsWith(github.ref, 'refs/heads/fix/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          APK="$(find source/winlator/app/build/outputs/apk/debug -maxdepth 1 -name '*.apk' -type f | head -n 1)"
+          TAG="apk-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" "$APK"             --title "D2Android 1.13c pack test ${GITHUB_RUN_NUMBER}"             --notes "Automatic build from ${GITHUB_SHA:0:8}: pack native mode, 4:3 picture, pack data diagnosis."             --latest
+          echo "release: https://github.com/${{ github.repository }}/releases/tag/$TAG"
