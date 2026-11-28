@@ -5335,9 +5335,61 @@ static void probeGameSites(const char* stage) {
         (unsigned long) RVA_GameCowPortal, at[0], at[1], at[2], at[3], at[4], at[5], at[6]);
 }
 
+/* Modules that are known to patch the game loop before us on a 1.13c install:
+   the pack's own patchload.dll, the map hack, and D2DX's renderer. */
+static const char* const GAMELOOP_OWNERS[] = {
+    "patchload.dll", "d2dx_sgd2freeres.dll", "d2hackmap.dll", "_d2hackmap.dll", "PlugY.dll",
+};
+
+/* Enter a foreign game loop hook that already sits at our site. Their patch is
+   E8 rel32 90 90, i.e. a call to their own thunk; we point the call at our stub,
+   do our per-frame work, and let their thunk run exactly as if we were not there.
+   The call's return address (site+7) is still on the stack, so their thunk returns
+   or jumps back to the game loop as usual. */
+static int installHookAfterForeign(BYTE* site, DWORD target, const char* owner) {
+    BYTE* stub = (BYTE*) VirtualAlloc(NULL, 64, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!stub) return 0;
+    BYTE* p = stub;
+    *p++ = 0x60;                                          /* pushal */
+    *p++ = 0xE8;                                          /* call onGameLoop */
+    *(DWORD*) p = (DWORD) onGameLoop - ((DWORD) stub + 6);
+    p += 4;
+    *p++ = 0x61;                                          /* popal */
+    *p++ = 0xB8;                                          /* mov eax, foreign thunk */
+    *(DWORD*) p = target;
+    p += 4;
+    *p++ = 0xFF;                                          /* jmp eax */
+    *p++ = 0xE0;
+    FlushInstructionCache(GetCurrentProcess(), stub, (SIZE_T) (p - stub));
+    DWORD old;
+    if (!VirtualProtect(site, 7, PAGE_EXECUTE_READWRITE, &old)) return 0;
+    site[0] = 0xE8;
+    *(DWORD*) (site + 1) = (DWORD) stub - ((DWORD) site + 5);
+    site[5] = 0x90;
+    site[6] = 0x90;
+    VirtualProtect(site, 7, old, &old);
+    FlushInstructionCache(GetCurrentProcess(), site, 7);
+    logLine("game loop: foreign hook at D2Client+0x%05lX belongs to %s, chained in front of %08lX",
+            (unsigned long) GAMELOOP_PATCH_RVA, owner, (unsigned long) target);
+    return 1;
+}
+
 static int installHook(void) {
     BYTE* site = (BYTE*) (client + GAMELOOP_PATCH_RVA);
     if (memcmp(site, GAMELOOP_ORIGINAL, sizeof(GAMELOOP_ORIGINAL)) != 0) {
+        DWORD target = site[0] == 0xE8 ? (DWORD) site + 5 + *(DWORD*) (site + 1) : 0;
+        const char* owner = NULL;
+        for (unsigned i = 0; i < sizeof(GAMELOOP_OWNERS) / sizeof(GAMELOOP_OWNERS[0]); i++) {
+            HMODULE m = GetModuleHandleA(GAMELOOP_OWNERS[i]);
+            logLine("game loop: %s %08lX", GAMELOOP_OWNERS[i], (unsigned long) (DWORD) m);
+            if (m && target && inModule(m, target)) owner = GAMELOOP_OWNERS[i];
+        }
+        logLine("game loop: site D2Client+0x%05lX = %02X %02X %02X %02X %02X %02X %02X, call target %08lX (%s)",
+                (unsigned long) GAMELOOP_PATCH_RVA, site[0], site[1], site[2], site[3], site[4], site[5], site[6],
+                (unsigned long) target, owner ? owner : "unknown");
+        if (owner && site[0] == 0xE8 && site[5] == 0x90 && site[6] == 0x90
+            && installHookAfterForeign(site, target, owner))
+            return 1;
         char text[96];
         snprintf(text, sizeof(text), "wrong version (%02X %02X %02X %02X %02X %02X %02X)",
             site[0], site[1], site[2], site[3], site[4], site[5], site[6]);
