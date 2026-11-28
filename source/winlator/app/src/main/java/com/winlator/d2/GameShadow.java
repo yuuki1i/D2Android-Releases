@@ -156,8 +156,12 @@ public final class GameShadow {
                 android.os.Environment.DIRECTORY_DOWNLOADS), "D2Android-d2dx.cfg");
             String cfg = d2dxCfg != null ? d2dxCfg : defaultD2DXConfig();
             if (userCfg.isFile()) {
-                try { cfg = FileUtils.readString(userCfg); D2Trace.log("d2dx: using " + userCfg); }
-                catch (IOException e) { D2Trace.log("d2dx: " + userCfg + " unreadable: " + e.getMessage()); }
+                byte[] raw = FileUtils.read(userCfg);
+                if (raw != null && raw.length > 0) {
+                    cfg = new String(raw, java.nio.charset.StandardCharsets.UTF_8);
+                    D2Trace.log("d2dx: using " + userCfg);
+                }
+                else D2Trace.log("d2dx: " + userCfg + " is empty or unreadable");
             }
             FileUtils.writeString(new File(shadowDir, "d2dx.cfg"), cfg);
         }
