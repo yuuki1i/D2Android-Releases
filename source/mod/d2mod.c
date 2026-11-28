@@ -5027,12 +5027,66 @@ static void* lastGoodPlayer;
 
 
 
+static void logPackDiagnosis(void) {
+    char path[MAX_PATH];
+    DWORD n = GetModuleFileNameA(NULL, path, sizeof(path));
+    char* slash = n > 0 ? strrchr(path, '\\') : NULL;
+    if (slash) slash[1] = 0; else path[0] = 0;
+    const char* names[] = {"NewMpq.mpq", "MDLL1.dll", "patch_d2.mpq", "D2Win.dll", "patchload.dll",
+                           "Plugin\\_d2hackmap.dll", "d2dx_sgd2freeres.dll"};
+    for (unsigned i = 0; i < sizeof(names) / sizeof(names[0]); i++) {
+        char full[MAX_PATH];
+        snprintf(full, sizeof(full), "%s%s", path, names[i]);
+        HANDLE f = CreateFileA(full, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        int present = f != INVALID_HANDLE_VALUE;
+        DWORD size = present ? GetFileSize(f, NULL) : 0;
+        if (present) CloseHandle(f);
+        logLine("pack file: %s %s %lu", names[i], present ? "present" : "missing", (unsigned long) size);
+    }
+    char log[MAX_PATH];
+    snprintf(log, sizeof(log), "%spatchload_sj.log", path);
+    HANDLE f = CreateFileA(log, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    if (f != INVALID_HANDLE_VALUE) {
+        DWORD size = GetFileSize(f, NULL), want = size > 400 ? 400 : size;
+        if (want) {
+            char buf[401];
+            SetFilePointer(f, (LONG) (size - want), NULL, FILE_BEGIN);
+            DWORD got = 0;
+            if (ReadFile(f, buf, want, &got, NULL)) {
+                buf[got] = 0;
+                for (char* c = buf; *c; c++) if (*c == '\r' || *c == '\n') *c = ' ';
+                logLine("patchload log tail: %s", buf);
+            }
+        }
+        CloseHandle(f);
+    }
+    else logLine("patchload_sj.log: missing");
+    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
+    if (snap != INVALID_HANDLE_VALUE) {
+        MODULEENTRY32 me;
+        me.dwSize = sizeof(me);
+        char list[900];
+        list[0] = 0;
+        int shown = 0;
+        if (Module32First(snap, &me)) {
+            do {
+                if (shown++ >= 22) { strncat(list, "...", sizeof(list) - strlen(list) - 2); break; }
+                strncat(list, me.szModule, sizeof(list) - strlen(list) - 2);
+                strncat(list, " ", sizeof(list) - strlen(list) - 2);
+            } while (Module32Next(snap, &me));
+        }
+        CloseHandle(snap);
+        logLine("modules: %s", list);
+    }
+}
+
 static void gameTick(void) {
     static int moreHooks;
     if (!moreHooks) {
 
         moreHooks = 1;
         crashStep = "first tick: hooks and site checks";
+        if (packPresent()) logPackDiagnosis();
         installClickHook();
         installHighlightHook();
         installWorldDrawHook();

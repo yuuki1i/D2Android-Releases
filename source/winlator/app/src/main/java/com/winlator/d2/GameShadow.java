@@ -155,6 +155,10 @@ public final class GameShadow {
             File userCfg = new File(android.os.Environment.getExternalStoragePublicDirectory(
                 android.os.Environment.DIRECTORY_DOWNLOADS), "D2Android-d2dx.cfg");
             String cfg = d2dxCfg != null ? d2dxCfg : defaultD2DXConfig();
+            /* A pack was written for the 4:3 window it was played in on a PC. Give it
+               that picture by default; a config file in Downloads still wins. */
+            if (new File(gameDir, "patchload.dll").isFile() && new File(gameDir, "NewMpq.mpq").isFile())
+                cfg = buildD2DXConfig("1024x768", 0);
             if (userCfg.isFile()) {
                 byte[] raw = FileUtils.read(userCfg);
                 if (raw != null && raw.length > 0) {
