@@ -102,14 +102,19 @@ static void checkCompareSites(void) {
     int client1 = callAt(client, RVA_DrawHoverCall, RVA_DrawHoverThunk) && readable(thunk, 6) && thunk[0] == 0xFF
         && thunk[1] == 0x25 && readable(*(void**) (thunk + 2), 4) && **(DWORD**) (thunk + 2) == (DWORD) fDrawHover;
 
-    int client2 = bytesAre(client + RVA_ItemHover, hoverStart, sizeof(hoverStart))
-        && addressAt(client, 0x97DF8, RVA_HoverBody) && addressAt(client, 0x97E01, RVA_HoverGrid)
-        && addressAt(client, 0x97E0E, RVA_HoverItem) && addressAt(client, 0x97FA6, RVA_HoverAnchor)
-        && addressAt(client, 0x97F94, RVA_HoverAnchor + 4)
-        && addressAt(client, 0x8FFCA, RVA_HoverBody) && addressAt(client, 0x8FFF6, RVA_HoverItem)
-        && addressAt(client, 0x8FFFC, RVA_HoverItem2) && addressAt(client, 0x8FFDD, RVA_BodySlots)
-        && addressAt(client, 0x90003, RVA_HoverAnchor) && addressAt(client, 0x98AF5, RVA_HoverGrid)
-        && addressAt(client, 0x987D1, RVA_TradeMode) && addressAt(client, 0x9882C, RVA_TradeMode);
+    /* The 1.13c build reads the hover variables from different instruction
+       addresses than 1.13d, so check that the game's code references them at all
+       instead of pinning the old sites. */
+    int refs[] = {
+        codeRefs(client, RVA_HoverBody), codeRefs(client, RVA_HoverGrid), codeRefs(client, RVA_HoverItem),
+        codeRefs(client, RVA_HoverItem2), codeRefs(client, RVA_HoverAnchor), codeRefs(client, RVA_HoverAnchor + 4),
+        codeRefs(client, RVA_BodySlots), codeRefs(client, RVA_TradeMode),
+    };
+    int client2 = bytesAre(client + RVA_ItemHover, hoverStart, sizeof(hoverStart));
+    for (unsigned i = 0; i < sizeof(refs) / sizeof(refs[0]); i++) client2 = client2 && refs[i] >= 1;
+    if (!client2)
+        logLine("compare: refs body %d grid %d item %d item2 %d anchor %d anchor4 %d slots %d trade %d",
+            refs[0], refs[1], refs[2], refs[3], refs[4], refs[5], refs[6], refs[7]);
     compareAvailable = win1 && client1 && client2 && fDrawHover && fTextSize && fBodyLocItem && fItemIsType;
     hoverText = compareAvailable ? (wchar_t*) text : NULL;
     logLine(compareAvailable ? "compare sites verified" : "compare sites not as expected (D2Win %d, call %d, D2Client %d): no comparison",

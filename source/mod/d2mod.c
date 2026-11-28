@@ -2242,6 +2242,34 @@ static int addressAt(DWORD module, DWORD rva, DWORD target) {
     return readable((void*) (module + rva), 4) && *(DWORD*) (module + rva) == module + target;
 }
 
+/* Number of 32-bit pointers to module+target inside the module's code section.
+   The 1.13c and 1.13d builds use the same data variables from different
+   instruction sites, so "this variable is referenced by the game's own code" is
+   the portable form of the old per-site check. */
+static int codeRefs(DWORD module, DWORD target) {
+    const BYTE* base = (const BYTE*) module;
+    if (!readable(base, 0x40)) return 0;
+    const BYTE* nt = base + *(const DWORD*) (base + 0x3C);
+    if (!readable(nt, 0x58) || *(const DWORD*) nt != 0x4550) return 0;
+    WORD sections = *(const WORD*) (nt + 6);
+    WORD optSize = *(const WORD*) (nt + 20);
+    const BYTE* table = nt + 24 + optSize;
+    DWORD want = module + target;
+    int found = 0;
+    for (WORD i = 0; i < sections; i++) {
+        const BYTE* sec = table + 40 * i;
+        DWORD vsize = *(const DWORD*) (sec + 8), vaddr = *(const DWORD*) (sec + 12);
+        DWORD rawSize = *(const DWORD*) (sec + 16);
+        if (!(sec[0] == '.' && sec[1] == 't' && sec[2] == 'e' && sec[3] == 'x' && sec[4] == 't')) continue;
+        DWORD size = vsize && vsize < rawSize ? vsize : rawSize;
+        const BYTE* code = base + vaddr;
+        if (!readable(code, size)) continue;
+        for (DWORD at = 0; at + 4 <= size; at++) if (*(const DWORD*) (code + at) == want) found++;
+    }
+    return found;
+}
+
+
 static int callAt(DWORD module, DWORD rva, DWORD target) {
     BYTE* at = (BYTE*) (module + rva);
     return readable(at, 5) && at[0] == 0xE8 && (DWORD) at + 5 + *(DWORD*) (at + 1) == module + target;
@@ -2333,11 +2361,18 @@ static void checkMapSites(void) {
         && addressAt(client, RVA_InitAutomapLayer + 0x25, RVA_AutomapLayer)
         && RD8(client, RVA_NewAutomapCell) == 0x8B && addressAt(client, RVA_NewAutomapCell + 2, RVA_AutomapCellPool);
 
-    int client2 = callAt(client, RVA_DrawAutomapCall, RVA_DrawAutomap)
-        && addressAt(client, 0x70D6C, RVA_AutomapDivisor) && addressAt(client, 0x70D7C, RVA_AutomapOffsetX)
-        && addressAt(client, 0x70D8E, RVA_AutomapOffsetY) && addressAt(client, 0x70E60, RVA_AutomapMode)
-        && addressAt(client, 0x70F4A, RVA_AutomapCorner) && addressAt(client, 0x70F54, RVA_AutomapCornerTop)
-        && addressAt(client, 0x737F1, RVA_AutomapLayer);
+    /* Same as in d2compare: 1.13c reads these automap variables from other
+       instruction addresses, so require that the code references them at all. */
+    int mapRefs[] = {
+        codeRefs(client, RVA_AutomapDivisor), codeRefs(client, RVA_AutomapOffsetX), codeRefs(client, RVA_AutomapOffsetY),
+        codeRefs(client, RVA_AutomapMode), codeRefs(client, RVA_AutomapCorner), codeRefs(client, RVA_AutomapCornerTop),
+        codeRefs(client, RVA_AutomapLayer),
+    };
+    int client2 = callAt(client, RVA_DrawAutomapCall, RVA_DrawAutomap);
+    for (unsigned i = 0; i < sizeof(mapRefs) / sizeof(mapRefs[0]); i++) client2 = client2 && mapRefs[i] >= 1;
+    if (!client2)
+        logLine("map hack: refs divisor %d offx %d offy %d mode %d corner %d cornerTop %d layer %d",
+            mapRefs[0], mapRefs[1], mapRefs[2], mapRefs[3], mapRefs[4], mapRefs[5], mapRefs[6]);
     if (functions) objectTxtCount = *(DWORD**) ((BYTE*) fGetObjectTxt + 6);
     if (!functions || !client1 || !client2 || !readable(objectTxtCount, 4)) {
         logLine("map hack sites not as expected (functions failed %X, D2Client %d/%d): no map hack", failed, client1, client2);
