@@ -307,37 +307,40 @@ static void checkDamageSites(void) {
     dmgGame = (DWORD) GetModuleHandleA("D2Game.dll");
     DWORD game = dmgGame;
     BYTE* thunk = (BYTE*) (game + RVA_GameSetStatThunk);
-#ifdef D2VER_113C
-    dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10887);
-#else
-    dmgSetUnitStat = (DWORD) GetProcAddress((HMODULE) common, (LPCSTR) 10590);
-#endif
+    /* Take the address from the game's own import slot: the D2Common ordinal
+       differs between builds and a guessed one would forward damage calls into
+       the wrong function. */
+    int thunkOk = readable(thunk, 6) && thunk[0] == 0xFF && thunk[1] == 0x25
+        && readable(*(void**) (thunk + 2), 4);
+    dmgSetUnitStat = thunkOk ? **(DWORD**) (thunk + 2) : 0;
     int server = game && bytesAre(game + RVA_GameDamage, prologue, sizeof(prologue))
         && bytesAre(game + RVA_GameDamageLife, life, sizeof(life)) && bytesAre(game + RVA_GameDamageSet - sizeof(set), set, sizeof(set))
         && (callAt(game, RVA_GameDamageSet, RVA_GameSetStatThunk) || dmgCallTarget(game + RVA_GameDamageSet) == (DWORD) damageStub)
-        && readable(thunk, 6) && thunk[0] == 0xFF && thunk[1] == 0x25 && dmgSetUnitStat
-        && readable(*(void**) (thunk + 2), 4) && **(DWORD**) (thunk + 2) == dmgSetUnitStat;
+        && thunkOk && dmgSetUnitStat;
     int draw = callAt(client, RVA_DrawUnitInfoCall, RVA_DrawUnitInfo) && RD8(client, RVA_DrawUnitInfoCall - 1) == 0x50
         && fDrawText && fSetTextSize && fGetTextWidth;
     damageSites = server && draw;
     damageServerSite = server;
     damagePatched = server && dmgCallTarget(game + RVA_GameDamageSet) == (DWORD) damageStub;
-    logLine(damageSites ? "damage numbers sites verified%s" : "damage numbers sites not as expected (server %d, draw %d)",
-        damageSites ? (damagePatched ? " (stub already in place)" : "") : "", server, draw);
+    if (damageSites)
+        logLine("damage numbers sites verified%s", damagePatched ? " (stub already in place)" : "");
+    else
+        logLine("damage numbers sites not as expected (server %d, draw %d)", server, draw);
 
     static const BYTE regen[] = {0x83, 0xEC, 0x0C, 0x53, 0x56, 0x57, 0x6A, 0x00, 0x8B, 0xF2, 0x6A, 0x4A, 0x8B, 0xF9, 0x56};
     static const BYTE regenSet[] = {0x8B, 0xFD, 0x83, 0xFF, 0x01, 0x7D, 0x02, 0x33, 0xFF, 0x6A, 0x00, 0x57, 0x6A, 0x06, 0x56};
     BYTE* listThunk = (BYTE*) (game + RVA_GameStateListThunk);
     BYTE* statThunk = (BYTE*) (game + RVA_GameListStatThunk);
-    void* statFn = (void*) GetProcAddress((HMODULE) common, (LPCSTR) ORD_GetStatListStat);
-    void* listFn = (void*) GetProcAddress((HMODULE) common, (LPCSTR) ORD_GetStatListWithState);
+    int listThunkOk = readable(listThunk, 6) && listThunk[0] == 0xFF && listThunk[1] == 0x25
+        && readable(*(void**) (listThunk + 2), 4);
+    int statThunkOk = readable(statThunk, 6) && statThunk[0] == 0xFF && statThunk[1] == 0x25
+        && readable(*(void**) (statThunk + 2), 4);
+    void* statFn = statThunkOk ? **(void***) (statThunk + 2) : NULL;
+    void* listFn = listThunkOk ? **(void***) (listThunk + 2) : NULL;
     poisonSite = damageSites && bytesAre(game + RVA_GameRegen, regen, sizeof(regen))
         && bytesAre(game + RVA_GameRegenSet - sizeof(regenSet), regenSet, sizeof(regenSet))
         && (callAt(game, RVA_GameRegenSet, RVA_GameSetStatThunk) || dmgCallTarget(game + RVA_GameRegenSet) == (DWORD) poisonStub)
-        && listFn && readable(listThunk, 6) && listThunk[0] == 0xFF && listThunk[1] == 0x25
-        && readable(*(void**) (listThunk + 2), 4) && **(void***) (listThunk + 2) == listFn
-        && statFn && readable(statThunk, 6) && statThunk[0] == 0xFF && statThunk[1] == 0x25
-        && readable(*(void**) (statThunk + 2), 4) && **(void***) (statThunk + 2) == statFn;
+        && listFn && statFn;
     fGetStatListStat = poisonSite ? (LONG (__stdcall *)(void*, DWORD, DWORD)) statFn : NULL;
     fGetStatListWithState = poisonSite ? (void* (__stdcall *)(void*, DWORD)) listFn : NULL;
     poisonPatched = poisonSite && dmgCallTarget(game + RVA_GameRegenSet) == (DWORD) poisonStub;

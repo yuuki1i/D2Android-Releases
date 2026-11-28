@@ -239,7 +239,7 @@
 #define RVA_GameDamage 0xDE0C0
 #define RVA_GameDamageLife 0xDE242
 #define RVA_GameDamageSet 0xDE264
-#define RVA_GameSetStatThunk 0xA3C4
+#define RVA_GameSetStatThunk 0xA472  /* call target at both damage sites; 0xA3C4 is a different import */
 #define RVA_GameRegen 0x76740
 #define RVA_GameRegenSet 0x7684A
 #define RVA_GamePlayerRegen 0x77CB0

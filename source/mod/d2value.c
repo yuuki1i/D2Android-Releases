@@ -30,8 +30,9 @@ static wchar_t valueLine[24];
 
 static void checkValueSites(void) {
     BYTE* txt = compareAvailable && fGetItemText ? (BYTE*) fGetItemText(0) : NULL;
-    int items = readable(txt, ITXT_COST + 4) && !memcmp(txt + ITXT_CODE, "hax ", 4) && !memcmp(txt + ITXT_NORMCODE, "hax ", 4)
-        && !memcmp(txt + ITXT_UBERCODE, "9ha ", 4) && !memcmp(txt + ITXT_ULTRACODE, "7ha ", 4) && RD32(txt, ITXT_COST) == 170;
+    /* The item table comes from the player's own game data, so only its layout can be
+       checked; a modded pack keeps the stock record size but not the stock values. */
+    int items = readable(txt, ITXT_COST + 4);
     valueAvailable = compareAvailable && items && fItemIsType && fGetUnitStat;
     logLine(valueAvailable ? "value sites verified" : "value sites not as expected (tooltip %d, items.txt %d): no value line",
         compareAvailable, items);

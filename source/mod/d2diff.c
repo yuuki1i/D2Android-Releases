@@ -62,8 +62,8 @@ static wchar_t diffBlock[DIFF_LINES * (DIFF_LINE_CHARS + 1) + 64];
 
 static void checkDiffSites(void) {
     BYTE* txt = compareAvailable && fGetItemText ? (BYTE*) fGetItemText(0) : NULL;
-    int items = readable(txt, ITXT_LEVELREQ + 1) && !memcmp(txt + ITXT_CODE, "hax ", 4) && !memcmp(txt + ITXT_WCLASS, "1hs", 3)
-        && !memcmp(txt + ITXT_WCLASS2, "1hs", 3) && txt[ITXT_2HANDED] == 0;
+    /* same as d2value: the pack ships its own items.txt, only the layout is fixed */
+    int items = readable(txt, ITXT_LEVELREQ + 1);
     diffAvailable = compareAvailable && items && fBodyLocItem && fGetUnitStat && fGetBaseStat && fItemIsType;
     logLine(diffAvailable ? "diff sites verified" : "diff sites not as expected (tooltip %d, items.txt %d): no comparison lines",
         compareAvailable, items);
