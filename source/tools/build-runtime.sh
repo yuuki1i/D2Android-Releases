@@ -20,7 +20,7 @@ CACHE_DIR="${D2_CACHE_DIR:-$HOME/.cache/d2android}"
 OUT_DIR="$REPO_DIR/winlator/app/src/main/assets/d2"
 
 
-PACKAGE=at.d2android
+PACKAGE="${D2_PACKAGE:-at.d2android}"
 if [ "${1:-}" = "--public" ]; then
   PACKAGE=$(sed -n 's/^d2PublicPackage=//p' "$REPO_DIR/winlator/gradle.properties")
   [ -n "$PACKAGE" ] || { echo "no d2PublicPackage in winlator/gradle.properties" >&2; exit 1; }

@@ -51,6 +51,11 @@ jobs:
           key: d2-runtime-v2-${{ hashFiles('source/tools/build-runtime.sh', 'source/tools/build-runtime.py', 'source/tools/binpatch.py', 'source/tools/fetch-winlator101.sh', 'source/tools/alsa-plugin/**', 'source/tools/patches/vortek-client-*.patch') }}
       - name: Build and bundle Wine / Box64 runtime
         working-directory: source
+        env:
+          # The debug build uses this application id (see app/build.gradle); the runtime
+          # asset carries the package it was built for and the app refuses one that
+          # names another package ("missing runtime").
+          D2_PACKAGE: at.d2android.cn
         run: bash tools/build-runtime.sh
       - name: Fetch D2DX / PlugY assets and build the native mod
         working-directory: source
