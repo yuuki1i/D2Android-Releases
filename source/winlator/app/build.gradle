@@ -51,6 +51,10 @@ android {
 
     buildTypes {
         debug {
+            /* A separate package id: the previous installs were signed with a throw-away
+               runner key, and Android protects the data they left behind against an APK
+               with any other signature. A new id installs cleanly next to it. */
+            applicationIdSuffix '.cn'
 
             if (d2Keystore.exists()) {
                 signingConfig signingConfigs.d2
