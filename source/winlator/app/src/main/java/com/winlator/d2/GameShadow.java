@@ -148,7 +148,19 @@ public final class GameShadow {
         if (plugy) plugyStatsHint(context, new File(new File(shadowDir, "PlugY"), D2PlugYTexts.STRINGS_FILE));
 
 
-        if (useD2DX) FileUtils.writeString(new File(shadowDir, "d2dx.cfg"), d2dxCfg != null ? d2dxCfg : defaultD2DXConfig());
+        if (useD2DX) {
+            /* A file in Downloads overrides the generated config, so every D2DX
+               option (motion prediction, anti-aliasing, filtering, scale, ...) can
+               be set by hand without a rebuild. */
+            File userCfg = new File(android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_DOWNLOADS), "D2Android-d2dx.cfg");
+            String cfg = d2dxCfg != null ? d2dxCfg : defaultD2DXConfig();
+            if (userCfg.isFile()) {
+                try { cfg = FileUtils.readString(userCfg); D2Trace.log("d2dx: using " + userCfg); }
+                catch (IOException e) { D2Trace.log("d2dx: " + userCfg + " unreadable: " + e.getMessage()); }
+            }
+            FileUtils.writeString(new File(shadowDir, "d2dx.cfg"), cfg);
+        }
 
 
         java.util.List<String> laid = mod == null ? java.util.Collections.emptyList()

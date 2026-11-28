@@ -5041,24 +5041,32 @@ static void gameTick(void) {
         checkLabelsSite();
         checkClickFlagSite();
         installClickMapEntryHook();
-        keepLabelTips();
         checkSoundSites();
         checkGameSoundSite();
         checkNpcMenuSites();
-        checkMapSites();
-        checkItemSites();
         checkTakeSites();
         checkEquipSites();
-        checkPointSites();
-        checkShopSites();
-        checkLabelFilterSite();
-        checkCompareSites();
-        checkLayerSites();
-        checkValueSites();
-        checkDiffSites();
-        checkDamageSites();
-        checkXpBarSites();
-        checkGoldSites();
+        /* A pack carries its own helpers (hackmap for map and item info, D2Ext for
+           damage numbers, PlugY for the stash, MDLL1 for the formulas). Running ours
+           next to them changes what the pack does, so on a pack the game keeps the
+           last word and we only do the touch input. */
+        if (packPresent())
+            logLine("pack: native mode, map/item info/formulas/stash stay the pack's own");
+        else {
+            keepLabelTips();
+            checkMapSites();
+            checkItemSites();
+            checkPointSites();
+            checkShopSites();
+            checkLabelFilterSite();
+            checkCompareSites();
+            checkLayerSites();
+            checkValueSites();
+            checkDiffSites();
+            checkDamageSites();
+            checkXpBarSites();
+            checkGoldSites();
+        }
         if (!unitActions) setStatus(STATUS_HOOKED, "connected (without direct clicks)");
     }
     void* raw = fGetPlayerUnit();

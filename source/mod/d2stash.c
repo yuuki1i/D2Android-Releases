@@ -723,6 +723,7 @@ static void sendStash(void* player) {
 
 
 static void stashTick(void* player) {
+    if (packPresent()) return;      /* PlugY in the pack owns the stash pages and the save */
     if (!player) {
         stashPending = 0;
         stashAllLeft = 0;

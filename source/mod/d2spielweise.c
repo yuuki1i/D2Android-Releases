@@ -198,6 +198,7 @@ static void swNote(int n, const char* name, void* table, int result) {
 
 
 static void spielweiseTick(void* player, DWORD now) {
+    if (packPresent()) return;      /* the pack balances drops, density and experience itself */
     if (!swRead) swReadFile();
     if (!player || !singlePlayerGame()) {
         InterlockedExchange(&swNoDropFloorNow, 1);
