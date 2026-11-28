@@ -51,8 +51,15 @@ static void checkEquipSites(void) {
     static const BYTE swap[] = {0x8B, 0x4E, 0x0C, 0x0F, 0xB7, 0xD5, 0xB0, 0x1D, 0xE8};
     static const BYTE toBody[] = {0x8B, 0x4E, 0x0C, 0x0F, 0xB7, 0xD5, 0xB0, 0x1A, 0xE8};
     static const BYTE toInventory[] = {0xB0, 0x18, 0x8B, 0x4D, 0x0C, 0xE8};
+#if defined(D2VER_113C)
+    /* 1.13c: the same packet sites, located by their 'mov al,0x18/0x19/0x1A/0x1D; call'
+       instruction sequences in this build. */
+    BYTE *a = (BYTE*) (client + 0x96E00), *b = (BYTE*) (client + 0x96228), *c = (BYTE*) (client + 0x96159),
+         *d = (BYTE*) (client + 0x9728B);
+#else
     BYTE *a = (BYTE*) (client + 0x9B350), *b = (BYTE*) (client + 0x9A778), *c = (BYTE*) (client + 0x9A6A9),
          *d = (BYTE*) (client + 0x9B7DB);
+#endif
     equipAvailable = fSendPacket && fGetItemText && fGetUiVar
         && readable(a, sizeof(toCursor)) && memcmp(a, toCursor, sizeof(toCursor)) == 0
         && readable(b, sizeof(swap)) && memcmp(b, swap, sizeof(swap)) == 0

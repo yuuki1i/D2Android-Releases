@@ -23,10 +23,19 @@ static void checkGoldSites(void) {
     static const BYTE movAmount[] = {0xA3};
     static const BYTE cmpAction[] = {0x83, 0x3D};
     static const BYTE movControls[] = {0x8B, 0x0D};
+#if defined(D2VER_113C)
+    /* 1.13c: recovered from the 'mov ecx,[controls] / mov [amount],eax / cmp [action],4'
+       sequence; the three data addresses match RVA_GoldDialog* below. */
+    goldSitesOk = bytesAre(client + 0xBE19E, movControls, 2) && addressAt(client, 0xBE1A0, RVA_GoldDialogControls)
+        && bytesAre(client + 0xBE1BE, movAmount, 1) && addressAt(client, 0xBE1BF, RVA_GoldDialogAmount)
+        && bytesAre(client + 0xBE1C3, cmpAction, 2) && addressAt(client, 0xBE1C5, RVA_GoldDialogAction)
+        && readable((void*) (client + 0xBE1C9), 1) && *(BYTE*) (client + 0xBE1C9) == GOLD_ACTION_WITHDRAW;
+#else
     goldSitesOk = bytesAre(client + 0x181BE, movControls, 2) && addressAt(client, 0x181C0, RVA_GoldDialogControls)
         && bytesAre(client + 0x181DE, movAmount, 1) && addressAt(client, 0x181DF, RVA_GoldDialogAmount)
         && bytesAre(client + 0x181E3, cmpAction, 2) && addressAt(client, 0x181E5, RVA_GoldDialogAction)
         && readable((void*) (client + 0x181E9), 1) && *(BYTE*) (client + 0x181E9) == GOLD_ACTION_WITHDRAW;
+#endif
     logLine(goldSitesOk ? "gold dialog sites verified" : "gold dialog sites not as expected: withdraw stays empty");
 }
 

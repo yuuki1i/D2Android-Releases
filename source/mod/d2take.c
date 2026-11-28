@@ -25,8 +25,15 @@ static int takeAvailable;
 static void checkTakeSites(void) {
     static const BYTE item[] = {0xB9, 0x04, 0x00, 0x00, 0x00, 0xB0, 0x16, 0xE8};
     static const BYTE object[] = {0xB9, 0x02, 0x00, 0x00, 0x00, 0xB0, 0x13, 0xE8};
+#if defined(D2VER_113C)
+    /* 1.13c: same 'mov ecx,N; mov al,0x16/0x13; call' packet sites, found by the
+       exact byte pattern in this build's D2Client.dll. */
+    BYTE* a = (BYTE*) (client + 0x2ADFE);
+    BYTE* b = (BYTE*) (client + 0x2AD17);
+#else
     BYTE* a = (BYTE*) (client + 0x4A13E);
     BYTE* b = (BYTE*) (client + 0x4A057);
+#endif
     takeAvailable = unitActions && fSendPacket && readable(a, sizeof(item)) && readable(b, sizeof(object))
         && memcmp(a, item, sizeof(item)) == 0 && memcmp(b, object, sizeof(object)) == 0;
     logLine(takeAvailable ? "take sites verified" : "take sites not as expected: Nehmen stays a click");
