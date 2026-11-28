@@ -5,6 +5,8 @@ on:
     branches: [d2-android-cn-touch-glass, 'fix/**']
     paths:
       - 'source/winlator/**'
+      - 'source/mod/**'
+      - 'source/tools/**'
       - '.github/workflows/android-build.yml'
 permissions:
   contents: read
